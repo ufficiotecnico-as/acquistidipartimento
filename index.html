@@ -73,8 +73,6 @@
         
         .close-btn { background: rgba(255,255,255,0.05); border: none; color: #fff; width: 40px; height: 40px; border-radius: 50%; cursor: pointer; position: absolute; top: 30px; right: 30px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .close-btn:hover { background: rgba(255,255,255,0.15); transform: rotate(90deg); }
-
-        pre { white-space: pre-wrap; font-family: 'Inter', sans-serif; margin: 0; }
     </style>
 </head>
 <body>
@@ -90,10 +88,10 @@
             <span id="d-time" style="color: #666; font-size: 0.85rem;">Aggiornato il --/--/----</span>
         </div>
 
-        <span class="detail-label">Priorità Richiesta</span>
+        <span class="detail-label">Richiedente / Docente</span>
         <span id="d-priority" class="detail-value">-</span>
 
-        <span class="detail-label">Specifiche Materiale (Colonna E)</span>
+        <span class="detail-label">Specifiche Materiale</span>
         <div id="d-specs" style="background: rgba(255,255,255,0.03); padding: 20px; border-radius: 12px; line-height: 1.6; color: #adbac7; margin-top: 10px; border: 1px solid var(--border); font-size: 0.95rem;">
             ...
         </div>
@@ -103,7 +101,7 @@
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M6 12.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5ZM3 8.062C3 6.76 4.235 5.765 5.53 5.886a26.58 26.58 0 0 0 4.94 0C11.765 5.765 13 6.76 13 8.062v1.157a4.448 4.448 0 0 1-1.452 3.354A.5.5 0 0 1 11 12.184V13.5a1.5 1.5 0 0 1-1.5 1.5h-3A1.5 1.5 0 0 1 5 13.5v-1.316a.5.5 0 0 1-.548-.388A4.448 4.448 0 0 1 3 9.22V8.062Z"/>
                 </svg>
-                Analisi Groq AI (Colonna F)
+                Analisi Groq AI
             </div>
             <div id="d-ai" style="color: #e6edf3; line-height: 1.6; font-size: 0.95rem;">
                 Caricamento analisi...
@@ -126,8 +124,8 @@
                     <tr>
                         <th>Dipartimento</th>
                         <th>Stato Attuale</th>
-                        <th>Priorità</th>
-                        <th>Ultimo Update</th>
+                        <th>Docente</th>
+                        <th>Data Invio</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -143,23 +141,24 @@
             try {
                 const res = await fetch(CSV + '&t=' + Date.now());
                 const text = await res.text();
-                const rows = text.split('\n').slice(1);
-                const clean = {};
+                // Rileva le righe correttamente
+                const rows = text.split(/\r?\n/).slice(1);
                 
+                db = [];
                 rows.forEach(r => {
-                    const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Regex per gestire virgole nei testi
-                    if(c.length < 3) return;
-                    const d = c[1].replace(/"/g,'').trim();
-                    if(d) clean[d] = {
-                        name: d,
-                        status: c[2].replace(/"/g,'').trim().toUpperCase(),
-                        priority: c[3] ? c[3].replace(/"/g,'').trim() : 'N/D',
-                        specs: c[4] ? c[4].replace(/"/g,'').trim() : 'Nessuna specifica',
-                        ai: c[5] ? c[5].replace(/"/g,'').trim() : 'Analisi in corso...',
-                        time: c[0].replace(/"/g,'').trim()
-                    };
+                    // Regex potente per gestire le virgole dentro i testi tra virgolette
+                    const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    if(c.length < 4) return;
+                    
+                    db.push({
+                        time: (c[0] || "").replace(/"/g,'').trim(),      // Colonna A: Timestamp
+                        name: (c[1] || "N/D").replace(/"/g,'').trim(),   // Colonna B: Dipartimento
+                        docente: (c[2] || "").replace(/"/g,'').trim(),    // Colonna C: Docente
+                        status: (c[3] || "").replace(/"/g,'').trim().toUpperCase(), // Colonna D: Stato
+                        specs: (c[4] || "").replace(/"/g,'').trim(),     // Colonna E: Specifiche
+                        ai: (c[5] || "In attesa di analisi...").replace(/"/g,'').trim() // Colonna F: AI
+                    });
                 });
-                db = Object.values(clean);
                 render();
             } catch(e) { console.error("Errore Sync:", e); }
         }
@@ -167,15 +166,16 @@
         function render() {
             const body = document.getElementById('tableBody');
             body.innerHTML = db.map(o => {
-                let cls = o.status.includes('VALUTAZIONE') ? 'b-valutazione' : 
-                          o.status.includes('INTEGRAZIONE') ? 'b-integrazione' : 
-                          o.status.includes('APPROVATO') ? 'b-approvato' : 
-                          o.status.includes('COMPLETATO') ? 'b-completato' : 'b-respinto';
+                let cls = 'b-valutazione';
+                if(o.status.includes('APPROVATO')) cls = 'b-approvato';
+                else if(o.status.includes('INTEGRAZIONE')) cls = 'b-integrazione';
+                else if(o.status.includes('COMPLETATO')) cls = 'b-completato';
+                else if(o.status.includes('RESPINTO')) cls = 'b-respinto';
 
                 return `<tr onclick="openDrawer('${o.name.replace(/'/g, "\\'")}')">
                     <td class="dept-name">${o.name}</td>
                     <td><span class="badge ${cls}">${o.status}</span></td>
-                    <td style="font-weight:600">${o.priority}</td>
+                    <td style="font-weight:600; color: #fff;">${o.docente}</td>
                     <td style="color: #666; font-size: 0.8rem;">${o.time}</td>
                 </tr>`;
             }).join('');
@@ -187,16 +187,18 @@
 
             document.getElementById('d-name').innerText = data.name;
             document.getElementById('d-status').innerText = data.status;
-            document.getElementById('d-status').className = 'badge ' + (
-                data.status.includes('VALUTAZIONE') ? 'b-valutazione' : 
-                data.status.includes('INTEGRAZIONE') ? 'b-integrazione' : 
-                data.status.includes('APPROVATO') ? 'b-approvato' : 
-                data.status.includes('COMPLETATO') ? 'b-completato' : 'b-respinto'
-            );
-            document.getElementById('d-priority').innerText = data.priority;
+            
+            let cls = 'badge b-valutazione';
+            if(data.status.includes('APPROVATO')) cls = 'badge b-approvato';
+            else if(data.status.includes('INTEGRAZIONE')) cls = 'badge b-integrazione';
+            else if(data.status.includes('COMPLETATO')) cls = 'badge b-completato';
+            else if(data.status.includes('RESPINTO')) cls = 'badge b-respinto';
+            
+            document.getElementById('d-status').className = cls;
+            document.getElementById('d-priority').innerText = data.docente;
             document.getElementById('d-specs').innerText = data.specs;
             document.getElementById('d-ai').innerText = data.ai;
-            document.getElementById('d-time').innerText = "Aggiornato il: " + data.time;
+            document.getElementById('d-time').innerText = "Inviato il: " + data.time;
             
             document.getElementById('drawer').classList.add('open');
             document.getElementById('overlay').style.display = 'block';
@@ -208,7 +210,7 @@
         }
 
         sync();
-        setInterval(sync, 15000); // Sincronizza ogni 15 secondi
+        setInterval(sync, 15000); 
     </script>
 </body>
 </html>
