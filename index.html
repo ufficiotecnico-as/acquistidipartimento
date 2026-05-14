@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Tracker Dashboard - Custom Status</title>
+    <title>Order Tracker Dashboard - Final Version</title>
     <style>
         :root {
             --bg-dark: #0f1216;
@@ -12,6 +12,7 @@
             --accent-yellow: #facc15;
             --accent-blue: #3b82f6;
             --accent-red: #f87171;
+            --accent-purple: #a855f7;
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
             --grid-color: rgba(255, 255, 255, 0.03);
@@ -19,7 +20,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Inter', sans-serif;
             background-color: var(--bg-dark);
             background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
                               linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
@@ -37,32 +38,48 @@
         header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
+            align-items: center;
             margin-bottom: 40px;
         }
 
         .title-section h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             font-weight: 900;
-            letter-spacing: -1px;
-            color: #7dd3fc;
+            color: #4ed9d9;
             margin: 0;
             text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .title-section p {
-            color: var(--text-muted);
-            margin: 5px 0 0 0;
-            letter-spacing: 2px;
+        .live-status {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            padding: 6px 15px;
+            border-radius: 20px;
             font-size: 0.8rem;
-            text-transform: uppercase;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
-        /* Stats Grid */
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+
+        /* Stats Grid - Fixed Header States */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
             margin-bottom: 30px;
         }
 
@@ -71,30 +88,31 @@
             border-radius: 12px;
             padding: 20px;
             border-top: 4px solid #333;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
-            min-height: 120px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
 
-        .stat-card.attivi { border-color: var(--accent-green); }
         .stat-card.valutazione { border-color: var(--accent-yellow); }
+        .stat-card.integrazione { border-color: var(--accent-purple); }
         .stat-card.approvato { border-color: var(--accent-blue); }
-        .stat-card.completato { border-color: var(--accent-red); }
+        .stat-card.completato { border-color: var(--accent-green); }
+        .stat-card.respinto { border-color: var(--accent-red); }
 
         .stat-label {
             color: var(--text-muted);
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             text-transform: uppercase;
-            font-weight: 700;
-            margin-bottom: 15px;
+            font-weight: 800;
+            margin-bottom: 12px;
             display: block;
+            height: 2.5em;
         }
 
-        .stat-value { font-size: 3rem; font-weight: 800; margin: 0; }
+        .stat-value { font-size: 2.5rem; font-weight: 800; margin: 0; }
 
-        /* Search & Filter */
-        .search-row {
+        /* Controls */
+        .controls {
             display: grid;
-            grid-template-columns: 1fr 250px;
+            grid-template-columns: 1fr 300px;
             gap: 20px;
             margin-bottom: 25px;
         }
@@ -102,66 +120,66 @@
         input, select {
             background: #1e293b;
             border: 1px solid var(--border-ui);
-            padding: 12px 16px;
+            padding: 14px;
             border-radius: 8px;
             color: white;
-            outline: none;
+            font-size: 1rem;
         }
 
-        /* Table */
-        .data-list {
+        /* List */
+        .data-table {
             background: var(--card-bg);
             border-radius: 12px;
             border: 1px solid var(--border-ui);
             overflow: hidden;
         }
 
-        .table-header {
+        .table-head {
             display: grid;
-            grid-template-columns: 1.5fr 1.2fr 1fr;
-            padding: 15px 24px;
-            background: rgba(255,255,255,0.03);
+            grid-template-columns: 1.5fr 1.5fr 1fr;
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.05);
+            font-size: 0.8rem;
             font-weight: bold;
-            font-size: 0.75rem;
-            text-transform: uppercase;
             color: var(--text-muted);
+            text-transform: uppercase;
             border-bottom: 1px solid var(--border-ui);
         }
 
-        .data-item {
+        .table-row {
             display: grid;
-            grid-template-columns: 1.5fr 1.2fr 1fr;
-            padding: 18px 24px;
+            grid-template-columns: 1.5fr 1.5fr 1fr;
+            padding: 20px 25px;
             border-bottom: 1px solid var(--border-ui);
-            transition: background 0.2s;
             align-items: center;
+            transition: background 0.3s;
         }
 
-        .data-item:hover { background: rgba(255, 255, 255, 0.05); }
+        .table-row:hover { background: rgba(255,255,255,0.03); }
+
+        .dept-name { font-size: 1.2rem; font-weight: 700; color: #fff; }
 
         .status-pill {
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.7rem;
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 25px;
+            font-size: 0.75rem;
             font-weight: 800;
             text-transform: uppercase;
-            display: inline-block;
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid transparent;
         }
 
-        /* Colori dinamici Pills */
-        .pill-valutazione { border-color: var(--accent-yellow); color: var(--accent-yellow); }
-        .pill-approvato { border-color: var(--accent-blue); color: var(--accent-blue); }
-        .pill-completato { border-color: var(--accent-green); color: var(--accent-green); }
-        .pill-respinto { border-color: var(--accent-red); color: var(--accent-red); }
-        .pill-integrazione { border-color: #a855f7; color: #a855f7; }
+        .pill-valutazione { background: rgba(250, 204, 21, 0.15); color: var(--accent-yellow); border-color: var(--accent-yellow); }
+        .pill-integrazione { background: rgba(168, 85, 247, 0.15); color: var(--accent-purple); border-color: var(--accent-purple); }
+        .pill-approvato { background: rgba(59, 130, 246, 0.15); color: var(--accent-blue); border-color: var(--accent-blue); }
+        .pill-completato { background: rgba(74, 222, 128, 0.15); color: var(--accent-green); border-color: var(--accent-green); }
+        .pill-respinto { background: rgba(248, 113, 113, 0.15); color: var(--accent-red); border-color: var(--accent-red); }
 
-        .timestamp { color: var(--text-muted); font-size: 0.8rem; font-family: monospace; }
+        .time { font-family: monospace; color: var(--text-muted); font-size: 0.9rem; }
 
-        @media (max-width: 850px) {
-            .stats-grid { grid-template-columns: 1fr 1fr; }
-            .search-row { grid-template-columns: 1fr; }
+        @media (max-width: 1000px) {
+            .stats-grid { grid-template-columns: repeat(3, 1fr); }
+            .controls { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -170,19 +188,20 @@
     <div class="container">
         <header>
             <div class="title-section">
-                <h1>DASHBOARD INTEGRATA GOOGLE FORM</h1>
-                <p>Monitoraggio avanzamento richieste e ordini</p>
+                <h1>ORDER TRACKER</h1>
+                <p>STATO AVANZAMENTO ORDINI PER DIPARTIMENTO</p>
             </div>
+            <div class="live-status"><div class="live-dot"></div> LIVE</div>
         </header>
 
         <div class="stats-grid">
-            <div class="stat-card attivi">
-                <span class="stat-label">Dipartimenti Attivi</span>
-                <p class="stat-value" id="count-total">0</p>
-            </div>
             <div class="stat-card valutazione">
                 <span class="stat-label">In Valutazione</span>
                 <p class="stat-value" id="count-valutazione">0</p>
+            </div>
+            <div class="stat-card integrazione">
+                <span class="stat-label">Richiesta Integrazione</span>
+                <p class="stat-value" id="count-integrazione">0</p>
             </div>
             <div class="stat-card approvato">
                 <span class="stat-label">Approvato - In Ordine</span>
@@ -192,12 +211,16 @@
                 <span class="stat-label">Completato / Consegnato</span>
                 <p class="stat-value" id="count-completato">0</p>
             </div>
+            <div class="stat-card respinto">
+                <span class="stat-label">Respinto</span>
+                <p class="stat-value" id="count-respinto">0</p>
+            </div>
         </div>
 
-        <div class="search-row">
-            <input type="text" id="search" placeholder="Cerca dipartimento..." onkeyup="filterData()">
-            <select id="status-filter" onchange="filterData()">
-                <option value="all">Tutti gli stati</option>
+        <div class="controls">
+            <input type="text" id="search" placeholder="Cerca dipartimento..." onkeyup="filter()">
+            <select id="filter-status" onchange="filter()">
+                <option value="ALL">Tutti gli stati</option>
                 <option value="IN VALUTAZIONE">In Valutazione</option>
                 <option value="RICHIESTA INTEGRAZIONE">Richiesta Integrazione</option>
                 <option value="APPROVATO - IN ORDINE">Approvato - In Ordine</option>
@@ -206,93 +229,82 @@
             </select>
         </div>
 
-        <div class="data-list">
-            <div class="table-header">
+        <div class="data-table">
+            <div class="table-head">
                 <span>Dipartimento</span>
                 <span>Stato Attuale</span>
-                <span>Ultimo Aggiornamento</span>
+                <span>Aggiornamento</span>
             </div>
-            <div id="data-container"></div>
+            <div id="table-body"></div>
         </div>
     </div>
 
     <script>
-        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
-        let latestDataByDept = {};
+        const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
+        let dataStore = {};
 
-        async function updateDashboard() {
+        async function refresh() {
             try {
-                const response = await fetch(csvUrl);
-                const text = await response.text();
-                const rows = text.split('\n').slice(1);
+                const res = await fetch(url);
+                const csv = await res.text();
+                const lines = csv.split('\n').slice(1);
                 
-                const tempData = {};
-
-                rows.forEach(row => {
-                    const cols = row.split(',');
-                    if(cols.length < 3) return;
-
-                    const timestamp = cols[0].replace(/"/g, '').trim();
-                    const dept = cols[1].replace(/"/g, '').trim();
-                    const status = cols[2].replace(/"/g, '').trim().toUpperCase();
-
-                    if (!dept) return;
-
-                    // Sovrascrive per tenere l'ultima risposta del form
-                    tempData[dept] = {
-                        dept: dept,
-                        status: status,
-                        time: timestamp
+                const currentData = {};
+                lines.forEach(l => {
+                    const c = l.split(',');
+                    if(c.length < 3) return;
+                    const d = c[1].replace(/"/g, '').trim();
+                    if(!d) return;
+                    currentData[d] = {
+                        dept: d,
+                        status: c[2].replace(/"/g, '').trim().toUpperCase(),
+                        time: c[0].replace(/"/g, '').trim()
                     };
                 });
 
-                latestDataByDept = tempData;
-                renderStats();
-                filterData();
-            } catch (e) {
-                console.error("Errore Sincronizzazione:", e);
-            }
+                dataStore = currentData;
+                updateStats();
+                filter();
+            } catch (e) { console.error(e); }
         }
 
-        function renderStats() {
-            const dataArray = Object.values(latestDataByDept);
-            document.getElementById('count-total').innerText = dataArray.length;
-            document.getElementById('count-valutazione').innerText = dataArray.filter(d => d.status.includes('VALUTAZIONE')).length;
-            document.getElementById('count-approvato').innerText = dataArray.filter(d => d.status.includes('APPROVATO')).length;
-            document.getElementById('count-completato').innerText = dataArray.filter(d => d.status.includes('COMPLETATO')).length;
+        function updateStats() {
+            const arr = Object.values(dataStore);
+            document.getElementById('count-valutazione').innerText = arr.filter(x => x.status === 'IN VALUTAZIONE').length;
+            document.getElementById('count-integrazione').innerText = arr.filter(x => x.status === 'RICHIESTA INTEGRAZIONE').length;
+            document.getElementById('count-approvato').innerText = arr.filter(x => x.status === 'APPROVATO - IN ORDINE').length;
+            document.getElementById('count-completati').innerText = arr.filter(x => x.status === 'COMPLETATO / CONSEGNATO').length;
+            document.getElementById('count-respinto').innerText = arr.filter(x => x.status === 'RESPINTO').length;
         }
 
-        function filterData() {
-            const searchTerm = document.getElementById('search').value.toLowerCase();
-            const statusFilter = document.getElementById('status-filter').value;
-            const container = document.getElementById('data-container');
+        function filter() {
+            const s = document.getElementById('search').value.toLowerCase();
+            const f = document.getElementById('filter-status').value;
+            const body = document.getElementById('table-body');
             
-            const filtered = Object.values(latestDataByDept).filter(item => {
-                const matchesSearch = item.dept.toLowerCase().includes(searchTerm);
-                const matchesStatus = statusFilter === 'all' || item.status === statusFilter;
-                return matchesSearch && matchesStatus;
+            const filtered = Object.values(dataStore).filter(x => {
+                return (x.dept.toLowerCase().includes(s)) && (f === 'ALL' || x.status === f);
             });
 
-            container.innerHTML = filtered.map(item => {
-                let pillClass = '';
-                if(item.status.includes('VALUTAZIONE')) pillClass = 'pill-valutazione';
-                else if(item.status.includes('APPROVATO')) pillClass = 'pill-approvato';
-                else if(item.status.includes('COMPLETATO')) pillClass = 'pill-completato';
-                else if(item.status.includes('RESPINTO')) pillClass = 'pill-respinto';
-                else if(item.status.includes('INTEGRAZIONE')) pillClass = 'pill-integrazione';
+            body.innerHTML = filtered.map(x => {
+                let cls = 'pill-valutazione';
+                if(x.status.includes('INTEGRAZIONE')) cls = 'pill-integrazione';
+                if(x.status.includes('APPROVATO')) cls = 'pill-approvato';
+                if(x.status.includes('COMPLETATO')) cls = 'pill-completato';
+                if(x.status.includes('RESPINTO')) cls = 'pill-respinto';
 
                 return `
-                    <div class="data-item">
-                        <span style="font-weight:700; font-size: 1.1rem;">${item.dept}</span>
-                        <div><span class="status-pill ${pillClass}">${item.status}</span></div>
-                        <span class="timestamp">${item.time}</span>
+                    <div class="table-row">
+                        <div class="dept-name">${x.dept}</div>
+                        <div><span class="status-pill ${cls}">${x.status}</span></div>
+                        <div class="time">${x.time}</div>
                     </div>
                 `;
             }).join('');
         }
 
-        updateDashboard();
-        setInterval(updateDashboard, 30000); 
+        refresh();
+        setInterval(refresh, 20000);
     </script>
 </body>
 </html>
