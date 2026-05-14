@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00d2ff; --accent: #ff007a; --bg-dark: #06090f; --error: #ff4b2b;
+            --primary: #00d2ff; --accent: #ff007a; --bg-dark: #05080d;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,82 +19,92 @@
             position: relative; padding: 20px;
         }
 
-        /* SFONDO DINAMICO */
-        .blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(70px); pointer-events: none; }
-        .blob { position: absolute; border-radius: 50%; opacity: 0.5; animation: move 15s infinite alternate ease-in-out; }
-        .blob-1 { width: 50vw; height: 50vw; background: var(--primary); top: -10%; left: -10%; }
-        .blob-2 { width: 60vw; height: 60vw; background: var(--accent); bottom: -10%; right: -10%; animation-delay: -7s; }
+        /* SFONDO CON BLOB ANIMATI */
+        .blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(60px); }
+        .blob { position: absolute; border-radius: 50%; opacity: 0.5; animation: move 18s infinite alternate ease-in-out; }
+        .blob-1 { width: 55vw; height: 55vw; background: var(--primary); top: -15%; left: -10%; }
+        .blob-2 { width: 65vw; height: 65vw; background: var(--accent); bottom: -15%; right: -10%; animation-delay: -5s; }
+        .blob-3 { width: 35vw; height: 35vw; background: #0066ff; top: 20%; right: 15%; animation-duration: 22s; }
 
-        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(40px, 60px) scale(1.2); } }
+        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(40px, 50px) scale(1.1); } }
 
-        /* CARD GLASSMORPHISM */
+        /* CARD GLASSMORPHISM DEFINITIVA */
         .login-card {
-            background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
             border: 2px solid transparent;
             background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
-                              linear-gradient(135deg, var(--primary), var(--accent));
+                              linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             background-origin: border-box; background-clip: padding-box, border-box;
-            padding: 3rem 2rem; border-radius: 30px; width: 100%; max-width: 400px;
-            text-align: center; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); z-index: 10;
+            padding: 3.5rem 2rem; border-radius: 30px; width: 100%; max-width: 420px;
+            text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); z-index: 10;
         }
 
-        /* LOGO SVG INTEGRATO */
-        .logo-box { margin-bottom: 1.5rem; filter: drop-shadow(0 0 15px rgba(255,255,255,0.5)); }
-        .logo-svg { width: 80px; height: auto; fill: white; }
-        .logo-text { color: white; font-weight: 800; font-size: 0.9rem; letter-spacing: 2px; margin-top: 5px; }
-        .logo-subtext { color: white; font-weight: 400; font-size: 0.6rem; letter-spacing: 4px; opacity: 0.8; }
+        /* LOGO RICOSTRUITO IDENTICO (SVG + GLOW) */
+        .logo-wrap {
+            position: relative; margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+        }
+        .logo-svg { width: 110px; height: auto; }
+        .school-name { color: white; font-weight: 400; font-size: 0.9rem; letter-spacing: 1px; margin-top: 5px; opacity: 0.9; }
+        .school-brand { color: white; font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; line-height: 1; }
 
-        h2 { color: #fff; font-weight: 800; font-size: 1.8rem; margin-top: 10px; }
-        .subtitle { color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-bottom: 2rem; }
+        h2 { color: #fff; font-weight: 700; font-size: 2.2rem; margin-top: 1.5rem; letter-spacing: -1px; }
+        .subtitle { color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 2rem; font-weight: 300; }
+        .status-ready { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 1.5rem; }
 
         /* INPUTS */
-        .input-group { margin-bottom: 1rem; }
-        .input-group input {
-            width: 100%; padding: 1.1rem; background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px;
-            color: #fff; font-size: 16px; outline: none; transition: 0.3s;
+        .input-field {
+            width: 100%; padding: 1.1rem; background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px;
+            color: #fff; font-size: 1rem; outline: none; transition: 0.3s; margin-bottom: 1rem;
         }
-        .input-group input:focus { border-color: var(--primary); }
+        .input-field:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); }
 
-        /* BUTTON */
+        /* BUTTON CON GRADIENTE ESATTO */
         .login-btn {
             width: 100%; padding: 1.1rem; 
-            background: linear-gradient(90deg, var(--primary), var(--accent));
+            background: linear-gradient(90deg, #00d2ff, #ff007a);
             color: #fff; border: none; border-radius: 12px; font-size: 1rem;
-            font-weight: 800; cursor: pointer; transition: 0.3s; text-transform: uppercase;
+            font-weight: 800; cursor: pointer; transition: 0.4s; text-transform: uppercase;
+            margin-top: 0.5rem; letter-spacing: 1px;
         }
-        .login-btn:hover { filter: brightness(1.2); transform: scale(1.02); }
+        .login-btn:hover { filter: brightness(1.2); box-shadow: 0 0 25px rgba(0, 210, 255, 0.4); }
 
-        footer { position: fixed; bottom: 20px; color: rgba(255,255,255,0.3); font-size: 0.6rem; letter-spacing: 2px; }
+        footer { position: fixed; bottom: 15px; color: rgba(255,255,255,0.3); font-size: 0.6rem; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div></div>
+    <div class="blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
 
-    <div class="login-card" id="card">
-        <div class="logo-box">
+    <div class="login-card">
+        <div class="logo-wrap">
             <svg class="logo-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
-                <path d="M50 20 L80 40 L50 60 L20 40 Z" fill="none" stroke="white" stroke-width="4"/>
-                <path d="M50 10 C60 10 70 20 70 30 L50 45 L30 30 C30 20 40 10 50 10 Z" fill="white"/>
-                <rect x="48" y="45" width="4" height="20" fill="white"/>
+                <path d="M25 55 Q15 45 20 25 M75 55 Q85 45 80 25" fill="none" stroke="white" stroke-width="2" opacity="0.8"/>
+                <path d="M50 50 L75 40 L75 20 L50 30 L25 20 L25 40 Z" fill="none" stroke="white" stroke-width="3"/>
+                <path d="M50 30 L50 50" fill="none" stroke="white" stroke-width="3"/>
+                <circle cx="50" cy="20" r="4" fill="white"/>
+                <path d="M40 28 Q50 15 60 28" fill="none" stroke="white" stroke-width="3"/>
             </svg>
-            <div class="logo-text">IIS ANTONIO</div>
-            <div class="logo-subtext">SCARPA</div>
+            <div class="school-name">IIS ANTONIO</div>
+            <div class="school-brand">SCARPA</div>
         </div>
 
         <h2>Area Riservata</h2>
         <div class="subtitle">Accesso Portale Acquisti</div>
+        <p class="status-ready">Pronto per l'autenticazione</p>
 
-        <div class="input-group"><input type="text" id="user" placeholder="Username" required></div>
-        <div class="input-group"><input type="password" id="pass" placeholder="Password" required></div>
+        <input type="text" class="input-field" id="user" placeholder="Username" spellcheck="false">
+        <input type="password" class="input-field" id="pass" placeholder="Password">
 
-        <button class="login-btn" id="loginBtn" onclick="handleLogin()">ACCEDI AL PORTALE</button>
+        <button class="login-btn" onclick="handleLogin()">Accedi al Portale</button>
     </div>
 
     <footer>IIS ANTONIO SCARPA — SMART SYSTEM 2026</footer>
 
     <script>
+        // Logica CSV per le utenze (già configurata con il tuo link)
         const USERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVgqrDiEAD3X6HclOFJoVo2xHgwS4TRmgJ8_HRFZFRNSS0ZVm_Hx6lSIsvj31paCckaWY2zY-HMb8J/pub?gid=0&single=true&output=csv';
         let authorizedUsers = [];
 
@@ -104,10 +114,10 @@
                 const data = await response.text();
                 const rows = data.split('\n').slice(1);
                 authorizedUsers = rows.map(row => {
-                    const columns = row.split(',');
-                    return { u: columns[0]?.trim(), p: columns[1]?.trim() };
+                    const cols = row.split(',');
+                    return { u: cols[0]?.trim(), p: cols[1]?.trim() };
                 }).filter(user => user.u && user.p);
-            } catch (e) { console.log("Errore caricamento database"); }
+            } catch (e) { console.error("Database offline"); }
         }
 
         function handleLogin() {
@@ -119,7 +129,7 @@
                 localStorage.setItem('scarpa_auth', 'true');
                 window.location.href = 'index.html';
             } else {
-                alert("Dati errati!");
+                alert("Accesso negato: credenziali non valide");
             }
         }
         loadUsers();
