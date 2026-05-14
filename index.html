@@ -2,7 +2,8 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>SISTEMA ACQUISTI v11.0 | IIS SCARPA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Scarpa v12.0</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -10,70 +11,84 @@
             --blue: #58a6ff; --purple: #bc8cff; --green: #3fb950; --red: #f85149; --yellow: #d29922;
         }
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
 
-        /* HEADER BIANCO */
+        /* HEADER RESPONSIVE */
         header { 
-            background: #fff; color: #000; padding: 10px 30px; 
+            background: #fff; color: #000; padding: 10px 20px; 
             display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            flex-wrap: wrap; gap: 10px;
         }
-        .nav-links { display: flex; gap: 10px; }
+        .nav-links { display: flex; gap: 5px; }
         .nav-btn { 
-            padding: 10px 20px; cursor: pointer; border: none; background: transparent; 
-            border-radius: 6px; font-weight: 700; color: #666; transition: 0.3s;
+            padding: 8px 15px; cursor: pointer; border: none; background: transparent; 
+            border-radius: 6px; font-weight: 700; color: #666; font-size: 0.8rem;
             text-transform: uppercase;
         }
-        .nav-btn.active { color: var(--blue); border-bottom: 3px solid var(--blue); border-radius: 0; }
+        .nav-btn.active { color: var(--blue); background: rgba(88,166,255,0.1); }
 
-        .container { padding: 30px; max-width: 1600px; margin: 0 auto; }
+        .container { padding: 15px; max-width: 1400px; margin: 0 auto; }
         .view { display: none; }
-        .view.active { display: block; animation: fadeIn 0.3s ease; }
+        .view.active { display: block; }
 
-        /* TABELLA */
-        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { background: rgba(255,255,255,0.03); padding: 20px 15px; text-align: left; font-size: 0.75rem; color: #8b949e; border-bottom: 2px solid var(--border); }
-        td { padding: 18px 15px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        /* TABELLA RESPONSIVE */
+        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; } /* Impedisce lo schiacciamento su mobile */
+        th { background: rgba(255,255,255,0.03); padding: 15px; text-align: left; font-size: 0.7rem; color: #8b949e; border-bottom: 2px solid var(--border); }
+        td { padding: 15px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         
         /* BADGES */
-        .badge { padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; border: 1px solid currentColor; }
-        .ST-APPROVATO { color: var(--blue); background: rgba(88,166,255,0.1); }
-        .ST-VALUTAZIONE { color: var(--yellow); background: rgba(210,153,34,0.1); }
-        .ST-RESPINTO { color: var(--red); background: rgba(248,81,73,0.1); }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border: 1px solid currentColor; }
+        .ST-APPROVATO { color: var(--blue); }
+        .ST-VALUTAZIONE { color: var(--yellow); }
+        .ST-RESPINTO { color: var(--red); }
 
-        /* REPORT AI CARD VIEW */
-        .ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 25px; }
+        /* REPORT AI AUTO-ADATTIVI */
+        .ai-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); 
+            gap: 20px; 
+        }
         .ai-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
-            padding: 25px; border-left: 5px solid var(--purple);
+            padding: 20px; border-top: 4px solid var(--purple);
         }
-        .ai-card h3 { margin: 0 0 12px 0; font-size: 1.2rem; color: #fff; }
-        .ai-card-body { font-size: 0.95rem; line-height: 1.7; color: #adbac7; white-space: pre-line; }
+        .ai-card-body { font-size: 0.9rem; line-height: 1.6; color: #adbac7; white-space: pre-wrap; }
 
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        /* MOBILE FIX */
+        @media (max-width: 600px) {
+            header { justify-content: center; text-align: center; }
+            .nav-links { width: 100%; justify-content: center; }
+            .container { padding: 10px; }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <h1 style="margin:0; font-size:1.2rem;">SISTEMA ACQUISTI <span style="font-weight:200;">| IIS SCARPA</span></h1>
-        <div class="nav-links">
-            <button class="nav-btn active" onclick="switchView('tabella', this)">Monitoraggio</button>
-            <button class="nav-btn" onclick="switchView('report', this)">Report AI</button>
+        <div class="logo-area">
+            <h1 style="margin:0; font-size:1rem; font-weight:900;">DASHBOARD ACQUISTI</h1>
         </div>
-        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" height="40">
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="switchView('tabella', this)">Lista</button>
+            <button class="nav-btn" onclick="switchView('report', this)">Analisi AI</button>
+        </div>
+        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" height="30">
     </header>
 
     <div class="container">
         <div id="tabella" class="view active">
             <div class="table-wrap">
-                <table>
-                    <colgroup>
-                        <col style="width: 120px"><col style="width: 200px"><col style="width: 200px"><col style="width: 180px"><col style="width: auto">
-                    </colgroup>
+                <table id="mainTable">
                     <thead>
-                        <tr><th>DATA</th><th>DIPARTIMENTO</th><th>STATO</th><th>RESPONSABILE</th><th>OBIETTIVO</th></tr>
+                        <tr>
+                            <th>DATA</th>
+                            <th>DIPARTIMENTO</th>
+                            <th>STATO</th>
+                            <th>RESPONSABILE</th>
+                            <th>OGGETTO</th>
+                        </tr>
                     </thead>
                     <tbody id="tbody"></tbody>
                 </table>
@@ -95,12 +110,9 @@
             btn.classList.add('active');
         }
 
-        // Funzione magica per leggere il CSV senza perdere colonne
+        // PARSER PROFESSIONALE
         function parseCSV(text) {
-            const rows = [];
-            let curr = [];
-            let field = '';
-            let inQuotes = false;
+            const rows = []; let curr = []; let field = ''; let inQuotes = false;
             for (let i = 0; i < text.length; i++) {
                 let char = text[i], next = text[i+1];
                 if (char === '"' && inQuotes && next === '"') { field += '"'; i++; }
@@ -115,7 +127,11 @@
 
         async function update() {
             try {
-                const r = await fetch(`${CSV_URL}&nocache=` + Date.now());
+                // FETCH CON CACHE-KILLER ESTREMO
+                const r = await fetch(`${CSV_URL}&nocache=${Date.now()}`, {
+                    method: 'GET',
+                    headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+                });
                 const csvText = await r.text();
                 const data = parseCSV(csvText).slice(1);
                 
@@ -127,44 +143,39 @@
                     if(cols.length >= 5) {
                         const val = {
                             date: cols[0], dept: cols[1], ai: cols[2], 
-                            stat: cols[3] || 'IN VALUTAZIONE', resp: cols[4], obj: cols[5]
+                            stat: cols[3] || 'IN ATTESA', resp: cols[4], obj: cols[5]
                         };
 
-                        // Tabella
+                        // TABLE
                         let sCls = 'ST-VALUTAZIONE';
                         if(val.stat.toUpperCase().includes('APPROVATO')) sCls = 'ST-APPROVATO';
                         if(val.stat.toUpperCase().includes('RESPINTO')) sCls = 'ST-RESPINTO';
 
                         table.innerHTML += `<tr>
-                            <td style="color:#6e7681">${val.date}</td>
-                            <td style="font-weight:900; color:#fff">${val.dept}</td>
+                            <td style="color:#666; font-size:0.75rem">${val.date}</td>
+                            <td style="font-weight:700; color:#fff">${val.dept}</td>
                             <td><span class="badge ${sCls}">${val.stat}</span></td>
                             <td style="color:#fff">${val.resp}</td>
-                            <td style="color:#8b949e">${val.obj}</td>
+                            <td style="color:#8b949e; font-size:0.8rem">${val.obj}</td>
                         </tr>`;
 
-                        // Card AI - Controllo rigoroso per farle apparire
-                        if(val.ai && val.ai.trim().length > 5 && !val.ai.includes("Caricamento")) {
+                        // AI CARDS
+                        if(val.ai && val.ai.trim().length > 10 && !val.ai.includes("Caricamento")) {
                             grid.innerHTML += `
                                 <div class="ai-card">
-                                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
-                                        <span style="color:var(--purple); font-weight:800; font-size:0.7rem; text-transform:uppercase;">Analisi Groq</span>
-                                        <span style="color:#666; font-size:0.7rem;">${val.date}</span>
-                                    </div>
-                                    <h3>${val.dept}</h3>
+                                    <div style="font-size:0.7rem; color:var(--purple); font-weight:800; margin-bottom:10px;">ANALISI DIPARTIMENTO</div>
+                                    <h3 style="margin:0; color:#fff;">${val.dept}</h3>
+                                    <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
                                     <div class="ai-card-body">${val.ai.replace(/\*\*/g, '')}</div>
-                                    <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px; font-size:0.75rem; color:#666;">
-                                        Richiedente: <strong>${val.resp}</strong>
-                                    </div>
                                 </div>`;
                         }
                     }
                 });
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Errore Sync:", e); }
         }
 
         update();
-        setInterval(update, 20000);
+        setInterval(update, 15000); // Sincronizza ogni 15 secondi
     </script>
 </body>
 </html>
