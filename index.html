@@ -13,76 +13,81 @@
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
 
-        /* HEADER & TITOLI */
+        /* HEADER */
         header { 
-            background: #fff; color: #000; padding: 15px 30px; 
+            background: #fff; color: #000; padding: 10px 30px; 
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1001; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            min-height: 80px;
         }
-        .brand h1 { margin: 0; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
-        .brand p { margin: 0; font-size: 0.75rem; color: #666; font-weight: 600; text-transform: uppercase; }
+        .header-left { display: flex; align-items: center; gap: 20px; }
+        .school-logo { height: 50px; width: auto; object-fit: contain; }
+        .brand h1 { margin: 0; font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; }
+        .brand p { margin: 0; font-size: 0.7rem; color: #666; font-weight: 600; text-transform: uppercase; }
 
         /* NAV & HAMBURGER */
-        .nav-wrapper { display: flex; align-items: center; gap: 20px; }
+        .nav-wrapper { display: flex; align-items: center; gap: 15px; }
         .nav-links { display: flex; gap: 10px; }
         .nav-btn { 
             padding: 10px 15px; cursor: pointer; border: none; background: transparent; 
-            border-radius: 6px; font-weight: 700; color: #444; font-size: 0.8rem; text-transform: uppercase;
+            border-radius: 6px; font-weight: 700; color: #444; font-size: 0.75rem; text-transform: uppercase;
         }
         .nav-btn.active { color: var(--blue); background: rgba(88,166,255,0.1); }
         
         .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; background: none; border: none; padding: 10px; }
-        .hamburger span { width: 25px; height: 3px; background: #000; border-radius: 2px; transition: 0.3s; }
+        .hamburger span { width: 25px; height: 3px; background: #000; border-radius: 2px; }
 
         .refresh-btn {
-            background: var(--green); color: white; border: none; padding: 10px 20px;
-            border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.75rem;
+            background: var(--green); color: white; border: none; padding: 10px 18px;
+            border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.7rem;
         }
 
-        .container { padding: 30px; max-width: 1500px; margin: 0 auto; }
+        .container { padding: 25px; max-width: 1500px; margin: 0 auto; }
         .view { display: none; }
         .view.active { display: block; }
 
         /* TABELLA ANTI-SOVRAPPOSIZIONE */
         .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 900px; }
-        th { background: rgba(255,255,255,0.03); padding: 15px; text-align: left; font-size: 0.7rem; color: #8b949e; border-bottom: 2px solid var(--border); }
+        th { background: rgba(255,255,255,0.03); padding: 15px; text-align: left; font-size: 0.65rem; color: #8b949e; border-bottom: 2px solid var(--border); }
         
-        /* FIX: white-space nowrap e overflow hidden impediscono la sovrapposizione */
         td { 
             padding: 15px; border-bottom: 1px solid var(--border); 
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
-            font-size: 0.85rem;
+            font-size: 0.8rem;
         }
         
-        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; border: 1px solid currentColor; }
+        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.6rem; font-weight: 800; border: 1px solid currentColor; }
         .ST-APPROVATO { color: var(--blue); } .ST-VALUTAZIONE { color: var(--yellow); } .ST-RESPINTO { color: var(--red); }
 
         /* GRID REPORT AI */
-        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr)); gap: 25px; }
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr)); gap: 20px; }
         .ai-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; border-left: 5px solid var(--purple); }
-        .ai-card-body { font-size: 0.95rem; line-height: 1.7; color: #adbac7; white-space: pre-wrap; }
+        .ai-card-body { font-size: 0.9rem; line-height: 1.6; color: #adbac7; white-space: pre-wrap; }
 
         /* MOBILE RESPONSIVE */
-        @media (max-width: 850px) {
+        @media (max-width: 950px) {
             .hamburger { display: flex; }
             .nav-links { 
-                display: none; position: absolute; top: 70px; right: 20px; 
-                background: #fff; flex-direction: column; width: 200px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.2); border-radius: 8px; padding: 10px;
+                display: none; position: absolute; top: 80px; right: 20px; 
+                background: #fff; flex-direction: column; width: 220px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px;
             }
             .nav-links.open { display: flex; }
-            .nav-btn { width: 100%; text-align: left; padding: 15px; color: #000; }
-            .brand h1 { font-size: 1.1rem; }
+            .nav-btn { width: 100%; text-align: left; padding: 15px; color: #000; border-bottom: 1px solid #eee; }
+            .school-logo { height: 40px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="brand">
-            <h1>ACQUISTI DIPARTIMENTO</h1>
-            <p>IIS ANTONIO SCARPA</p>
+        <div class="header-left">
+            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo" alt="Logo Scarpa">
+            <div class="brand">
+                <h1>ACQUISTI DIPARTIMENTO</h1>
+                <p>IIS ANTONIO SCARPA</p>
+            </div>
         </div>
         
         <div class="nav-wrapper">
@@ -102,7 +107,7 @@
             <div class="table-wrap">
                 <table>
                     <colgroup>
-                        <col style="width: 110px">
+                        <col style="width: 100px">
                         <col style="width: 180px">
                         <col style="width: 180px">
                         <col style="width: 160px">
@@ -131,7 +136,7 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
-            if(window.innerWidth < 850) toggleMenu();
+            if(window.innerWidth < 950) document.getElementById('menu').classList.remove('open');
         }
 
         function parseCSV(text) {
@@ -150,7 +155,7 @@
 
         async function update() {
             const btn = document.querySelector('.refresh-btn');
-            btn.innerText = "ATTENDI...";
+            btn.innerText = "...";
             try {
                 const r = await fetch(`${CSV_URL}&nocache=${Date.now()}`);
                 const csvText = await r.text();
@@ -167,34 +172,4 @@
                             stat: cols[3] || 'INFO', resp: cols[4], obj: cols[5]
                         };
 
-                        let sCls = 'ST-VALUTAZIONE';
-                        if(val.stat.toUpperCase().includes('APPROVATO')) sCls = 'ST-APPROVATO';
-                        if(val.stat.toUpperCase().includes('RESPINTO')) sCls = 'ST-RESPINTO';
-
-                        // Nella tabella usiamo TITLE per mostrare il testo completo al passaggio del mouse
-                        table.innerHTML += `<tr>
-                            <td style="color:#8b949e">${val.date}</td>
-                            <td style="font-weight:800; color:#fff">${val.dept}</td>
-                            <td><span class="badge ${sCls}">${val.stat}</span></td>
-                            <td>${val.resp}</td>
-                            <td title="${val.obj.replace(/"/g, '&quot;')}">${val.obj}</td>
-                        </tr>`;
-
-                        if(val.ai && val.ai.trim().length > 10 && !val.ai.includes("Caricamento")) {
-                            grid.innerHTML += `
-                                <div class="ai-card">
-                                    <h3 style="margin:0; color:#fff; font-size:1.2rem;">${val.dept}</h3>
-                                    <p style="font-size:0.7rem; color:var(--purple); margin: 5px 0 15px 0; font-weight:800;">DIPARTIMENTO - ${val.date}</p>
-                                    <div class="ai-card-body">${val.ai.replace(/\*\*/g, '')}</div>
-                                </div>`;
-                        }
-                    }
-                });
-            } catch (e) { console.error(e); }
-            btn.innerText = "SINCRO 🔄";
-        }
-
-        update();
-    </script>
-</body>
-</html>
+                        let sCls = 'ST-VAL
