@@ -55,7 +55,7 @@
         <span class="detail-label">Docente Richiedente</span>
         <span id="d-docente" class="detail-value">-</span>
 
-        <span class="detail-label">Specifiche Ordine</span>
+        <span class="detail-label">Oggetto / Specifiche Ordine</span>
         <div id="d-specs" style="color: #adbac7; line-height: 1.6; margin-top: 10px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px;">-</div>
 
         <div class="ai-box">
@@ -100,13 +100,15 @@
                 rows.forEach(r => {
                     const c = r.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(c.length < 5) return;
+                    
+                    // MAPPATURA CORRETTA BASATA SUL TUO CSV
                     db.push({
-                        time: (c[0]||"").replace(/"/g,''),
-                        dept: (c[1]||"N/D").replace(/"/g,''),
-                        docente: (c[2]||"").replace(/"/g,''),
-                        status: (c[3]||"VALUTAZIONE").replace(/"/g,'').toUpperCase(),
-                        specs: (c[4]||"").replace(/"/g,''),
-                        ai: (c[5]||"Analisi in corso...").replace(/"/g,'')
+                        time: (c[0]||"").replace(/"/g,'').trim(),     // A: Timestamp
+                        dept: (c[1]||"N/D").replace(/"/g,'').trim(),  // B: Dipartimento
+                        ai: (c[2]||"Analisi non disponibile").replace(/"/g,'').trim(), // C: AI Groq
+                        status: (c[3]||"VALUTAZIONE").replace(/"/g,'').trim().toUpperCase(), // D: Stato Pratica
+                        docente: (c[4]||"N/D").replace(/"/g,'').trim(), // E: Docente (Responsabile)
+                        oggetto: (c[5]||"").replace(/"/g,'').trim()    // F: Descrizione Obiettivo
                     });
                 });
                 render();
@@ -115,28 +117,30 @@
 
         function render() {
             const body = document.getElementById('tableBody');
-            body.innerHTML = db.map(o => {
+            body.innerHTML = db.map((o, index) => {
                 let cls = o.status.includes('APPROVATO') ? 'b-approvato' : o.status.includes('RESPINTO') ? 'b-respinto' : 'b-valutazione';
-                return `<tr onclick="openDrawer('${o.dept.replace(/'/g, "\\'")}')">
+                return `<tr onclick="openDrawer(${index})">
                     <td class="dept-name">${o.dept}</td>
                     <td><span class="badge ${cls}">${o.status}</span></td>
                     <td style="color:#fff;">${o.docente}</td>
-                    <td style="color:#8b949e; font-size:0.9rem;">${o.specs.substring(0, 40)}...</td>
+                    <td style="color:#8b949e; font-size:0.9rem;">${o.oggetto.substring(0, 50)}...</td>
                     <td style="color:#666; font-size:0.8rem;">${o.time}</td>
                 </tr>`;
             }).join('');
         }
 
-        function openDrawer(name) {
-            const data = db.find(o => o.dept === name);
+        function openDrawer(index) {
+            const data = db[index];
             if(!data) return;
+            
             document.getElementById('d-name').innerText = data.dept;
             document.getElementById('d-status').innerText = data.status;
             document.getElementById('d-status').className = 'badge ' + (data.status.includes('APPROVATO') ? 'b-approvato' : data.status.includes('RESPINTO') ? 'b-respinto' : 'b-valutazione');
             document.getElementById('d-docente').innerText = data.docente;
-            document.getElementById('d-specs').innerText = data.specs;
+            document.getElementById('d-specs').innerText = data.oggetto;
             document.getElementById('d-ai').innerText = data.ai;
             document.getElementById('d-time').innerText = "Inviato il: " + data.time;
+            
             document.getElementById('drawer').classList.add('open');
             document.getElementById('overlay').style.display = 'block';
         }
