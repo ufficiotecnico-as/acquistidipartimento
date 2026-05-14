@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Ordini v7.0 | IIS Scarpa</title>
+    <title>Dashboard Ordini v8.0 | IIS Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -11,98 +11,71 @@
             --yellow: #d29922; --purple: #a371f7; --blue: #1f6feb; --green: #238636; --red: #f85149;
         }
         
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg); 
-            color: var(--text); 
-            margin: 0; 
-            padding: 0; 
-            overflow-x: hidden;
-        }
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
 
-        /* HEADER FISSO */
+        /* HEADER */
         .white-header { 
-            background-color: #ffffff; 
-            padding: 12px 30px; 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
+            background-color: #ffffff; padding: 12px 30px; display: flex; 
+            justify-content: space-between; align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; 
         }
-        .white-header h1 { color: #000; margin: 0; font-size: 1.3rem; font-weight: 800; }
-        .school-logo { max-height: 45px; }
+        .white-header h1 { color: #000; margin: 0; font-size: 1.2rem; font-weight: 800; }
+        .school-logo { max-height: 40px; }
 
-        .main-content { padding: 20px; width: 100%; box-sizing: border-box; }
+        .main-content { padding: 20px; width: 100%; }
 
-        /* TABELLA CON LAYOUT FISSO */
+        /* TABELLA BLINDATA */
         .table-container { 
-            background: var(--card); 
-            border: 1px solid var(--border); 
-            border-radius: 12px; 
-            overflow: hidden; 
-            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+            background: var(--card); border: 1px solid var(--border); 
+            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
         }
         
         table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            font-size: 0.85rem; 
-            table-layout: fixed; /* BLOCCA LE COLONNE */
+            width: 100%; border-collapse: collapse; font-size: 0.85rem; 
+            table-layout: fixed; /* Impedisce alle celle di allargarsi */
         }
         
         th { 
-            background: rgba(255,255,255,0.03); 
-            text-align: left; 
-            padding: 15px; 
-            color: #8b949e; 
-            text-transform: uppercase; 
-            font-size: 0.7rem; 
-            border-bottom: 2px solid var(--border);
+            background: rgba(255,255,255,0.03); text-align: left; padding: 15px; 
+            color: #8b949e; text-transform: uppercase; font-size: 0.65rem; 
+            border-bottom: 2px solid var(--border); letter-spacing: 0.5px;
         }
         
         td { 
-            padding: 15px; 
-            border-bottom: 1px solid var(--border); 
-            vertical-align: middle; 
-            word-wrap: break-word; 
-            height: 100px; /* ALTEZZA FISSA MINIMA */
+            padding: 15px; border-bottom: 1px solid var(--border); 
+            vertical-align: top; /* Allineamento in alto per ordine visivo */
+            height: 120px; /* Altezza fissa per tutte le righe */
         }
 
-        /* BADGE STATO */
+        /* BADGE STATO (COLONNA D) */
         .badge { 
-            padding: 6px 12px; 
-            border-radius: 20px; 
-            font-size: 0.65rem; 
-            font-weight: 800; 
-            text-transform: uppercase; 
-            border: 1px solid transparent; 
-            display: inline-block;
+            padding: 5px 12px; border-radius: 20px; font-size: 0.6rem; 
+            font-weight: 800; text-transform: uppercase; border: 1px solid transparent; 
+            display: inline-block; white-space: nowrap;
         }
         .b-valutazione { border-color: var(--yellow); color: var(--yellow); background: rgba(210,153,34,0.1); }
         .b-approvato { border-color: var(--blue); color: var(--blue); background: rgba(31,111,235,0.1); }
         .b-completato { border-color: var(--green); color: var(--green); background: rgba(35,134,54,0.1); }
         .b-respinto { border-color: var(--red); color: var(--red); background: rgba(248,81,73,0.1); }
 
-        /* CONTENITORE IA CON SCROLL (L'ELEMENTO CHE TI SALVA IL LAYOUT) */
-        .ai-scroll-box {
-            max-height: 100px; /* Impedisce alla riga di esplodere */
+        /* IL FIX DEFINITIVO: SCROLLBOX PER L'IA */
+        .ai-box {
+            height: 90px; /* Altezza massima interna */
             overflow-y: auto; 
-            padding-right: 8px;
-            font-size: 0.8rem;
-            line-height: 1.5;
+            font-size: 0.78rem;
+            line-height: 1.4;
             color: var(--purple);
+            padding-right: 5px;
             scrollbar-width: thin;
             scrollbar-color: var(--border) transparent;
         }
-        /* Scrollbar per Chrome/Safari */
-        .ai-scroll-box::-webkit-scrollbar { width: 4px; }
-        .ai-scroll-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        .ai-box::-webkit-scrollbar { width: 3px; }
+        .ai-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
-        .timestamp { color: #6e7681; font-family: monospace; font-size: 0.8rem; }
-        tr:hover td { background: rgba(255,255,255,0.02); }
+        .timestamp { color: #6e7681; font-family: monospace; font-size: 0.75rem; }
+        .dept-name { font-weight: 800; color: #fff; }
+        tr:hover td { background: rgba(255,255,255,0.01); }
     </style>
 </head>
 <body>
@@ -116,11 +89,11 @@
         <div class="table-container">
             <table>
                 <colgroup>
-                    <col style="width: 10%"> <col style="width: 12%"> <col style="width: 12%"> <col style="width: 10%"> <col style="width: 15%"> <col style="width: 28%"> <col style="width: 13%"> </colgroup>
+                    <col style="width: 9%">  <col style="width: 12%"> <col style="width: 12%"> <col style="width: 10%"> <col style="width: 16%"> <col style="width: 28%"> <col style="width: 13%"> </colgroup>
                 <thead>
                     <tr>
                         <th>DATA (A)</th>
-                        <th>DEPT (B)</th>
+                        <th>DIPARTIMENTO (B)</th>
                         <th>STATO (D)</th>
                         <th>RESP. (E)</th>
                         <th>OGGETTO (F)</th>
@@ -128,65 +101,68 @@
                         <th>NOTE (H)</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody"></tbody>
+                <tbody id="tableBody">
+                    </tbody>
             </table>
         </div>
     </div>
 
     <script>
-        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
+        const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
 
-        async function sync() {
+        async function updateDashboard() {
             try {
-                const response = await fetch(`${CSV_URL}&nocache=${Date.now()}`);
-                const text = await response.text();
-                const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
+                // Il nocache impedisce al browser di leggere dati vecchi
+                const res = await fetch(`${CSV}&nocache=${Date.now()}`);
+                const data = await res.text();
+                const rows = data.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
                 
-                const tbody = document.getElementById('tableBody');
-                let html = '';
+                const container = document.getElementById('tableBody');
+                let content = '';
 
                 rows.forEach(row => {
                     const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(c.length >= 6) {
-                        const clean = (val) => (val || "").replace(/^"|"$/g, '').trim();
+                        const clean = (v) => (v || "").replace(/^"|"$/g, '').trim();
 
-                        const dataA = clean(c[0]);
-                        const deptB = clean(c[1]);
-                        const aiC   = clean(c[2]);
-                        const statD = clean(c[3]);
-                        const respE = clean(c[4]);
-                        const objF  = clean(c[5]);
-                        const noteH = clean(c[7]) || "-";
+                        const d_time = clean(c[0]);
+                        const d_dept = clean(c[1]);
+                        const d_ai   = clean(c[2]);
+                        const d_stat = clean(c[3]);
+                        const d_resp = clean(c[4]);
+                        const d_obj  = clean(c[5]);
+                        const d_note = clean(c[7]) || "-";
 
+                        // Logica colori badge
                         let bCls = 'b-valutazione';
-                        const s = statD.toUpperCase();
+                        const s = d_stat.toUpperCase();
                         if(s.includes('APPROVATO')) bCls = 'b-approvato';
                         else if(s.includes('COMPLETATO')) bCls = 'b-completato';
                         else if(s.includes('RESPINTO')) bCls = 'b-respinto';
 
-                        html += `
+                        content += `
                             <tr>
-                                <td class="timestamp">${dataA}</td>
-                                <td style="font-weight:800; color:#fff;">${deptB}</td>
-                                <td><span class="badge ${bCls}">${statD}</span></td>
-                                <td style="color:#fff;">${respE}</td>
-                                <td style="color:#8b949e; font-size:0.8rem;">${objF}</td>
+                                <td class="timestamp">${d_time}</td>
+                                <td class="dept-name">${d_dept}</td>
+                                <td><span class="badge ${bCls}">${d_stat}</span></td>
+                                <td style="color:#fff;">${d_resp}</td>
+                                <td style="color:#8b949e; font-size:0.75rem;">${d_obj}</td>
                                 <td>
-                                    <div class="ai-scroll-box">
-                                        ${aiC || "[In attesa...]"}
+                                    <div class="ai-box">
+                                        ${d_ai || '<span style="opacity:0.3">In attesa di analisi...</span>'}
                                     </div>
                                 </td>
-                                <td style="color:#8b949e; font-size: 0.8rem;">${noteH}</td>
+                                <td style="color:#6e7681; font-size:0.75rem;">${d_note}</td>
                             </tr>
                         `;
                     }
                 });
-                tbody.innerHTML = html;
-            } catch (e) { console.error(e); }
+                container.innerHTML = content;
+            } catch (err) { console.error("Errore:", err); }
         }
 
-        sync();
-        setInterval(sync, 15000);
+        updateDashboard();
+        setInterval(updateDashboard, 15000); // Aggiorna ogni 15 secondi
     </script>
 </body>
 </html>
