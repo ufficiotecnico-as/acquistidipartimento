@@ -3,166 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Ordini v8.0 | IIS Scarpa</title>
+    <title>Gestione Acquisti | IIS Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0e14; --card: #161b22; --border: #30363d; --text: #c9d1d9;
             --yellow: #d29922; --purple: #a371f7; --blue: #1f6feb; --green: #238636; --red: #f85149;
         }
-        
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
 
-        /* HEADER */
-        .white-header { 
-            background-color: #ffffff; padding: 12px 30px; display: flex; 
+        /* HEADER & NAVIGATION */
+        header { 
+            background-color: #ffffff; padding: 0 30px; display: flex; 
             justify-content: space-between; align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 1000;
+            height: 70px;
         }
-        .white-header h1 { color: #000; margin: 0; font-size: 1.2rem; font-weight: 800; }
-        .school-logo { max-height: 40px; }
-
-        .main-content { padding: 20px; width: 100%; }
-
-        /* TABELLA BLINDATA */
-        .table-container { 
-            background: var(--card); border: 1px solid var(--border); 
-            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
-        }
+        .header-left h1 { color: #000; margin: 0; font-size: 1.1rem; font-weight: 800; }
         
-        table { 
-            width: 100%; border-collapse: collapse; font-size: 0.85rem; 
-            table-layout: fixed; /* Impedisce alle celle di allargarsi */
+        nav { display: flex; gap: 20px; height: 100%; }
+        .nav-btn {
+            background: none; border: none; padding: 0 15px; cursor: pointer;
+            font-weight: 600; font-size: 0.9rem; color: #666;
+            display: flex; align-items: center; transition: 0.2s;
+            border-bottom: 3px solid transparent;
         }
-        
-        th { 
-            background: rgba(255,255,255,0.03); text-align: left; padding: 15px; 
-            color: #8b949e; text-transform: uppercase; font-size: 0.65rem; 
-            border-bottom: 2px solid var(--border); letter-spacing: 0.5px;
-        }
-        
-        td { 
-            padding: 15px; border-bottom: 1px solid var(--border); 
-            vertical-align: top; /* Allineamento in alto per ordine visivo */
-            height: 120px; /* Altezza fissa per tutte le righe */
-        }
+        .nav-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+        .nav-btn:hover { color: #000; }
 
-        /* BADGE STATO (COLONNA D) */
-        .badge { 
-            padding: 5px 12px; border-radius: 20px; font-size: 0.6rem; 
-            font-weight: 800; text-transform: uppercase; border: 1px solid transparent; 
-            display: inline-block; white-space: nowrap;
-        }
+        .main-content { padding: 25px; max-width: 1400px; margin: 0 auto; }
+        .page { display: none; }
+        .page.active { display: block; animation: fadeIn 0.3s ease; }
+
+        /* TABELLA MONITORAGGIO */
+        .table-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+        th { background: rgba(255,255,255,0.03); text-align: left; padding: 15px; color: #8b949e; font-size: 0.7rem; border-bottom: 2px solid var(--border); }
+        td { padding: 15px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        
+        /* BADGE */
+        .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border: 1px solid transparent; }
         .b-valutazione { border-color: var(--yellow); color: var(--yellow); background: rgba(210,153,34,0.1); }
         .b-approvato { border-color: var(--blue); color: var(--blue); background: rgba(31,111,235,0.1); }
         .b-completato { border-color: var(--green); color: var(--green); background: rgba(35,134,54,0.1); }
         .b-respinto { border-color: var(--red); color: var(--red); background: rgba(248,81,73,0.1); }
 
-        /* IL FIX DEFINITIVO: SCROLLBOX PER L'IA */
-        .ai-box {
-            height: 90px; /* Altezza massima interna */
-            overflow-y: auto; 
-            font-size: 0.78rem;
-            line-height: 1.4;
-            color: var(--purple);
-            padding-right: 5px;
-            scrollbar-width: thin;
-            scrollbar-color: var(--border) transparent;
+        /* PAGINA REPORT AI (CARDS) */
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 20px; }
+        .ai-card { 
+            background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
+            padding: 20px; border-left: 4px solid var(--purple);
         }
-        .ai-box::-webkit-scrollbar { width: 3px; }
-        .ai-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        .ai-card-header { display: flex; justify-content: space-between; margin-bottom: 15px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
+        .ai-card-dept { font-weight: 800; color: #fff; }
+        .ai-card-body { font-size: 0.9rem; line-height: 1.6; color: #adbac7; white-space: pre-wrap; }
 
-        .timestamp { color: #6e7681; font-family: monospace; font-size: 0.75rem; }
-        .dept-name { font-weight: 800; color: #fff; }
-        tr:hover td { background: rgba(255,255,255,0.01); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <header class="white-header">
-        <h1>SISTEMA MONITORAGGIO ACQUISTI</h1>
-        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo">
+    <header>
+        <div class="header-left">
+            <h1>ISTITUTO SCARPA <span style="font-weight:300; color:#888;">| Dashboard</span></h1>
+        </div>
+        <nav>
+            <button class="nav-btn active" onclick="showPage('monitoraggio')">MONITORAGGIO</button>
+            <button class="nav-btn" onclick="showPage('report')">REPORT AI</button>
+        </nav>
+        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" style="height:35px;">
     </header>
 
     <div class="main-content">
-        <div class="table-container">
-            <table>
-                <colgroup>
-                    <col style="width: 9%">  <col style="width: 12%"> <col style="width: 12%"> <col style="width: 10%"> <col style="width: 16%"> <col style="width: 28%"> <col style="width: 13%"> </colgroup>
-                <thead>
-                    <tr>
-                        <th>DATA (A)</th>
-                        <th>DIPARTIMENTO (B)</th>
-                        <th>STATO (D)</th>
-                        <th>RESP. (E)</th>
-                        <th>OGGETTO (F)</th>
-                        <th>ANALISI GROQ (C)</th>
-                        <th>NOTE (H)</th>
-                    </tr>
-                </thead>
-                <tbody id="tableBody">
-                    </tbody>
-            </table>
-        </div>
+        
+        <section id="monitoraggio" class="page active">
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>DATA (A)</th>
+                            <th>DIPARTIMENTO (B)</th>
+                            <th>STATO (D)</th>
+                            <th>RESPONSABILE (E)</th>
+                            <th>OBIETTIVO (F)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="report" class="page">
+            <div class="ai-grid" id="aiGrid">
+                </div>
+        </section>
+
     </div>
 
     <script>
         const CSV = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
 
-        async function updateDashboard() {
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(pageId).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+
+        async function loadData() {
             try {
-                // Il nocache impedisce al browser di leggere dati vecchi
-                const res = await fetch(`${CSV}&nocache=${Date.now()}`);
-                const data = await res.text();
-                const rows = data.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
+                const res = await fetch(`${CSV}&t=${Date.now()}`);
+                const text = await res.text();
+                const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
                 
-                const container = document.getElementById('tableBody');
-                let content = '';
+                const tableBody = document.getElementById('tableBody');
+                const aiGrid = document.getElementById('aiGrid');
+                
+                tableBody.innerHTML = '';
+                aiGrid.innerHTML = '';
 
                 rows.forEach(row => {
                     const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                     if(c.length >= 6) {
                         const clean = (v) => (v || "").replace(/^"|"$/g, '').trim();
+                        const data = {
+                            time: clean(c[0]),
+                            dept: clean(c[1]),
+                            ai: clean(c[2]),
+                            stat: clean(c[3]),
+                            resp: clean(c[4]),
+                            obj: clean(c[5])
+                        };
 
-                        const d_time = clean(c[0]);
-                        const d_dept = clean(c[1]);
-                        const d_ai   = clean(c[2]);
-                        const d_stat = clean(c[3]);
-                        const d_resp = clean(c[4]);
-                        const d_obj  = clean(c[5]);
-                        const d_note = clean(c[7]) || "-";
-
-                        // Logica colori badge
+                        // 1. Aggiungi a Tabella Monitoraggio
                         let bCls = 'b-valutazione';
-                        const s = d_stat.toUpperCase();
-                        if(s.includes('APPROVATO')) bCls = 'b-approvato';
-                        else if(s.includes('COMPLETATO')) bCls = 'b-completato';
-                        else if(s.includes('RESPINTO')) bCls = 'b-respinto';
+                        if(data.stat.toUpperCase().includes('APPROVATO')) bCls = 'b-approvato';
+                        else if(data.stat.toUpperCase().includes('COMPLETATO')) bCls = 'b-completato';
+                        else if(data.stat.toUpperCase().includes('RESPINTO')) bCls = 'b-respinto';
 
-                        content += `
+                        tableBody.innerHTML += `
                             <tr>
-                                <td class="timestamp">${d_time}</td>
-                                <td class="dept-name">${d_dept}</td>
-                                <td><span class="badge ${bCls}">${d_stat}</span></td>
-                                <td style="color:#fff;">${d_resp}</td>
-                                <td style="color:#8b949e; font-size:0.75rem;">${d_obj}</td>
-                                <td>
-                                    <div class="ai-box">
-                                        ${d_ai || '<span style="opacity:0.3">In attesa di analisi...</span>'}
-                                    </div>
-                                </td>
-                                <td style="color:#6e7681; font-size:0.75rem;">${d_note}</td>
+                                <td style="color:#666; font-family:monospace;">${data.time}</td>
+                                <td style="font-weight:800; color:#fff;">${data.dept}</td>
+                                <td><span class="badge ${bCls}">${data.stat}</span></td>
+                                <td style="color:#fff;">${data.resp}</td>
+                                <td style="color:#8b949e;">${data.obj}</td>
                             </tr>
                         `;
+
+                        // 2. Aggiungi a Tabella Report AI (solo se c'è un'analisi)
+                        if(data.ai && !data.ai.includes("Caricamento")) {
+                            aiGrid.innerHTML += `
+                                <div class="ai-card">
+                                    <div class="ai-card-header">
+                                        <span class="ai-card-dept">${data.dept}</span>
+                                        <span style="font-size:0.7rem; color:#666;">${data.time}</span>
+                                    </div>
+                                    <div style="font-size:0.7rem; color:var(--purple); margin-bottom:10px; font-weight:800;">RIASSUNTO IA:</div>
+                                    <div class="ai-card-body">${data.ai}</div>
+                                </div>
+                            `;
+                        }
                     }
                 });
-                container.innerHTML = content;
-            } catch (err) { console.error("Errore:", err); }
+            } catch (e) { console.error(e); }
         }
 
-        updateDashboard();
-        setInterval(updateDashboard, 15000); // Aggiorna ogni 15 secondi
+        loadData();
+        setInterval(loadData, 30000);
     </script>
 </body>
 </html>
