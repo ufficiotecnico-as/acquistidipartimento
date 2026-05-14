@@ -40,51 +40,39 @@
         .view { display: none; }
         .view.active { display: block; }
 
-        /* TABELLA RIDOTTA (4 COLONNE + AZIONI) */
-        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; width: 100%; margin-bottom: 20px; overflow: hidden; }
+        /* TABELLA */
+        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; width: 100%; margin-bottom: 10px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: rgba(255,255,255,0.03); padding: 12px 10px; text-align: left; font-size: 0.6rem; color: #8b949e; border-bottom: 1px solid var(--border); }
         td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
+        /* PAGINAZIONE */
+        .pagination { display: flex; justify-content: center; align-items: center; gap: 15px; margin-bottom: 20px; padding: 10px; }
+        .pag-btn { background: var(--card); border: 1px solid var(--border); color: #fff; padding: 5px 15px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem; }
+        .pag-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+        .pag-info { font-size: 0.8rem; color: #8b949e; font-weight: 600; }
+
         .badge { padding: 3px 8px; border-radius: 20px; font-size: 0.55rem; font-weight: 800; border: 1px solid currentColor; }
         .ST-APPROVATO { color: var(--blue); } .ST-VALUTAZIONE { color: var(--yellow); } .ST-RESPINTO { color: var(--red); }
+        .btn-action { background: var(--border); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; cursor: pointer; }
 
-        /* BOTTONE AZIONI */
-        .btn-action { background: var(--border); color: #fff; border: none; padding: 5px 10px; border-radius: 4px; font-size: 0.65rem; font-weight: 700; cursor: pointer; transition: 0.2s; }
-        .btn-action:hover { background: var(--blue); }
-
-        /* MODAL POPUP */
-        .modal { 
-            display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; 
-        }
-        .modal-content { 
-            background: var(--card); border: 1px solid var(--border); width: 90%; max-width: 500px; 
-            padding: 25px; border-radius: 15px; position: relative; animation: slideUp 0.3s ease-out;
-        }
-        @keyframes slideUp { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        .modal-header { border-bottom: 1px solid var(--border); padding-bottom: 15px; margin-bottom: 15px; }
+        /* MODAL */
+        .modal { display: none; position: fixed; z-index: 2000; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; }
+        .modal-content { background: var(--card); border: 1px solid var(--border); width: 90%; max-width: 500px; padding: 25px; border-radius: 15px; position: relative; }
         .modal-close { position: absolute; right: 15px; top: 15px; cursor: pointer; font-size: 1.5rem; color: #8b949e; }
-        .modal-body p { margin: 10px 0; font-size: 0.9rem; line-height: 1.4; }
-        .modal-label { color: #8b949e; font-size: 0.7rem; text-transform: uppercase; font-weight: 800; display: block; margin-bottom: 2px; }
 
         /* STATS */
         .stats-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; width: 100%; }
         .chart-box { position: relative; height: 300px; width: 100%; }
 
-        /* MOBILE FIX */
         @media (max-width: 768px) {
             header { height: 60px; padding: 0 10px; }
             .brand { display: none; } 
-            .school-logo { height: 35px; }
             .hamburger { display: flex; }
             .nav-links { display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0; background: #fff; flex-direction: column; align-items: center; padding-top: 30px; z-index: 1000; }
             .nav-links.open { display: flex; }
-            .nav-btn { font-size: 1.1rem; color: #000; width: 85%; text-align: center; padding: 15px; border-bottom: 1px solid #eee; }
-            
-            /* Colonne tabella su mobile */
-            th:nth-child(4), td:nth-child(4) { display: none; } /* Nascondiamo 'Responsabile' su schermi piccolissimi per far stare il resto */
-            table { min-width: auto; }
+            .nav-btn { font-size: 1.1rem; color: #000; width: 85%; text-align: center; padding: 15px; }
+            th:nth-child(4), td:nth-child(4) { display: none; }
         }
     </style>
 </head>
@@ -93,19 +81,14 @@
     <div id="infoModal" class="modal">
         <div class="modal-content">
             <span class="modal-close" onclick="closeModal()">&times;</span>
-            <div class="modal-header">
-                <h2 id="m-dept" style="margin:0; color:var(--blue)">Dipartimento</h2>
-                <div id="m-status" style="margin-top:5px"></div>
-            </div>
-            <div class="modal-body">
-                <span class="modal-label">Oggetto Acquisto</span>
-                <p id="m-obj" style="color:#fff; font-weight:600"></p>
-                <hr style="border:0; border-top:1px solid var(--border); margin:15px 0;">
-                <span class="modal-label">Analisi Intelligenza Artificiale</span>
-                <p id="m-ai" style="color:var(--purple); font-style: italic;"></p>
-                <div style="margin-top:20px; font-size:0.75rem; color:#8b949e">
-                    Richiesto da: <span id="m-resp" style="color:#fff"></span> in data <span id="m-date" style="color:#fff"></span>
-                </div>
+            <h2 id="m-dept" style="margin:0; color:var(--blue)"></h2>
+            <div id="m-status" style="margin: 5px 0 15px 0"></div>
+            <span style="color:#8b949e; font-size:0.7rem; font-weight:800; text-transform:uppercase">Oggetto</span>
+            <p id="m-obj" style="color:#fff; font-weight:600; margin:5px 0 15px 0"></p>
+            <span style="color:#8b949e; font-size:0.7rem; font-weight:800; text-transform:uppercase">Analisi IA</span>
+            <p id="m-ai" style="color:var(--purple); font-style:italic; font-size:0.9rem"></p>
+            <div style="margin-top:20px; font-size:0.75rem; color:#8b949e">
+                Richiesto da: <span id="m-resp" style="color:#fff"></span> | Data: <span id="m-date" style="color:#fff"></span>
             </div>
         </div>
     </div>
@@ -117,63 +100,97 @@
         </div>
         <div class="nav-wrapper">
             <button class="refresh-btn" onclick="update()">SINCRO 🔄</button>
-            <button class="hamburger" id="hamBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+            <button class="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></button>
             <nav class="nav-links" id="menu">
-                <button class="nav-btn active" onclick="switchView('tabella', this)">Lista</button>
+                <button class="nav-btn active">Lista</button>
                 <button class="nav-btn logout" onclick="logout()">ESCI ✖</button>
             </nav>
         </div>
     </header>
 
     <div class="container">
-        <div id="tabella" class="view active">
+        <div class="view active">
             <div class="table-wrap">
                 <table>
-                    <colgroup>
-                        <col style="width: 80px"><col style="width: 100px"><col style="width: 110px"><col style="width: 110px"><col style="width: 70px">
-                    </colgroup>
+                    <colgroup><col style="width: 80px"><col style="width: 100px"><col style="width: 110px"><col style="width: 110px"><col style="width: 70px"></colgroup>
                     <thead><tr><th>DATA</th><th>DEPT</th><th>STATO</th><th>RESP.</th><th>INFO</th></tr></thead>
                     <tbody id="tbody"></tbody>
                 </table>
             </div>
+
+            <div class="pagination">
+                <button id="prevBtn" class="pag-btn" onclick="changePage(-1)">← Indietro</button>
+                <span id="pageInfo" class="pag-info">Pagina 1 di 1</span>
+                <button id="nextBtn" class="pag-btn" onclick="changePage(1)">Avanti →</button>
+            </div>
+
             <div class="stats-container">
-                <p style="font-size: 0.65rem; color: #8b949e; text-align: center; margin-bottom: 10px; font-weight: 800; text-transform: uppercase;">Avanzamento Acquisti</p>
+                <p style="font-size: 0.65rem; color: #8b949e; text-align: center; margin-bottom: 10px; font-weight: 800; text-transform: uppercase;">Grafico Stato Richieste</p>
                 <div class="chart-box"><canvas id="deptChart"></canvas></div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- SICUREZZA ---
         if (localStorage.getItem('scarpa_auth') !== 'true') { window.location.href = 'login.html'; }
         function logout() { localStorage.removeItem('scarpa_auth'); window.location.href = 'login.html'; }
 
-        // --- DATI ---
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
-        let myChart = null;
+        
         let allData = [];
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let myChart = null;
 
-        function toggleMenu() { 
-            const menu = document.getElementById('menu');
-            const btn = document.getElementById('hamBtn');
-            menu.classList.toggle('open');
-            btn.classList.toggle('open');
-        }
+        function toggleMenu() { document.getElementById('menu').classList.toggle('open'); }
 
         function openModal(index) {
             const item = allData[index];
             document.getElementById('m-dept').innerText = item.dept;
             document.getElementById('m-status').innerHTML = `<span class="badge ${item.sCls}">${item.stat}</span>`;
             document.getElementById('m-obj').innerText = item.obj;
-            document.getElementById('m-ai').innerText = item.ai && item.ai.length > 5 ? item.ai.replace(/\*\*/g, '') : "Nessuna analisi disponibile per questa richiesta.";
+            document.getElementById('m-ai').innerText = item.ai && item.ai.length > 5 ? item.ai.replace(/\*\*/g, '') : "Nessuna analisi disponibile.";
             document.getElementById('m-resp').innerText = item.resp;
             document.getElementById('m-date').innerText = item.date;
             document.getElementById('infoModal').style.display = 'flex';
         }
 
         function closeModal() { document.getElementById('infoModal').style.display = 'none'; }
+        window.onclick = function(e) { if (e.target == document.getElementById('infoModal')) closeModal(); }
 
-        window.onclick = function(event) { if (event.target == document.getElementById('infoModal')) closeModal(); }
+        function displayTable() {
+            const tbody = document.getElementById('tbody');
+            tbody.innerHTML = '';
+            
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedItems = allData.slice(start, end);
+
+            paginatedItems.forEach((item, i) => {
+                const globalIndex = start + i;
+                tbody.innerHTML += `<tr>
+                    <td>${item.date}</td>
+                    <td style="font-weight:800; color:#fff">${item.dept}</td>
+                    <td><span class="badge ${item.sCls}">${item.stat}</span></td>
+                    <td>${item.resp}</td>
+                    <td><button class="btn-action" onclick="openModal(${globalIndex})">APRI</button></td>
+                </tr>`;
+            });
+
+            updatePaginationControls();
+        }
+
+        function updatePaginationControls() {
+            const totalPages = Math.ceil(allData.length / rowsPerPage);
+            document.getElementById('pageInfo').innerText = `Pagina ${currentPage} di ${totalPages || 1}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages || totalPages === 0;
+        }
+
+        function changePage(step) {
+            currentPage += step;
+            displayTable();
+        }
 
         function parseCSV(text) {
             const rows = []; let curr = []; let field = ''; let inQuotes = false;
@@ -193,13 +210,12 @@
             try {
                 const r = await fetch(`${CSV_URL}&t=${Date.now()}`);
                 const csvText = await r.text();
-                const data = parseCSV(csvText).slice(1);
-                const table = document.getElementById('tbody');
-                table.innerHTML = '';
+                const rawRows = parseCSV(csvText).slice(1);
+                
                 allData = [];
                 const stats = {};
 
-                data.forEach((cols, index) => {
+                rawRows.forEach(cols => {
                     if(cols.length >= 5) {
                         const statRaw = (cols[3] || 'INFO').toUpperCase();
                         let sCls = 'ST-VALUTAZIONE';
@@ -216,16 +232,11 @@
                         if (sCls === 'ST-APPROVATO') stats[item.dept].app++;
                         else if (sCls === 'ST-RESPINTO') stats[item.dept].res++;
                         else stats[item.dept].val++;
-
-                        table.innerHTML += `<tr>
-                            <td>${item.date}</td>
-                            <td style="font-weight:800; color:#fff">${item.dept}</td>
-                            <td><span class="badge ${sCls}">${item.stat}</span></td>
-                            <td>${item.resp}</td>
-                            <td><button class="btn-action" onclick="openModal(${index})">APRI</button></td>
-                        </tr>`;
                     }
                 });
+
+                currentPage = 1;
+                displayTable();
                 renderChart(stats);
             } catch (e) { console.error(e); }
         }
