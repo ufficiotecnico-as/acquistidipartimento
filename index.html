@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Tracker Dashboard</title>
+    <title>Order Tracker Dashboard - Google Form Sync</title>
     <style>
         :root {
             --bg-dark: #0f1216;
@@ -15,6 +15,7 @@
             --text-main: #e2e8f0;
             --text-muted: #94a3b8;
             --grid-color: rgba(255, 255, 255, 0.03);
+            --border-ui: #334155;
         }
 
         body {
@@ -31,10 +32,7 @@
             align-items: center;
         }
 
-        .container {
-            width: 100%;
-            max-width: 1100px;
-        }
+        .container { width: 100%; max-width: 1100px; }
 
         header {
             display: flex;
@@ -47,7 +45,7 @@
             font-size: 3rem;
             font-weight: 900;
             letter-spacing: -1px;
-            color: #7dd3fc; /* Colore simile all'immagine */
+            color: #7dd3fc;
             margin: 0;
             text-transform: uppercase;
         }
@@ -82,13 +80,8 @@
             animation: pulse 1.5s infinite;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.4; }
-            100% { opacity: 1; }
-        }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-        /* Stat Cards */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -101,7 +94,6 @@
             border-radius: 12px;
             padding: 24px;
             border-top: 4px solid #333;
-            position: relative;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
         }
 
@@ -115,17 +107,12 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             display: block;
         }
 
-        .stat-value {
-            font-size: 2.5rem;
-            font-weight: 800;
-            margin: 0;
-        }
+        .stat-value { font-size: 2.5rem; font-weight: 800; margin: 0; }
 
-        /* Table/List Area */
         .search-row {
             display: grid;
             grid-template-columns: 1fr 250px;
@@ -135,7 +122,7 @@
 
         input, select {
             background: #1e293b;
-            border: 1px solid #334155;
+            border: 1px solid var(--border-ui);
             padding: 12px 16px;
             border-radius: 8px;
             color: white;
@@ -146,24 +133,46 @@
             background: var(--card-bg);
             border-radius: 12px;
             margin-top: 20px;
+            border: 1px solid var(--border-ui);
             overflow: hidden;
-            border: 1px solid #334155;
+        }
+
+        .table-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            padding: 15px 24px;
+            background: rgba(255,255,255,0.05);
+            font-weight: bold;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-ui);
         }
 
         .data-item {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             padding: 15px 24px;
-            border-bottom: 1px solid #334155;
+            border-bottom: 1px solid var(--border-ui);
             transition: background 0.2s;
+            align-items: center;
         }
 
-        .data-item:hover {
-            background: rgba(255, 255, 255, 0.05);
+        .data-item:hover { background: rgba(255, 255, 255, 0.05); }
+
+        .status-pill {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
         }
 
-        .data-item .dept { font-weight: bold; }
-        .data-item .status { text-align: right; font-family: monospace; }
+        .pill-corso { background: rgba(250, 204, 21, 0.2); color: var(--accent-yellow); }
+        .pill-completato { background: rgba(59, 130, 246, 0.2); color: var(--accent-blue); }
+        .pill-bloccato { background: rgba(248, 113, 113, 0.2); color: var(--accent-red); }
+
+        .timestamp { color: var(--text-muted); font-size: 0.8rem; }
 
         @media (max-width: 768px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
@@ -177,16 +186,16 @@
         <header>
             <div class="title-section">
                 <h1>ORDER TRACKER</h1>
-                <p>Stato avanzamento ordini per dipartimento</p>
+                <p>Dashboard Integrata Google Form</p>
             </div>
             <div class="live-badge">
-                <div class="live-dot"></div> LIVE
+                <div class="live-dot"></div> LIVE SYNC
             </div>
         </header>
 
         <div class="stats-grid">
             <div class="stat-card dipartimenti">
-                <span class="stat-label">Dipartimenti</span>
+                <span class="stat-label">Dipartimenti Attivi</span>
                 <p class="stat-value" id="count-total">-</p>
             </div>
             <div class="stat-card in-corso">
@@ -207,20 +216,25 @@
             <input type="text" id="search" placeholder="Cerca dipartimento..." onkeyup="filterData()">
             <select id="status-filter" onchange="filterData()">
                 <option value="all">Tutti gli stati</option>
-                <option value="In Corso">In Corso</option>
+                <option value="Corso">In Corso</option>
                 <option value="Completato">Completati</option>
                 <option value="Bloccato">Bloccati</option>
             </select>
         </div>
 
-        <div id="data-container" class="data-list">
-            <!-- Dati caricati qui -->
+        <div class="data-list">
+            <div class="table-header">
+                <span>Dipartimento</span>
+                <span>Stato Attuale</span>
+                <span>Ultimo Aggiornamento</span>
+            </div>
+            <div id="data-container"></div>
         </div>
     </div>
 
     <script>
         const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
-        let allData = [];
+        let latestDataByDept = {};
 
         async function updateDashboard() {
             try {
@@ -228,26 +242,41 @@
                 const text = await response.text();
                 const rows = text.split('\n').slice(1);
                 
-                allData = rows.map(row => {
-                    const cols = row.split(',');
-                    return {
-                        dept: cols[0]?.replace(/"/g, '').trim(),
-                        status: cols[1]?.replace(/"/g, '').trim()
-                    };
-                }).filter(item => item.dept);
+                const tempData = {};
 
+                rows.forEach(row => {
+                    const cols = row.split(',');
+                    if(cols.length < 3) return;
+
+                    const timestamp = cols[0].replace(/"/g, '').trim();
+                    const dept = cols[1].replace(/"/g, '').trim();
+                    const status = cols[2].replace(/"/g, '').trim();
+
+                    if (!dept) return;
+
+                    // Logica "Latest Only": sovrascrive se l'entry è più recente
+                    // In un Google Form, le righe nuove sono in fondo, quindi l'ultima vince.
+                    tempData[dept] = {
+                        dept: dept,
+                        status: status,
+                        time: timestamp
+                    };
+                });
+
+                latestDataByDept = tempData;
                 renderStats();
                 filterData();
             } catch (e) {
-                console.error("Errore fetch:", e);
+                console.error("Errore Sincronizzazione:", e);
             }
         }
 
         function renderStats() {
-            document.getElementById('count-total').innerText = allData.length;
-            document.getElementById('count-corso').innerText = allData.filter(d => d.status.toLowerCase().includes('corso')).length;
-            document.getElementById('count-completati').innerText = allData.filter(d => d.status.toLowerCase().includes('complet')).length;
-            document.getElementById('count-bloccati').innerText = allData.filter(d => d.status.toLowerCase().includes('blocc') || d.status.toLowerCase().includes('ritard')).length;
+            const dataArray = Object.values(latestDataByDept);
+            document.getElementById('count-total').innerText = dataArray.length;
+            document.getElementById('count-corso').innerText = dataArray.filter(d => d.status.includes('Corso')).length;
+            document.getElementById('count-completati').innerText = dataArray.filter(d => d.status.includes('Completato')).length;
+            document.getElementById('count-bloccati').innerText = dataArray.filter(d => d.status.includes('Bloccato')).length;
         }
 
         function filterData() {
@@ -255,23 +284,29 @@
             const statusFilter = document.getElementById('status-filter').value;
             const container = document.getElementById('data-container');
             
-            const filtered = allData.filter(item => {
+            const filtered = Object.values(latestDataByDept).filter(item => {
                 const matchesSearch = item.dept.toLowerCase().includes(searchTerm);
                 const matchesStatus = statusFilter === 'all' || item.status.includes(statusFilter);
                 return matchesSearch && matchesStatus;
             });
 
-            container.innerHTML = filtered.map(item => `
-                <div class="data-item">
-                    <span class="dept">${item.dept}</span>
-                    <span class="status">${item.status}</span>
-                </div>
-            `).join('');
+            container.innerHTML = filtered.map(item => {
+                let pillClass = 'pill-corso';
+                if(item.status.includes('Completato')) pillClass = 'pill-completato';
+                if(item.status.includes('Bloccato')) pillClass = 'pill-bloccato';
+
+                return `
+                    <div class="data-item">
+                        <span style="font-weight:600">${item.dept}</span>
+                        <div><span class="status-pill ${pillClass}">${item.status}</span></div>
+                        <span class="timestamp">${item.time}</span>
+                    </div>
+                `;
+            }).join('');
         }
 
-        // Init & Auto-refresh ogni 60s
         updateDashboard();
-        setInterval(updateDashboard, 60000);
+        setInterval(updateDashboard, 30000); // Aggiorna ogni 30 secondi
     </script>
 </body>
 </html>
