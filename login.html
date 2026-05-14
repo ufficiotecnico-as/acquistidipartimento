@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Area Riservata Scarpa</title>
+    <title>Login | Portale Acquisti Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #58a6ff;
-            --error: #f85149;
-            --bg-dark: #0d1117;
-            --glass: rgba(22, 27, 34, 0.8);
+            --primary: #00d2ff;
+            --secondary: #92fe9d;
+            --accent: #ff007a;
+            --bg-dark: #06090f;
+            --error: #ff4b2b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,94 +27,130 @@
             position: relative;
         }
 
-        /* SFONDO ANIMATO */
-        body::before {
-            content: "";
+        /* SFONDO CON BLOBS COLORATI ANIMATI */
+        .blobs {
             position: absolute;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle at 50% 50%, #161b22 0%, #0d1117 100%);
+            width: 100%;
+            height: 100%;
             z-index: -1;
-        }
-
-        .bg-glow {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(88, 166, 255, 0.15) 0%, transparent 70%);
             filter: blur(80px);
-            z-index: -1;
-            animation: pulse 8s infinite alternate;
         }
 
-        @keyframes pulse {
-            0% { transform: translate(-50%, -50%) scale(1); opacity: 0.5; }
-            100% { transform: translate(-50%, -50%) scale(1.3); opacity: 0.8; }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: move 20s infinite alternate;
         }
 
+        .blob-1 { width: 400px; height: 400px; background: var(--primary); top: -10%; left: -10%; }
+        .blob-2 { width: 450px; height: 450px; background: var(--accent); bottom: -10%; right: -10%; animation-duration: 15s; }
+        .blob-3 { width: 300px; height: 300px; background: var(--secondary); top: 40%; right: 20%; animation-duration: 12s; }
+
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(50px, 100px) scale(1.2); }
+        }
+
+        /* CARD EFFETTO VETRO COLORATO */
         .login-card {
-            background: var(--glass);
-            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 50px 40px;
-            border-radius: 24px;
+            border-radius: 30px;
             width: 100%;
-            max-width: 400px;
+            max-width: 420px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 10;
         }
 
-        .logo { height: 50px; margin-bottom: 30px; }
-        h2 { color: #fff; font-weight: 800; font-size: 1.8rem; margin-bottom: 10px; letter-spacing: -1px; }
-        p { color: #8b949e; font-size: 0.95rem; margin-bottom: 35px; }
+        .logo { 
+            height: 60px; 
+            margin-bottom: 25px; 
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
+        }
 
-        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
+        h2 { 
+            color: #fff; 
+            font-weight: 800; 
+            font-size: 2rem; 
+            margin-bottom: 5px; 
+            background: linear-gradient(to right, #fff, var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 35px; letter-spacing: 0.5px; }
+
+        /* INPUTS */
+        .input-group { position: relative; margin-bottom: 25px; }
         .input-group input {
-            width: 100%; padding: 15px; background: rgba(13, 17, 23, 0.8);
-            border: 2px solid #30363d; border-radius: 12px; color: #fff;
-            font-size: 1rem; outline: none; transition: all 0.3s ease;
+            width: 100%; padding: 16px 20px; 
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            border-radius: 15px; color: #fff;
+            font-size: 1rem; outline: none; transition: 0.3s;
         }
-        .input-group input:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(88, 166, 255, 0.15); }
+        .input-group input:focus { 
+            border-color: var(--primary); 
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+        }
+
         .input-group label {
-            position: absolute; left: 15px; top: 50%; transform: translateY(-50%);
-            color: #8b949e; pointer-events: none; transition: all 0.3s ease;
+            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.4); pointer-events: none; transition: 0.3s;
         }
         .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label {
-            top: -10px; left: 10px; font-size: 0.75rem; font-weight: 800; color: var(--primary);
-            background: var(--bg-dark); padding: 0 5px;
+            top: -12px; left: 15px; font-size: 0.75rem; font-weight: 800; 
+            color: var(--primary); text-transform: uppercase;
         }
 
+        /* BUTTON GRADIENT */
         .login-btn {
-            width: 100%; padding: 16px; background: var(--primary); color: #fff;
-            border: none; border-radius: 12px; font-size: 1rem; font-weight: 800;
-            cursor: pointer; transition: all 0.3s ease; margin-top: 10px;
+            width: 100%; padding: 18px; 
+            background: linear-gradient(45deg, var(--primary), var(--secondary));
+            color: #06090f; border: none; border-radius: 15px; 
+            font-size: 1rem; font-weight: 800;
+            cursor: pointer; transition: 0.3s; margin-top: 10px;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .login-btn:disabled { opacity: 0.5; cursor: wait; }
+        .login-btn:hover { 
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4);
+            filter: brightness(1.1);
+        }
+        .login-btn:disabled { opacity: 0.5; cursor: wait; background: #333; color: #666; }
 
-        #error-msg { color: var(--error); font-size: 0.85rem; font-weight: 600; margin-top: 20px; display: none; }
+        #error-msg { color: var(--error); font-size: 0.85rem; font-weight: 700; margin-top: 20px; display: none; text-shadow: 0 0 10px rgba(255, 75, 43, 0.3); }
         
-        .shake { animation: shake 0.4s ease-in-out; }
+        .shake { animation: shake 0.4s; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-10px); }
-            75% { transform: translateX(10px); }
+            20% { transform: translateX(-10px); }
+            40% { transform: translateX(10px); }
+            60% { transform: translateX(-10px); }
+            80% { transform: translateX(10px); }
         }
 
-        footer { position: absolute; bottom: 20px; color: #484f58; font-size: 0.75rem; }
+        footer { position: absolute; bottom: 30px; color: rgba(255,255,255,0.2); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <div class="bg-glow"></div>
+    <div class="blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
 
     <div class="login-card" id="card">
         <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="logo">
         <h2>Area Riservata</h2>
-        <p id="status-text">Caricamento sistema...</p>
+        <p id="status-text">Sincronizzazione database...</p>
 
         <div class="input-group">
             <input type="text" id="user" placeholder=" " required>
@@ -125,74 +162,56 @@
             <label>Password</label>
         </div>
 
-        <button class="login-btn" id="loginBtn" onclick="handleLogin()" disabled>ATTENDI...</button>
+        <button class="login-btn" id="loginBtn" onclick="handleLogin()" disabled>Attendi...</button>
         
-        <div id="error-msg">Credenziali errate o utente non autorizzato.</div>
+        <div id="error-msg">Accesso negato. Riprova.</div>
     </div>
 
-    <footer>IIS ANTONIO SCARPA — PORTALE ACQUISTI v18.0</footer>
+    <footer>IIS ANTONIO SCARPA — SMART PORTAL 2026</footer>
 
     <script>
         const USERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVgqrDiEAD3X6HclOFJoVo2xHgwS4TRmgJ8_HRFZFRNSS0ZVm_Hx6lSIsvj31paCckaWY2zY-HMb8J/pub?gid=0&single=true&output=csv';
         let authorizedUsers = [];
 
-        // 1. Carica gli utenti dal CSV all'avvio
         async function loadUsers() {
             try {
-                const response = await fetch(USERS_CSV_URL);
+                const response = await fetch(USERS_CSV_URL + '?t=' + Date.now());
                 const data = await response.text();
-                
-                // Parsa il CSV (assume Colonna A: Username, Colonna B: Password)
-                const rows = data.split('\n').slice(1); // Salta l'intestazione
+                const rows = data.split('\n').slice(1);
                 authorizedUsers = rows.map(row => {
                     const columns = row.split(',');
-                    return {
-                        username: columns[0]?.trim(),
-                        password: columns[1]?.trim()
-                    };
+                    return { username: columns[0]?.trim(), password: columns[1]?.trim() };
                 }).filter(u => u.username && u.password);
 
-                // Abilita il login
                 document.getElementById('loginBtn').disabled = false;
-                document.getElementById('loginBtn').innerText = "ACCEDI AL PORTALE";
-                document.getElementById('status-text').innerText = "Inserisci le tue credenziali";
+                document.getElementById('loginBtn').innerText = "Accedi";
+                document.getElementById('status-text').innerText = "Pronto per l'autenticazione";
             } catch (error) {
-                console.error("Errore caricamento utenti:", error);
-                document.getElementById('status-text').innerText = "Errore di connessione al database.";
+                document.getElementById('status-text').innerText = "Errore di rete.";
             }
         }
 
-        // 2. Gestione del Login
         function handleLogin() {
             const uInput = document.getElementById('user').value.trim();
             const pInput = document.getElementById('pass').value.trim();
             const card = document.getElementById('card');
             const error = document.getElementById('error-msg');
 
-            // Cerca l'utente nel database caricato
             const userFound = authorizedUsers.find(u => u.username === uInput && u.password === pInput);
 
             if (userFound) {
-                // Successo
+                card.style.transform = 'translateY(-20px) scale(0.95)';
                 card.style.opacity = '0';
-                card.style.transform = 'scale(0.9)';
                 localStorage.setItem('scarpa_auth', 'true');
-                localStorage.setItem('scarpa_user', uInput); // Opzionale: salva chi è loggato
-                
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 400);
+                setTimeout(() => { window.location.href = 'index.html'; }, 500);
             } else {
-                // Errore
                 error.style.display = 'block';
                 card.classList.add('shake');
                 setTimeout(() => card.classList.remove('shake'), 400);
             }
         }
 
-        // Avvio
         loadUsers();
-
         document.addEventListener('keypress', (e) => {
             if (e.key === 'Enter' && !document.getElementById('loginBtn').disabled) handleLogin();
         });
