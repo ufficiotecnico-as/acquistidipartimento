@@ -3,152 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ordini di Dipartimento | IIS Antonio Scarpa</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <title>Elite Dashboard | IIS Scarpa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #030508;
-            --surface: rgba(17, 25, 40, 0.75);
-            --border: rgba(255, 255, 255, 0.1);
-            --valutazione: #ffc107;
+            --bg: #080a0f;
+            --panel: rgba(13, 17, 23, 0.8);
+            --border: rgba(255, 255, 255, 0.08);
+            --accent: #3b82f6;
+            --valutazione: #ffb100;
             --integrazione: #a855f7;
-            --approvato: #3b82f6;
+            --approvato: #22d3ee;
             --completato: #10b981;
-            --respinto: #ef4444;
-            --text-dim: #94a3b8;
+            --respinto: #f43f5e;
         }
 
-        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg);
-            background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: var(--bg);
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(59, 130, 246, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 90% 90%, rgba(168, 85, 247, 0.08) 0%, transparent 40%);
             color: #fff;
-            margin: 0;
-            padding: 30px;
             min-height: 100vh;
+            padding: 40px;
         }
 
-        .container { max-width: 1440px; margin: 0 auto; }
+        /* HEADER STYLE */
+        header { text-align: center; margin-bottom: 60px; }
+        h1 { 
+            font-size: 3.5rem; font-weight: 800; letter-spacing: -2px;
+            background: linear-gradient(180deg, #fff 0%, #64748b 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+        }
+        .subtitle { 
+            text-transform: uppercase; letter-spacing: 10px; color: #475569; 
+            font-weight: 600; font-size: 0.9rem; margin-top: 10px;
+        }
 
-        header { text-align: center; margin-bottom: 40px; }
-        h1 { font-size: 3.5rem; font-weight: 900; margin: 0; letter-spacing: -2px; background: linear-gradient(#fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .subtitle { font-size: 1.1rem; letter-spacing: 6px; color: var(--text-dim); text-transform: uppercase; margin-top: 5px; font-weight: 300; }
+        /* SEARCH BAR */
+        .search-container { max-width: 800px; margin: 0 auto 50px; }
+        #searchInput {
+            width: 100%; padding: 20px 30px; border-radius: 20px;
+            background: var(--panel); border: 1px solid var(--border);
+            color: white; font-size: 1.1rem; outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+        #searchInput:focus { border-color: var(--accent); box-shadow: 0 0 30px rgba(59, 130, 246, 0.15); }
 
-        .dashboard-grid { display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
+        /* MAIN LAYOUT */
+        .dashboard-main { display: grid; grid-template-columns: 350px 1fr; gap: 40px; }
 
-        .glass-panel { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 25px; }
+        /* SIDEBAR / CHART */
+        .sidebar {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: 30px; padding: 30px; backdrop-filter: blur(20px);
+            height: fit-content; position: sticky; top: 40px;
+        }
 
-        .kpi-tile { padding: 12px 18px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid transparent; cursor: pointer; display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .kpi-tile:hover { background: rgba(255,255,255,0.08); transform: translateX(8px); }
-        .kpi-tile.active { background: rgba(59, 130, 246, 0.2); border-color: var(--approvato); }
+        .kpi-list { margin-top: 30px; }
+        .kpi-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px; border-radius: 15px; margin-bottom: 10px;
+            background: rgba(255,255,255,0.02); border: 1px solid transparent;
+            cursor: pointer; transition: 0.3s;
+        }
+        .kpi-item:hover { background: rgba(255,255,255,0.05); transform: scale(1.02); }
+        .kpi-item.active { border-color: var(--accent); background: rgba(59, 130, 246, 0.1); }
 
-        .tiles-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-        .order-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; }
-        .order-tile::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
-        
-        .t-valutazione::before { background: var(--valutazione); }
-        .t-integrazione::before { background: var(--integrazione); }
-        .t-approvato::before { background: var(--approvato); }
-        .t-completato::before { background: var(--completato); }
-        .t-respinto::before { background: var(--respinto); }
+        /* CARDS GRID */
+        .grid-orders { 
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+            gap: 25px; align-content: start;
+        }
 
-        .tile-dept { font-size: 1.3rem; font-weight: 800; margin-top: 10px; display: block; }
-        .status-pill { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.65rem; font-weight: 700; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
-        .tile-time { display: block; margin-top: 15px; font-size: 0.7rem; color: var(--text-dim); font-family: monospace; }
+        .card {
+            background: var(--panel); border: 1px solid var(--border);
+            border-radius: 24px; padding: 25px; position: relative;
+            overflow: hidden; animation: cardReveal 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            backdrop-filter: blur(10px);
+        }
+        @keyframes cardReveal { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 
-        #searchInput { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 18px 25px; border-radius: 50px; color: white; font-size: 1rem; margin-bottom: 30px; outline: none; }
+        .card::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 6px;
+        }
+        .c-valutazione::after { background: var(--valutazione); box-shadow: 0 4px 15px var(--valutazione); }
+        .c-integrazione::after { background: var(--integrazione); box-shadow: 0 4px 15px var(--integrazione); }
+        .c-approvato::after { background: var(--approvato); box-shadow: 0 4px 15px var(--approvato); }
+        .c-completato::after { background: var(--completato); box-shadow: 0 4px 15px var(--completato); }
+        .c-respinto::after { background: var(--respinto); box-shadow: 0 4px 15px var(--respinto); }
+
+        .badge {
+            font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+            padding: 5px 12px; border-radius: 50px; background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border); letter-spacing: 1px;
+        }
+
+        .dept-name { font-size: 1.6rem; font-weight: 800; margin: 15px 0 10px; color: #fff; }
+        .update-time { font-size: 0.8rem; color: #64748b; font-family: monospace; }
+
+        /* SCROLLBAR */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
 <body>
 
-<div class="container">
     <header>
         <h1>Ordini di Dipartimento</h1>
         <div class="subtitle">IIS ANTONIO SCARPA</div>
     </header>
 
-    <input type="text" id="searchInput" placeholder="Cerca dipartimento..." onkeyup="renderAll()">
+    <div class="search-container">
+        <input type="text" id="searchInput" placeholder="Cerca un dipartimento..." onkeyup="render()">
+    </div>
 
-    <div class="dashboard-grid">
-        <aside class="glass-panel">
-            <canvas id="mainChart" style="max-height: 200px; margin-bottom: 25px;"></canvas>
-            <div class="kpi-tile" onclick="setFilter('IN VALUTAZIONE', this)"><span>Valutazione</span><b id="c-val" style="color:var(--valutazione)">0</b></div>
-            <div class="kpi-tile" onclick="setFilter('RICHIESTA INTEGRAZIONE', this)"><span>Integrazione</span><b id="c-int" style="color:var(--integrazione)">0</b></div>
-            <div class="kpi-tile" onclick="setFilter('APPROVATO - IN ORDINE', this)"><span>Approvati</span><b id="c-app" style="color:var(--approvato)">0</b></div>
-            <div class="kpi-tile" onclick="setFilter('COMPLETATO / CONSEGNATO', this)"><span>Completati</span><b id="c-com" style="color:var(--completato)">0</b></div>
-            <div class="kpi-tile" onclick="setFilter('RESPINTO', this)"><span>Respinti</span><b id="c-res" style="color:var(--respinto)">0</b></div>
-            <button onclick="resetFilters()" style="width:100%; margin-top:15px; background:none; border:1px solid var(--border); color:var(--text-dim); padding:10px; border-radius:10px; cursor:pointer;">Reset</button>
+    <div class="dashboard-main">
+        <aside class="sidebar">
+            <div style="height: 250px; position: relative;">
+                <canvas id="statusChart"></canvas>
+            </div>
+            <div class="kpi-list">
+                <div class="kpi-item" onclick="filterBy('IN VALUTAZIONE', this)">
+                    <span>In Valutazione</span> <b id="stat-val" style="color:var(--valutazione)">0</b>
+                </div>
+                <div class="kpi-item" onclick="filterBy('RICHIESTA INTEGRAZIONE', this)">
+                    <span>Integrazione</span> <b id="stat-int" style="color:var(--integrazione)">0</b>
+                </div>
+                <div class="kpi-item" onclick="filterBy('APPROVATO - IN ORDINE', this)">
+                    <span>Approvati</span> <b id="stat-app" style="color:var(--approvato)">0</b>
+                </div>
+                <div class="kpi-item" onclick="filterBy('COMPLETATO / CONSEGNATO', this)">
+                    <span>Consegnati</span> <b id="stat-com" style="color:var(--completato)">0</b>
+                </div>
+                <div class="kpi-item" onclick="filterBy('RESPINTO', this)">
+                    <span>Respinti</span> <b id="stat-res" style="color:var(--respinto)">0</b>
+                </div>
+                <button onclick="resetFilters()" style="width:100%; margin-top:20px; padding:12px; background:rgba(255,255,255,0.05); border:1px solid var(--border); color:white; border-radius:12px; cursor:pointer;">Reset Vista</button>
+            </div>
         </aside>
 
-        <main id="tilesGrid" class="tiles-container"></main>
+        <section class="grid-orders" id="orderGrid"></section>
     </div>
-</div>
 
-<script>
-    const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
-    let rawData = [], activeStatus = null, chartObj = null;
+    <script>
+        const URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
+        let dataStore = [];
+        let filterActive = null;
+        let myChart = null;
 
-    async function loadData() {
-        try {
-            const r = await fetch(CSV_URL + '&t=' + Date.now());
+        async function fetchData() {
+            const r = await fetch(URL + '&cache=' + Date.now());
             const text = await r.text();
             const rows = text.split('\n').slice(1);
-            const unique = {};
+            const mapping = {};
+            
             rows.forEach(row => {
                 const c = row.split(',');
                 if(c.length < 3) return;
-                const d = c[1].replace(/"/g, '').trim();
-                if(d) unique[d] = { dept: d, status: c[2].replace(/"/g, '').trim().toUpperCase(), time: c[0].replace(/"/g, '').trim() };
+                const name = c[1].replace(/"/g,'').trim();
+                if(name) mapping[name] = {
+                    name,
+                    status: c[2].replace(/"/g,'').trim().toUpperCase(),
+                    date: c[0].replace(/"/g,'').trim()
+                };
             });
-            rawData = Object.values(unique);
-            renderAll();
-        } catch(e) { console.error(e); }
-    }
+            dataStore = Object.values(mapping);
+            render();
+        }
 
-    function renderAll() {
-        const query = document.getElementById('searchInput').value.toLowerCase();
-        const filtered = rawData.filter(o => (!activeStatus || o.status === activeStatus) && o.dept.toLowerCase().includes(query));
+        function render() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const grid = document.getElementById('orderGrid');
+            
+            const filtered = dataStore.filter(o => 
+                (!filterActive || o.status === filterActive) && 
+                (o.name.toLowerCase().includes(query))
+            );
 
-        const stats = { 'IN VALUTAZIONE': 0, 'RICHIESTA INTEGRAZIONE': 0, 'APPROVATO - IN ORDINE': 0, 'COMPLETATO / CONSEGNATO': 0, 'RESPINTO': 0 };
-        rawData.forEach(o => { if(stats[o.status] !== undefined) stats[o.status]++; });
+            // Update Counters
+            const counts = { 'IN VALUTAZIONE': 0, 'RICHIESTA INTEGRAZIONE': 0, 'APPROVATO - IN ORDINE': 0, 'COMPLETATO / CONSEGNATO': 0, 'RESPINTO': 0 };
+            dataStore.forEach(o => counts[o.status]++);
+            
+            document.getElementById('stat-val').innerText = counts['IN VALUTAZIONE'];
+            document.getElementById('stat-int').innerText = counts['RICHIESTA INTEGRAZIONE'];
+            document.getElementById('stat-app').innerText = counts['APPROVATO - IN ORDINE'];
+            document.getElementById('stat-com').innerText = counts['COMPLETATO / CONSEGNATO'];
+            document.getElementById('stat-res').innerText = counts['RESPINTO'];
 
-        ['val','int','app','com','res'].forEach((k, i) => document.getElementById('c-'+k).innerText = Object.values(stats)[i]);
-        updateChart(stats);
+            drawChart(Object.values(counts));
 
-        document.getElementById('tilesGrid').innerHTML = filtered.map(o => {
-            let type = 't-valutazione';
-            if(o.status.includes('INTEGRAZIONE')) type = 't-integrazione';
-            if(o.status.includes('APPROVATO')) type = 't-approvato';
-            if(o.status.includes('COMPLETATO')) type = 't-completato';
-            if(o.status.includes('RESPINTO')) type = 't-respinto';
-            return `<div class="order-tile ${type}"><span class="status-pill">${o.status}</span><span class="tile-dept">${o.dept}</span><span class="tile-time">Aggiornato: ${o.time}</span></div>`;
-        }).join('');
-    }
+            grid.innerHTML = filtered.map(o => {
+                let type = 'c-valutazione';
+                if(o.status.includes('INTEGRAZIONE')) type = 'c-integrazione';
+                if(o.status.includes('APPROVATO')) type = 'c-approvato';
+                if(o.status.includes('COMPLETATO')) type = 'c-completato';
+                if(o.status.includes('RESPINTO')) type = 'c-respinto';
 
-    function updateChart(s) {
-        const ctx = document.getElementById('mainChart').getContext('2d');
-        if(chartObj) chartObj.destroy();
-        chartObj = new Chart(ctx, {
-            type: 'doughnut',
-            data: { labels: ['Val', 'Int', 'App', 'Com', 'Res'], datasets: [{ data: Object.values(s), backgroundColor: ['#ffc107', '#a855f7', '#3b82f6', '#10b981', '#ef4444'], borderWidth: 0 }] },
-            options: { cutout: '80%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
-        });
-    }
+                return `
+                    <div class="card ${type}">
+                        <span class="badge">${o.status}</span>
+                        <div class="dept-name">${o.name}</div>
+                        <div class="update-time">Update: ${o.date}</div>
+                    </div>
+                `;
+            }).join('');
+        }
 
-    function setFilter(s, el) {
-        document.querySelectorAll('.kpi-tile').forEach(t => t.classList.remove('active'));
-        if(activeStatus === s) activeStatus = null;
-        else { activeStatus = s; el.classList.add('active'); }
-        renderAll();
-    }
+        function drawChart(valori) {
+            const ctx = document.getElementById('statusChart').getContext('2d');
+            if(myChart) myChart.destroy();
+            myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: valori,
+                        backgroundColor: ['#ffb100', '#a855f7', '#22d3ee', '#10b981', '#f43f5e'],
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: { cutout: '80%', plugins: { legend: { display: false } } }
+            });
+        }
 
-    function resetFilters() { activeStatus = null; document.getElementById('searchInput').value = ''; document.querySelectorAll('.kpi-tile').forEach(t => t.classList.remove('active')); renderAll(); }
+        function filterBy(status, el) {
+            document.querySelectorAll('.kpi-item').forEach(i => i.classList.remove('active'));
+            if(filterActive === status) filterActive = null;
+            else { filterActive = status; el.classList.add('active'); }
+            render();
+        }
 
-    loadData();
-    setInterval(loadData, 30000);
-</script>
+        function resetFilters() {
+            filterActive = null;
+            document.getElementById('searchInput').value = '';
+            document.querySelectorAll('.kpi-item').forEach(i => i.classList.remove('active'));
+            render();
+        }
+
+        fetchData();
+        setInterval(fetchData, 30000);
+    </script>
 </body>
 </html>
