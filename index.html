@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Acquisti Dipartimento | IIS Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -11,71 +11,77 @@
             --blue: #58a6ff; --purple: #bc8cff; --green: #3fb950; --red: #f85149; --yellow: #d29922;
         }
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
 
-        /* HEADER */
+        /* HEADER OTTIMIZZATO */
         header { 
-            background: #fff; color: #000; padding: 10px 30px; 
+            background: #fff; color: #000; padding: 0 20px; 
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 1001; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            min-height: 80px;
+            height: 80px; width: 100%;
         }
-        .header-left { display: flex; align-items: center; gap: 20px; }
-        .school-logo { height: 50px; width: auto; object-fit: contain; }
-        .brand h1 { margin: 0; font-size: 1.2rem; font-weight: 800; letter-spacing: -0.5px; line-height: 1.1; }
-        .brand p { margin: 0; font-size: 0.7rem; color: #666; font-weight: 600; text-transform: uppercase; }
+        .header-left { display: flex; align-items: center; gap: 12px; overflow: hidden; }
+        .school-logo { height: 45px; width: auto; flex-shrink: 0; }
+        .brand { overflow: hidden; }
+        .brand h1 { margin: 0; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; white-space: nowrap; }
+        .brand p { margin: 0; font-size: 0.65rem; color: #666; font-weight: 600; text-transform: uppercase; }
 
-        /* NAV & HAMBURGER */
-        .nav-wrapper { display: flex; align-items: center; gap: 15px; }
-        .nav-links { display: flex; gap: 10px; }
+        /* NAV & HAMBURGER ANIMATO */
+        .nav-wrapper { display: flex; align-items: center; gap: 10px; }
+        .nav-links { display: flex; gap: 5px; }
         .nav-btn { 
-            padding: 10px 15px; cursor: pointer; border: none; background: transparent; 
+            padding: 8px 12px; cursor: pointer; border: none; background: transparent; 
             border-radius: 6px; font-weight: 700; color: #444; font-size: 0.75rem; text-transform: uppercase;
+            transition: 0.2s;
         }
         .nav-btn.active { color: var(--blue); background: rgba(88,166,255,0.1); }
         
-        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; background: none; border: none; padding: 10px; }
-        .hamburger span { width: 25px; height: 3px; background: #000; border-radius: 2px; }
+        .hamburger { 
+            display: none; cursor: pointer; flex-direction: column; gap: 5px; 
+            background: none; border: none; padding: 10px; z-index: 1002;
+        }
+        .hamburger span { width: 22px; height: 2px; background: #000; border-radius: 2px; transition: 0.3s; }
+        
+        /* Animazione X hamburger */
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         .refresh-btn {
-            background: var(--green); color: white; border: none; padding: 10px 18px;
-            border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.7rem;
+            background: var(--green); color: white; border: none; padding: 8px 15px;
+            border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.7rem; white-space: nowrap;
         }
 
-        .container { padding: 25px; max-width: 1500px; margin: 0 auto; }
+        .container { padding: 20px; max-width: 100%; margin: 0 auto; }
         .view { display: none; }
         .view.active { display: block; }
 
-        /* TABELLA ANTI-SOVRAPPOSIZIONE */
-        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 900px; }
-        th { background: rgba(255,255,255,0.03); padding: 15px; text-align: left; font-size: 0.65rem; color: #8b949e; border-bottom: 2px solid var(--border); }
+        /* TABELLA RESPONSIVE */
+        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; width: 100%; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 800px; }
+        th { background: rgba(255,255,255,0.03); padding: 12px; text-align: left; font-size: 0.65rem; color: #8b949e; border-bottom: 2px solid var(--border); }
+        td { padding: 12px; border-bottom: 1px solid var(--border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem; }
         
-        td { 
-            padding: 15px; border-bottom: 1px solid var(--border); 
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
-            font-size: 0.8rem;
-        }
-        
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.6rem; font-weight: 800; border: 1px solid currentColor; }
+        .badge { padding: 3px 8px; border-radius: 20px; font-size: 0.6rem; font-weight: 800; border: 1px solid currentColor; }
         .ST-APPROVATO { color: var(--blue); } .ST-VALUTAZIONE { color: var(--yellow); } .ST-RESPINTO { color: var(--red); }
 
         /* GRID REPORT AI */
-        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr)); gap: 20px; }
-        .ai-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 25px; border-left: 5px solid var(--purple); }
-        .ai-card-body { font-size: 0.9rem; line-height: 1.6; color: #adbac7; white-space: pre-wrap; }
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 15px; }
+        .ai-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; border-left: 4px solid var(--purple); }
+        .ai-card-body { font-size: 0.85rem; line-height: 1.6; color: #adbac7; white-space: pre-wrap; }
 
-        /* MOBILE RESPONSIVE */
-        @media (max-width: 950px) {
+        /* MOBILE FIX */
+        @media (max-width: 900px) {
             .hamburger { display: flex; }
             .nav-links { 
-                display: none; position: absolute; top: 80px; right: 20px; 
-                background: #fff; flex-direction: column; width: 220px;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 8px; padding: 10px;
+                display: none; position: fixed; top: 80px; left: 0; right: 0; bottom: 0;
+                background: #fff; flex-direction: column; align-items: center; padding-top: 40px;
+                gap: 20px; z-index: 1000;
             }
             .nav-links.open { display: flex; }
-            .nav-btn { width: 100%; text-align: left; padding: 15px; color: #000; border-bottom: 1px solid #eee; }
-            .school-logo { height: 40px; }
+            .nav-btn { font-size: 1.2rem; color: #000; width: 80%; text-align: center; border-bottom: 1px solid #eee; padding: 20px; }
+            .brand h1 { font-size: 0.9rem; }
+            .school-logo { height: 35px; }
         }
     </style>
 </head>
@@ -83,7 +89,7 @@
 
     <header>
         <div class="header-left">
-            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo" alt="Logo Scarpa">
+            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo">
             <div class="brand">
                 <h1>ACQUISTI DIPARTIMENTO</h1>
                 <p>IIS ANTONIO SCARPA</p>
@@ -92,7 +98,7 @@
         
         <div class="nav-wrapper">
             <button class="refresh-btn" onclick="update()">SINCRO 🔄</button>
-            <button class="hamburger" onclick="toggleMenu()">
+            <button class="hamburger" id="hamBtn" onclick="toggleMenu()">
                 <span></span><span></span><span></span>
             </button>
             <nav class="nav-links" id="menu">
@@ -107,10 +113,10 @@
             <div class="table-wrap">
                 <table>
                     <colgroup>
-                        <col style="width: 100px">
-                        <col style="width: 180px">
-                        <col style="width: 180px">
-                        <col style="width: 160px">
+                        <col style="width: 90px">
+                        <col style="width: 150px">
+                        <col style="width: 140px">
+                        <col style="width: 140px">
                         <col style="width: auto">
                     </colgroup>
                     <thead>
@@ -129,14 +135,17 @@
     <script>
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
 
-        function toggleMenu() { document.getElementById('menu').classList.toggle('open'); }
+        function toggleMenu() { 
+            document.getElementById('menu').classList.toggle('open'); 
+            document.getElementById('hamBtn').classList.toggle('open');
+        }
 
         function switchView(id, btn) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
-            if(window.innerWidth < 950) document.getElementById('menu').classList.remove('open');
+            if(window.innerWidth <= 900) toggleMenu();
         }
 
         function parseCSV(text) {
@@ -157,7 +166,7 @@
             const btn = document.querySelector('.refresh-btn');
             btn.innerText = "...";
             try {
-                const r = await fetch(`${CSV_URL}&nocache=${Date.now()}`);
+                const r = await fetch(`${CSV_URL}&t=${Date.now()}`);
                 const csvText = await r.text();
                 const data = parseCSV(csvText).slice(1);
                 
