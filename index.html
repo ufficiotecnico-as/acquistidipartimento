@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Tracker Dashboard - Final Version</title>
+    <title>Order Tracker - Versione Finale</title>
     <style>
         :root {
             --bg-dark: #0f1216;
@@ -75,7 +75,6 @@
 
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        /* Stats Grid - Fixed Header States */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
@@ -109,7 +108,6 @@
 
         .stat-value { font-size: 2.5rem; font-weight: 800; margin: 0; }
 
-        /* Controls */
         .controls {
             display: grid;
             grid-template-columns: 1fr 300px;
@@ -126,7 +124,6 @@
             font-size: 1rem;
         }
 
-        /* List */
         .data-table {
             background: var(--card-bg);
             border-radius: 12px;
@@ -233,7 +230,7 @@
             <div class="table-head">
                 <span>Dipartimento</span>
                 <span>Stato Attuale</span>
-                <span>Aggiornamento</span>
+                <span>Informazioni cronologiche</span>
             </div>
             <div id="table-body"></div>
         </div>
@@ -245,7 +242,7 @@
 
         async function refresh() {
             try {
-                const res = await fetch(url);
+                const res = await fetch(url + '&cachebuster=' + new Date().getTime());
                 const csv = await res.text();
                 const lines = csv.split('\n').slice(1);
                 
@@ -273,7 +270,7 @@
             document.getElementById('count-valutazione').innerText = arr.filter(x => x.status === 'IN VALUTAZIONE').length;
             document.getElementById('count-integrazione').innerText = arr.filter(x => x.status === 'RICHIESTA INTEGRAZIONE').length;
             document.getElementById('count-approvato').innerText = arr.filter(x => x.status === 'APPROVATO - IN ORDINE').length;
-            document.getElementById('count-completati').innerText = arr.filter(x => x.status === 'COMPLETATO / CONSEGNATO').length;
+            document.getElementById('count-completato').innerText = arr.filter(x => x.status === 'COMPLETATO / CONSEGNATO').length;
             document.getElementById('count-respinto').innerText = arr.filter(x => x.status === 'RESPINTO').length;
         }
 
