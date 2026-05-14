@@ -3,67 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Ordini v6.5 | IIS Scarpa</title>
+    <title>Dashboard Ordini v7.0 | IIS Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0e14; --card: #161b22; --border: #30363d; --text: #c9d1d9;
             --yellow: #d29922; --purple: #a371f7; --blue: #1f6feb; --green: #238636; --red: #f85149;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
         
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg); 
+            color: var(--text); 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden;
+        }
+
+        /* HEADER FISSO */
         .white-header { 
-            background-color: #ffffff; padding: 12px 30px; display: flex; 
-            justify-content: space-between; align-items: center; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; 
+            background-color: #ffffff; 
+            padding: 12px 30px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
         }
         .white-header h1 { color: #000; margin: 0; font-size: 1.3rem; font-weight: 800; }
         .school-logo { max-height: 45px; }
 
         .main-content { padding: 20px; width: 100%; box-sizing: border-box; }
+
+        /* TABELLA CON LAYOUT FISSO */
         .table-container { 
-            background: var(--card); border: 1px solid var(--border); 
-            border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
+            background: var(--card); 
+            border: 1px solid var(--border); 
+            border-radius: 12px; 
+            overflow: hidden; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
         }
         
-        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; table-layout: fixed; }
+        table { 
+            width: 100%; 
+            border-collapse: collapse; 
+            font-size: 0.85rem; 
+            table-layout: fixed; /* BLOCCA LE COLONNE */
+        }
         
         th { 
-            background: rgba(255,255,255,0.03); text-align: left; padding: 15px; 
-            color: #8b949e; text-transform: uppercase; font-size: 0.7rem; 
-            border-bottom: 2px solid var(--border); letter-spacing: 0.5px;
+            background: rgba(255,255,255,0.03); 
+            text-align: left; 
+            padding: 15px; 
+            color: #8b949e; 
+            text-transform: uppercase; 
+            font-size: 0.7rem; 
+            border-bottom: 2px solid var(--border);
         }
         
         td { 
-            padding: 15px; border-bottom: 1px solid var(--border); 
-            vertical-align: middle; /* Allinea tutto al centro verticalmente */
+            padding: 15px; 
+            border-bottom: 1px solid var(--border); 
+            vertical-align: middle; 
             word-wrap: break-word; 
+            height: 100px; /* ALTEZZA FISSA MINIMA */
         }
 
-        /* Badge Stato (Colonna D) */
+        /* BADGE STATO */
         .badge { 
-            padding: 6px 12px; border-radius: 20px; font-size: 0.65rem; 
-            font-weight: 800; text-transform: uppercase; border: 1px solid transparent; 
-            display: inline-block; white-space: nowrap;
+            padding: 6px 12px; 
+            border-radius: 20px; 
+            font-size: 0.65rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            border: 1px solid transparent; 
+            display: inline-block;
         }
         .b-valutazione { border-color: var(--yellow); color: var(--yellow); background: rgba(210,153,34,0.1); }
         .b-approvato { border-color: var(--blue); color: var(--blue); background: rgba(31,111,235,0.1); }
         .b-completato { border-color: var(--green); color: var(--green); background: rgba(35,134,54,0.1); }
         .b-respinto { border-color: var(--red); color: var(--red); background: rgba(248,81,73,0.1); }
 
-        /* FIX PER TESTO LUNGO AI */
-        .ai-container {
-            max-height: 120px; /* Altezza massima della cella */
-            overflow-y: auto;  /* Scroll se il testo è troppo lungo */
-            padding-right: 5px;
+        /* CONTENITORE IA CON SCROLL (L'ELEMENTO CHE TI SALVA IL LAYOUT) */
+        .ai-scroll-box {
+            max-height: 100px; /* Impedisce alla riga di esplodere */
+            overflow-y: auto; 
+            padding-right: 8px;
             font-size: 0.8rem;
             line-height: 1.5;
             color: var(--purple);
             scrollbar-width: thin;
             scrollbar-color: var(--border) transparent;
         }
-        .ai-container::-webkit-scrollbar { width: 4px; }
-        .ai-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+        /* Scrollbar per Chrome/Safari */
+        .ai-scroll-box::-webkit-scrollbar { width: 4px; }
+        .ai-scroll-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
 
         .timestamp { color: #6e7681; font-family: monospace; font-size: 0.8rem; }
         tr:hover td { background: rgba(255,255,255,0.02); }
@@ -84,10 +120,10 @@
                 <thead>
                     <tr>
                         <th>DATA (A)</th>
-                        <th>DIPARTIMENTO (B)</th>
+                        <th>DEPT (B)</th>
                         <th>STATO (D)</th>
                         <th>RESP. (E)</th>
-                        <th>OBIETTIVO (F)</th>
+                        <th>OGGETTO (F)</th>
                         <th>ANALISI GROQ (C)</th>
                         <th>NOTE (H)</th>
                     </tr>
@@ -100,11 +136,11 @@
     <script>
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
 
-        async function syncData() {
+        async function sync() {
             try {
                 const response = await fetch(`${CSV_URL}&nocache=${Date.now()}`);
-                const csvText = await response.text();
-                const rows = csvText.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
+                const text = await response.text();
+                const rows = text.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
                 
                 const tbody = document.getElementById('tableBody');
                 let html = '';
@@ -122,7 +158,6 @@
                         const objF  = clean(c[5]);
                         const noteH = clean(c[7]) || "-";
 
-                        // Logica Colori
                         let bCls = 'b-valutazione';
                         const s = statD.toUpperCase();
                         if(s.includes('APPROVATO')) bCls = 'b-approvato';
@@ -135,10 +170,10 @@
                                 <td style="font-weight:800; color:#fff;">${deptB}</td>
                                 <td><span class="badge ${bCls}">${statD}</span></td>
                                 <td style="color:#fff;">${respE}</td>
-                                <td style="color:#adbac7; font-size:0.8rem;">${objF}</td>
+                                <td style="color:#8b949e; font-size:0.8rem;">${objF}</td>
                                 <td>
-                                    <div class="ai-container">
-                                        ${aiC.includes("Error") ? '<span style="color:var(--red)">⚠️ Errore API</span>' : aiC}
+                                    <div class="ai-scroll-box">
+                                        ${aiC || "[In attesa...]"}
                                     </div>
                                 </td>
                                 <td style="color:#8b949e; font-size: 0.8rem;">${noteH}</td>
@@ -150,8 +185,8 @@
             } catch (e) { console.error(e); }
         }
 
-        syncData();
-        setInterval(syncData, 15000);
+        sync();
+        setInterval(sync, 15000);
     </script>
 </body>
 </html>
