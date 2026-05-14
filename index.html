@@ -12,73 +12,72 @@
             --blue: #58a6ff; --purple: #bc8cff; --green: #3fb950; --red: #f85149; --yellow: #d29922;
         }
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; width: 100vw; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; width: 100%; }
 
-        /* HEADER */
+        /* HEADER OTTIMIZZATO */
         header { 
-            background: #fff; color: #000; padding: 0 15px; 
+            background: #fff; color: #000; padding: 0 20px; 
             display: flex; justify-content: space-between; align-items: center;
-            position: sticky; top: 0; z-index: 1001; box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-            min-height: 80px; width: 100%;
+            position: sticky; top: 0; z-index: 1001; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            height: 70px; width: 100%;
         }
-        .header-left { display: flex; align-items: center; gap: 10px; max-width: 65%; }
-        .school-logo { height: 45px; width: auto; flex-shrink: 0; }
-        .brand { min-width: 0; }
-        .brand h1 { margin: 0; font-size: 1.1rem; font-weight: 800; white-space: nowrap; }
-        .brand p { margin: 0; font-size: 0.65rem; color: #666; font-weight: 600; text-transform: uppercase; }
+        .header-left { display: flex; align-items: center; gap: 12px; flex: 1; }
+        .school-logo { height: 40px; width: auto; flex-shrink: 0; }
+        .brand h1 { margin: 0; font-size: 1.1rem; font-weight: 800; letter-spacing: -0.5px; }
+        .brand p { margin: 0; font-size: 0.6rem; color: #666; font-weight: 600; text-transform: uppercase; }
 
-        .nav-wrapper { display: flex; align-items: center; gap: 8px; }
+        /* NAV */
+        .nav-wrapper { display: flex; align-items: center; gap: 10px; }
         .nav-links { display: flex; gap: 5px; }
         .nav-btn { 
             padding: 8px 12px; cursor: pointer; border: none; background: transparent; 
-            border-radius: 6px; font-weight: 700; color: #444; font-size: 0.75rem; text-transform: uppercase;
+            border-radius: 6px; font-weight: 700; color: #444; font-size: 0.7rem; text-transform: uppercase;
         }
         .nav-btn.active { color: var(--blue); background: rgba(88,166,255,0.1); }
         
-        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 4px; background: none; border: none; padding: 10px; }
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 4px; background: none; border: none; }
         .hamburger span { width: 22px; height: 2px; background: #000; border-radius: 2px; transition: 0.3s; }
-        .hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
-        .hamburger.open span:nth-child(2) { opacity: 0; }
-        .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+        
+        .refresh-btn { background: var(--green); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.65rem; }
 
-        .refresh-btn { background: var(--green); color: white; border: none; padding: 8px 15px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.7rem; white-space: nowrap; }
-
-        .container { padding: 15px; width: 100%; max-width: 1450px; margin: 0 auto; }
-        .view { display: none; width: 100%; }
+        .container { padding: 15px; width: 100%; max-width: 1400px; margin: 0 auto; }
+        .view { display: none; }
         .view.active { display: block; }
 
-        /* TABELLA */
-        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; width: 100%; margin-bottom: 25px; }
-        table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 800px; }
-        th { background: rgba(255,255,255,0.03); padding: 12px; text-align: left; font-size: 0.65rem; color: #8b949e; border-bottom: 2px solid var(--border); }
-        td { padding: 12px; border-bottom: 1px solid var(--border); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 0.8rem; }
+        /* TABELLA RESPONSIVE */
+        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; width: 100%; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 750px; }
+        th { background: rgba(255,255,255,0.03); padding: 12px 10px; text-align: left; font-size: 0.6rem; color: #8b949e; border-bottom: 1px solid var(--border); }
+        td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.6rem; font-weight: 800; border: 1px solid currentColor; }
+        .badge { padding: 3px 8px; border-radius: 20px; font-size: 0.55rem; font-weight: 800; border: 1px solid currentColor; }
         .ST-APPROVATO { color: var(--blue); } .ST-VALUTAZIONE { color: var(--yellow); } .ST-RESPINTO { color: var(--red); }
 
-        /* GRAFICO */
-        .stats-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; width: 100%; }
-        .chart-box { width: 100%; height: 350px; position: relative; }
+        /* STATS */
+        .stats-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; width: 100%; }
+        .chart-box { position: relative; height: 300px; width: 100%; }
 
-        /* ANALISI IA */
-        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 15px; }
-        .ai-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; border-left: 4px solid var(--purple); }
-
-        /* MOBILE FIX & NASCONDI SOTTOTITOLO */
-        @media (max-width: 900px) {
-            header { padding: 0 10px; }
-            .brand p { display: none; } /* NASCONDE IIS ANTONIO SCARPA SU MOBILE */
-            .brand h1 { font-size: 0.95rem; }
+        /* MOBILE FIX CRITICO */
+        @media (max-width: 768px) {
+            header { height: 60px; padding: 0 10px; }
+            .brand { display: none; } /* RIMUOVE TITOLO E SOTTOTITOLO SU MOBILE */
+            .header-left { justify-content: flex-start; }
+            .school-logo { height: 35px; }
+            
             .hamburger { display: flex; }
             .nav-links { 
-                display: none; position: fixed; top: 80px; left: 0; right: 0; bottom: 0;
-                background: #fff; flex-direction: column; align-items: center; padding-top: 40px; gap: 20px; z-index: 1000;
+                display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+                background: #fff; flex-direction: column; align-items: center; padding-top: 30px; gap: 10px; z-index: 1000;
             }
             .nav-links.open { display: flex; }
-            .nav-btn { font-size: 1.2rem; color: #000; width: 80%; text-align: center; border-bottom: 1px solid #eee; padding: 20px; }
-            .school-logo { height: 35px; }
-            .chart-box { height: 280px; }
+            .nav-btn { font-size: 1.1rem; color: #000; width: 85%; text-align: center; padding: 15px; border-bottom: 1px solid #eee; }
+            
+            .chart-box { height: 250px; }
+            .container { padding: 10px; }
         }
+
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)); gap: 15px; }
+        .ai-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; border-left: 4px solid var(--purple); }
     </style>
 </head>
 <body>
@@ -108,14 +107,16 @@
         <div id="tabella" class="view active">
             <div class="table-wrap">
                 <table>
-                    <colgroup><col style="width: 90px"><col style="width: 150px"><col style="width: 140px"><col style="width: 140px"><col style="width: auto"></colgroup>
+                    <colgroup>
+                        <col style="width: 80px"><col style="width: 120px"><col style="width: 130px"><col style="width: 120px"><col style="width: auto">
+                    </colgroup>
                     <thead><tr><th>DATA</th><th>DEPT</th><th>STATO</th><th>RESP.</th><th>OGGETTO</th></tr></thead>
                     <tbody id="tbody"></tbody>
                 </table>
             </div>
 
             <div class="stats-container">
-                <p style="font-size: 0.75rem; color: #8b949e; text-align: center; margin-bottom: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">Avanzamento per Dipartimento</p>
+                <p style="font-size: 0.65rem; color: #8b949e; text-align: center; margin-bottom: 10px; font-weight: 800; text-transform: uppercase;">Avanzamento Acquisti</p>
                 <div class="chart-box">
                     <canvas id="deptChart"></canvas>
                 </div>
@@ -132,8 +133,19 @@
         let myChart = null;
 
         function toggleMenu() { 
-            document.getElementById('menu').classList.toggle('open'); 
-            document.getElementById('hamBtn').classList.toggle('open');
+            const menu = document.getElementById('menu');
+            const btn = document.getElementById('hamBtn');
+            menu.classList.toggle('open');
+            btn.classList.toggle('open');
+            if(btn.classList.contains('open')) {
+                btn.querySelectorAll('span')[0].style.transform = "translateY(6px) rotate(45deg)";
+                btn.querySelectorAll('span')[1].style.opacity = "0";
+                btn.querySelectorAll('span')[2].style.transform = "translateY(-6px) rotate(-45deg)";
+            } else {
+                btn.querySelectorAll('span')[0].style.transform = "none";
+                btn.querySelectorAll('span')[1].style.opacity = "1";
+                btn.querySelectorAll('span')[2].style.transform = "none";
+            }
         }
 
         function switchView(id, btn) {
@@ -141,8 +153,8 @@
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             btn.classList.add('active');
-            if(window.innerWidth <= 900 && document.getElementById('menu').classList.contains('open')) toggleMenu();
-            if(id === 'tabella' && myChart) setTimeout(() => myChart.update(), 100);
+            if(window.innerWidth <= 768 && document.getElementById('menu').classList.contains('open')) toggleMenu();
+            if(id === 'tabella') setTimeout(() => { if(myChart) myChart.resize(); }, 50);
         }
 
         function parseCSV(text) {
@@ -169,9 +181,9 @@
                 data: {
                     labels: labels,
                     datasets: [
-                        { label: 'APPROVATI', data: labels.map(l => stats[l].app), backgroundColor: '#58a6ff' },
-                        { label: 'IN ATTESA', data: labels.map(l => stats[l].val), backgroundColor: '#d29922' },
-                        { label: 'RESPINTI', data: labels.map(l => stats[l].res), backgroundColor: '#f85149' }
+                        { label: 'OK', data: labels.map(l => stats[l].app), backgroundColor: '#58a6ff' },
+                        { label: 'WAIT', data: labels.map(l => stats[l].val), backgroundColor: '#d29922' },
+                        { label: 'NO', data: labels.map(l => stats[l].res), backgroundColor: '#f85149' }
                     ]
                 },
                 options: {
@@ -182,7 +194,7 @@
                         y: { stacked: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 9 } } }
                     },
                     plugins: {
-                        legend: { position: 'bottom', labels: { color: '#c9d1d9', boxWidth: 12, font: { size: 10 } } }
+                        legend: { position: 'bottom', labels: { color: '#c9d1d9', boxWidth: 10, font: { size: 10 } } }
                     }
                 }
             });
@@ -192,23 +204,18 @@
             const btn = document.querySelector('.refresh-btn');
             btn.innerText = "...";
             try {
-                const r = await fetch(`${CSV_URL}&t=${Date.now()}`);
+                const r = await fetch(`${CSV_URL}&nocache=${Date.now()}`);
                 const csvText = await r.text();
                 const data = parseCSV(csvText).slice(1);
                 
                 const table = document.getElementById('tbody');
                 const grid = document.getElementById('aiGrid');
                 table.innerHTML = ''; grid.innerHTML = '';
-                
                 const stats = {};
 
                 data.forEach(cols => {
                     if(cols.length >= 5) {
-                        const val = { 
-                            date: cols[0], dept: cols[1], ai: cols[2], 
-                            stat: (cols[3] || 'IN VALUTAZIONE').toUpperCase(), 
-                            resp: cols[4], obj: cols[5] 
-                        };
+                        const val = { date: cols[0], dept: cols[1], ai: cols[2], stat: (cols[3] || 'INFO').toUpperCase(), resp: cols[4], obj: cols[5] };
                         
                         if (!stats[val.dept]) stats[val.dept] = { app: 0, val: 0, res: 0 };
                         let sCls = 'ST-VALUTAZIONE';
@@ -221,13 +228,13 @@
                             <td style="font-weight:800; color:#fff">${val.dept}</td>
                             <td><span class="badge ${sCls}">${val.stat}</span></td>
                             <td>${val.resp}</td>
-                            <td title="${val.obj.replace(/"/g, '&quot;')}">${val.obj}</td>
+                            <td title="${val.obj}">${val.obj}</td>
                         </tr>`;
 
-                        if(val.ai && val.ai.trim().length > 10 && !val.ai.includes("Caricamento")) {
+                        if(val.ai && val.ai.trim().length > 10) {
                             grid.innerHTML += `<div class="ai-card">
                                 <h3 style="margin:0; color:#fff; font-size:1rem;">${val.dept}</h3>
-                                <div style="font-size:0.85rem; line-height:1.6; margin-top:10px;">${val.ai.replace(/\*\*/g, '')}</div>
+                                <div style="font-size:0.8rem; line-height:1.5; margin-top:10px; color:#adbac7;">${val.ai.replace(/\*\*/g, '')}</div>
                             </div>`;
                         }
                     }
