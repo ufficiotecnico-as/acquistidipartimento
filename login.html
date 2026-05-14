@@ -16,8 +16,6 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
-            /* Supporto per tastiere mobile e dynamic viewport */
-            min-height: 100vh;
             min-height: 100dvh;
             display: flex;
             flex-direction: column;
@@ -25,65 +23,68 @@
             justify-content: center;
             position: relative;
             padding: 20px;
-            overflow-y: auto; /* Permette lo scroll se lo schermo è piccolo */
             overflow-x: hidden;
         }
 
-        /* BLOBS SFONDO - Ottimizzati per non pesare */
-        .blobs { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            z-index: -1; filter: blur(60px); pointer-events: none;
-        }
+        /* SFONDO ANIMATO */
+        .blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(60px); pointer-events: none; }
         .blob { position: absolute; border-radius: 50%; opacity: 0.4; animation: move 20s infinite alternate; }
         .blob-1 { width: 60vw; height: 60vw; background: var(--primary); top: -20%; left: -10%; }
         .blob-2 { width: 70vw; height: 70vw; background: var(--accent); bottom: -20%; right: -10%; animation-delay: -5s; }
-        
         @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(20px, 40px) scale(1.1); } }
 
-        /* CARD RESPONSIVE */
+        /* CARD */
         .login-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 2.5rem 2rem;
-            border-radius: 24px;
+            border-radius: 28px;
             width: 100%;
-            max-width: 380px; /* Compattezza ideale */
+            max-width: 380px;
             text-align: center;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-            margin: auto; /* Centratura verticale in flex */
-            transition: transform 0.3s ease, opacity 0.3s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
         }
 
-        .logo { width: auto; height: 45px; max-width: 100%; margin-bottom: 1.5rem; }
+        /* FIX VISIBILITÀ LOGO */
+        .logo-container {
+            background: rgba(255, 255, 255, 0.9); /* Sfondo chiaro per far vedere il nero del logo */
+            padding: 12px;
+            border-radius: 18px;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+        .logo { height: 45px; width: auto; display: block; }
 
         h2 { 
-            color: #fff; font-weight: 800; font-size: 1.5rem; margin-bottom: 0.5rem; 
+            color: #fff; font-weight: 800; font-size: 1.6rem; margin-bottom: 0.5rem; 
             background: linear-gradient(to right, #fff, var(--primary));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        p { color: rgba(255,255,255,0.5); font-size: 0.8rem; margin-bottom: 2rem; }
+        p { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 2rem; }
 
         /* INPUTS */
-        .input-group { position: relative; margin-bottom: 1.5rem; width: 100%; }
+        .input-group { position: relative; margin-bottom: 1.5rem; width: 100%; text-align: left; }
         .input-group input {
             width: 100%; padding: 1rem 1.2rem; 
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 14px; color: #fff; font-size: 16px; /* Evita zoom automatico iOS */
+            border-radius: 14px; color: #fff; font-size: 16px; 
             outline: none; transition: 0.2s;
         }
         .input-group input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.08); }
 
         .input-group label {
             position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%);
-            color: rgba(255,255,255,0.4); pointer-events: none; transition: 0.2s; font-size: 0.9rem;
+            color: rgba(255,255,255,0.4); pointer-events: none; transition: 0.2s;
         }
         .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label {
             top: -0.6rem; left: 0.8rem; font-size: 0.7rem; font-weight: 800; color: var(--primary);
-            background: var(--bg-dark); padding: 0 6px; border-radius: 4px;
+            background: #0d1117; padding: 0 6px; border-radius: 4px;
         }
 
         /* BUTTON */
@@ -91,24 +92,21 @@
             width: 100%; padding: 1.1rem; 
             background: linear-gradient(45deg, var(--primary), var(--secondary));
             color: #06090f; border: none; border-radius: 14px; 
-            font-size: 0.9rem; font-weight: 800; cursor: pointer; transition: 0.2s;
+            font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: 0.2s;
             text-transform: uppercase; letter-spacing: 1px;
-            margin-top: 0.5rem;
         }
         .login-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .login-btn:active { transform: translateY(0) scale(0.98); }
+        .login-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
 
-        #error-msg { color: var(--error); font-size: 0.75rem; font-weight: 700; margin-top: 1rem; display: none; }
+        #error-msg { color: var(--error); font-size: 0.8rem; font-weight: 700; margin-top: 1rem; display: none; }
         
-        /* FOOTER */
-        footer { margin-top: 2rem; color: rgba(255,255,255,0.15); font-size: 0.6rem; letter-spacing: 1px; text-align: center; }
+        footer { margin-top: 2rem; color: rgba(255,255,255,0.2); font-size: 0.6rem; letter-spacing: 1px; }
 
-        /* FIX PER SCHERMI MOLTO PICCOLI O ORIZZONTALI */
-        @media (max-height: 500px) {
-            body { padding: 40px 20px; }
+        /* MOBILE FIX */
+        @media (max-height: 600px) {
             .login-card { padding: 1.5rem; }
-            .logo { height: 30px; margin-bottom: 1rem; }
-            p { margin-bottom: 1rem; }
+            .logo-container { margin-bottom: 1rem; padding: 8px; }
+            .logo { height: 35px; }
         }
 
         .shake { animation: shake 0.4s; }
@@ -127,9 +125,12 @@
     </div>
 
     <div class="login-card" id="card">
-        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="logo" alt="Logo">
-        <h2>Portale Acquisti</h2>
-        <p id="status-text">Inizializzazione database...</p>
+        <div class="logo-container">
+            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="logo" alt="IIS Scarpa">
+        </div>
+        
+        <h2>Area Riservata</h2>
+        <p id="status-text">Connessione al database...</p>
 
         <div class="input-group">
             <input type="text" id="user" placeholder=" " required autocomplete="username">
@@ -142,7 +143,7 @@
         </div>
 
         <button class="login-btn" id="loginBtn" onclick="handleLogin()" disabled>Entra</button>
-        <div id="error-msg">Credenziali non valide</div>
+        <div id="error-msg">Dati di accesso errati</div>
     </div>
 
     <footer>IIS ANTONIO SCARPA — SMART SYSTEM 2026</footer>
@@ -163,9 +164,9 @@
 
                 document.getElementById('loginBtn').disabled = false;
                 document.getElementById('loginBtn').innerText = "Accedi";
-                document.getElementById('status-text').innerText = "Pronto per l'accesso";
+                document.getElementById('status-text').innerText = "Database sincronizzato";
             } catch (error) {
-                document.getElementById('status-text').innerText = "Errore connessione database.";
+                document.getElementById('status-text').innerText = "Errore di rete.";
             }
         }
 
@@ -179,7 +180,7 @@
 
             if (found) {
                 card.style.opacity = '0';
-                card.style.transform = 'translateY(-10px)';
+                card.style.transform = 'translateY(-10px) scale(0.95)';
                 localStorage.setItem('scarpa_auth', 'true');
                 setTimeout(() => { window.location.href = 'index.html'; }, 400);
             } else {
