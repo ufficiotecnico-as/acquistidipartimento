@@ -23,36 +23,48 @@
             background-image: linear-gradient(var(--border) .1em, transparent .1em), linear-gradient(90deg, var(--border) .1em, transparent .1em);
             background-size: 3em 3em;
             color: var(--text);
-            padding: 40px;
             margin: 0;
+            padding: 0;
         }
 
-        /* HEADER & LOGO */
-        .main-header {
+        /* HEADER BIANCO PER LOGO */
+        .white-header {
+            background-color: #ffffff;
+            padding: 20px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
             margin-bottom: 40px;
         }
+
         .title-group h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 800;
             margin: 0;
-            color: #fff;
+            color: #000000;
             letter-spacing: -1px;
         }
+
         .title-group p {
-            font-size: 1rem;
+            font-size: 0.9rem;
             letter-spacing: 4px;
-            color: #8b949e;
+            color: #444444;
             margin: 5px 0 0 0;
             text-transform: uppercase;
-        }
-        .school-logo {
-            max-height: 80px;
+            font-weight: 600;
         }
 
-        /* TOP CARDS - AGGIORNATE */
+        .school-logo {
+            max-height: 70px;
+            width: auto;
+        }
+
+        .main-content {
+            padding: 0 40px 40px 40px;
+        }
+
+        /* TOP CARDS */
         .top-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 40px; }
         .stat-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; 
@@ -65,7 +77,7 @@
         .c-completato::before { background: var(--green); }
         .c-respinto::before { background: var(--red); }
         
-        .stat-label { font-size: 0.65rem; font-weight: 600; color: #8b949e; text-transform: uppercase; display: block; line-height: 1.2; }
+        .stat-label { font-size: 0.65rem; font-weight: 600; color: #8b949e; text-transform: uppercase; display: block; }
         .stat-value { font-size: 2rem; font-weight: 800; display: block; margin-top: 8px; color: #fff; }
 
         /* CONTROLS */
@@ -101,7 +113,7 @@
 </head>
 <body>
 
-    <header class="main-header">
+    <header class="white-header">
         <div class="title-group">
             <h1>ORDINI DI DIPARTIMENTO</h1>
             <p>IIS ANTONIO SCARPA</p>
@@ -109,53 +121,55 @@
         <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" alt="Logo Scarpa" class="school-logo">
     </header>
 
-    <div class="top-grid">
-        <div class="stat-card c-valutazione">
-            <span class="stat-label">In Valutazione</span>
-            <span class="stat-value" id="count-val">0</span>
+    <div class="main-content">
+        <div class="top-grid">
+            <div class="stat-card c-valutazione">
+                <span class="stat-label">In Valutazione</span>
+                <span class="stat-value" id="count-val">0</span>
+            </div>
+            <div class="stat-card c-integrazione">
+                <span class="stat-label">Richiesta Integrazione</span>
+                <span class="stat-value" id="count-int">0</span>
+            </div>
+            <div class="stat-card c-approvato">
+                <span class="stat-label">Approvato - In Ordine</span>
+                <span class="stat-value" id="count-app">0</span>
+            </div>
+            <div class="stat-card c-completato">
+                <span class="stat-label">Completato / Consegna</span>
+                <span class="stat-value" id="count-com">0</span>
+            </div>
+            <div class="stat-card c-respinto">
+                <span class="stat-label">Respinto</span>
+                <span class="stat-value" id="count-res">0</span>
+            </div>
         </div>
-        <div class="stat-card c-integrazione">
-            <span class="stat-label">Richiesta Integrazione</span>
-            <span class="stat-value" id="count-int">0</span>
-        </div>
-        <div class="stat-card c-approvato">
-            <span class="stat-label">Approvato - In Ordine</span>
-            <span class="stat-value" id="count-app">0</span>
-        </div>
-        <div class="stat-card c-completato">
-            <span class="stat-label">Completato / Consegna</span>
-            <span class="stat-value" id="count-com">0</span>
-        </div>
-        <div class="stat-card c-respinto">
-            <span class="stat-label">Respinto</span>
-            <span class="stat-value" id="count-res">0</span>
-        </div>
-    </div>
 
-    <div class="controls">
-        <input type="text" id="search" placeholder="Cerca dipartimento..." onkeyup="refresh()">
-        <select id="statusFilter" onchange="refresh()">
-            <option value="">Tutti gli stati</option>
-            <option value="IN VALUTAZIONE">In Valutazione</option>
-            <option value="RICHIESTA INTEGRAZIONE">Richiesta Integrazione</option>
-            <option value="APPROVATO - IN ORDINE">Approvato - In Ordine</option>
-            <option value="COMPLETATO / CONSEGNATO">Completato / Consegnato</option>
-            <option value="RESPINTO">Respinto</option>
-        </select>
-    </div>
+        <div class="controls">
+            <input type="text" id="search" placeholder="Cerca dipartimento..." onkeyup="refresh()">
+            <select id="statusFilter" onchange="refresh()">
+                <option value="">Tutti gli stati</option>
+                <option value="IN VALUTAZIONE">In Valutazione</option>
+                <option value="RICHIESTA INTEGRAZIONE">Richiesta Integrazione</option>
+                <option value="APPROVATO - IN ORDINE">Approvato - In Ordine</option>
+                <option value="COMPLETATO / CONSEGNATO">Completato / Consegnato</option>
+                <option value="RESPINTO">Respinto</option>
+            </select>
+        </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Dipartimento</th>
-                    <th>Stato Attuale</th>
-                    <th>Priorità</th>
-                    <th>Aggiornamento</th>
-                </tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Dipartimento</th>
+                        <th>Stato Attuale</th>
+                        <th>Priorità</th>
+                        <th>Aggiornamento</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -194,7 +208,6 @@
                 (!filter || o.status === filter) && (o.name.toLowerCase().includes(query))
             );
 
-            // Aggiorna contatori superiori
             document.getElementById('count-val').innerText = db.filter(o => o.status === 'IN VALUTAZIONE').length;
             document.getElementById('count-int').innerText = db.filter(o => o.status === 'RICHIESTA INTEGRAZIONE').length;
             document.getElementById('count-app').innerText = db.filter(o => o.status === 'APPROVATO - IN ORDINE').length;
