@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Acquisti Dipartimento | IIS Scarpa</title>
+    <title>Dashboard Acquisti | IIS Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -14,7 +14,7 @@
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; width: 100%; }
 
-        /* HEADER OTTIMIZZATO */
+        /* HEADER */
         header { 
             background: #fff; color: #000; padding: 0 20px; 
             display: flex; justify-content: space-between; align-items: center;
@@ -34,8 +34,9 @@
             border-radius: 6px; font-weight: 700; color: #444; font-size: 0.7rem; text-transform: uppercase;
         }
         .nav-btn.active { color: var(--blue); background: rgba(88,166,255,0.1); }
+        .nav-btn.logout { color: var(--red); }
         
-        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 4px; background: none; border: none; }
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 4px; background: none; border: none; padding: 5px; }
         .hamburger span { width: 22px; height: 2px; background: #000; border-radius: 2px; transition: 0.3s; }
         
         .refresh-btn { background: var(--green); color: white; border: none; padding: 8px 12px; border-radius: 6px; font-weight: 800; cursor: pointer; font-size: 0.65rem; }
@@ -44,8 +45,8 @@
         .view { display: none; }
         .view.active { display: block; }
 
-        /* TABELLA RESPONSIVE */
-        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; width: 100%; margin-bottom: 20px; -webkit-overflow-scrolling: touch; }
+        /* TABELLA */
+        .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow-x: auto; width: 100%; margin-bottom: 20px; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 750px; }
         th { background: rgba(255,255,255,0.03); padding: 12px 10px; text-align: left; font-size: 0.6rem; color: #8b949e; border-bottom: 1px solid var(--border); }
         td { padding: 12px 10px; border-bottom: 1px solid var(--border); font-size: 0.75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -53,17 +54,19 @@
         .badge { padding: 3px 8px; border-radius: 20px; font-size: 0.55rem; font-weight: 800; border: 1px solid currentColor; }
         .ST-APPROVATO { color: var(--blue); } .ST-VALUTAZIONE { color: var(--yellow); } .ST-RESPINTO { color: var(--red); }
 
-        /* STATS */
+        /* GRAFICO */
         .stats-container { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; width: 100%; }
         .chart-box { position: relative; height: 300px; width: 100%; }
 
-        /* MOBILE FIX CRITICO */
+        /* CARDS IA */
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)); gap: 15px; }
+        .ai-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; border-left: 4px solid var(--purple); }
+
+        /* MOBILE FIX */
         @media (max-width: 768px) {
             header { height: 60px; padding: 0 10px; }
-            .brand { display: none; } /* RIMUOVE TITOLO E SOTTOTITOLO SU MOBILE */
-            .header-left { justify-content: flex-start; }
+            .brand { display: none; } 
             .school-logo { height: 35px; }
-            
             .hamburger { display: flex; }
             .nav-links { 
                 display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
@@ -71,20 +74,16 @@
             }
             .nav-links.open { display: flex; }
             .nav-btn { font-size: 1.1rem; color: #000; width: 85%; text-align: center; padding: 15px; border-bottom: 1px solid #eee; }
-            
+            .nav-btn.logout { color: var(--red); border-bottom: none; }
             .chart-box { height: 250px; }
-            .container { padding: 10px; }
         }
-
-        .ai-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr)); gap: 15px; }
-        .ai-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; border-left: 4px solid var(--purple); }
     </style>
 </head>
 <body>
 
     <header>
         <div class="header-left">
-            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo" alt="Logo">
+            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo">
             <div class="brand">
                 <h1>ACQUISTI DIPARTIMENTO</h1>
                 <p>IIS ANTONIO SCARPA</p>
@@ -99,6 +98,7 @@
             <nav class="nav-links" id="menu">
                 <button class="nav-btn active" onclick="switchView('tabella', this)">Lista</button>
                 <button class="nav-btn" onclick="switchView('report', this)">Analisi IA</button>
+                <button class="nav-btn logout" onclick="logout()">ESCI ✖</button>
             </nav>
         </div>
     </header>
@@ -117,9 +117,7 @@
 
             <div class="stats-container">
                 <p style="font-size: 0.65rem; color: #8b949e; text-align: center; margin-bottom: 10px; font-weight: 800; text-transform: uppercase;">Avanzamento Acquisti</p>
-                <div class="chart-box">
-                    <canvas id="deptChart"></canvas>
-                </div>
+                <div class="chart-box"><canvas id="deptChart"></canvas></div>
             </div>
         </div>
 
@@ -129,6 +127,17 @@
     </div>
 
     <script>
+        // --- 1. SICUREZZA ---
+        if (localStorage.getItem('scarpa_auth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+
+        function logout() {
+            localStorage.removeItem('scarpa_auth');
+            window.location.href = 'login.html';
+        }
+
+        // --- 2. CONFIGURAZIONE E DATI ---
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
         let myChart = null;
 
@@ -137,14 +146,15 @@
             const btn = document.getElementById('hamBtn');
             menu.classList.toggle('open');
             btn.classList.toggle('open');
-            if(btn.classList.contains('open')) {
-                btn.querySelectorAll('span')[0].style.transform = "translateY(6px) rotate(45deg)";
-                btn.querySelectorAll('span')[1].style.opacity = "0";
-                btn.querySelectorAll('span')[2].style.transform = "translateY(-6px) rotate(-45deg)";
+            const spans = btn.querySelectorAll('span');
+            if(menu.classList.contains('open')) {
+                spans[0].style.transform = "translateY(6px) rotate(45deg)";
+                spans[1].style.opacity = "0";
+                spans[2].style.transform = "translateY(-6px) rotate(-45deg)";
             } else {
-                btn.querySelectorAll('span')[0].style.transform = "none";
-                btn.querySelectorAll('span')[1].style.opacity = "1";
-                btn.querySelectorAll('span')[2].style.transform = "none";
+                spans[0].style.transform = "none";
+                spans[1].style.opacity = "1";
+                spans[2].style.transform = "none";
             }
         }
 
@@ -175,7 +185,6 @@
             const ctx = document.getElementById('deptChart').getContext('2d');
             const labels = Object.keys(stats);
             if (myChart) myChart.destroy();
-
             myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -187,15 +196,12 @@
                     ]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     scales: {
                         x: { stacked: true, grid: { display: false }, ticks: { color: '#8b949e', font: { size: 9 } } },
                         y: { stacked: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 9 } } }
                     },
-                    plugins: {
-                        legend: { position: 'bottom', labels: { color: '#c9d1d9', boxWidth: 10, font: { size: 10 } } }
-                    }
+                    plugins: { legend: { position: 'bottom', labels: { color: '#c9d1d9', boxWidth: 10, font: { size: 10 } } } }
                 }
             });
         }
@@ -207,7 +213,6 @@
                 const r = await fetch(`${CSV_URL}&nocache=${Date.now()}`);
                 const csvText = await r.text();
                 const data = parseCSV(csvText).slice(1);
-                
                 const table = document.getElementById('tbody');
                 const grid = document.getElementById('aiGrid');
                 table.innerHTML = ''; grid.innerHTML = '';
@@ -216,26 +221,15 @@
                 data.forEach(cols => {
                     if(cols.length >= 5) {
                         const val = { date: cols[0], dept: cols[1], ai: cols[2], stat: (cols[3] || 'INFO').toUpperCase(), resp: cols[4], obj: cols[5] };
-                        
                         if (!stats[val.dept]) stats[val.dept] = { app: 0, val: 0, res: 0 };
                         let sCls = 'ST-VALUTAZIONE';
                         if (val.stat.includes('APPROVATO')) { stats[val.dept].app++; sCls = 'ST-APPROVATO'; }
                         else if (val.stat.includes('RESPINTO')) { stats[val.dept].res++; sCls = 'ST-RESPINTO'; }
                         else { stats[val.dept].val++; }
 
-                        table.innerHTML += `<tr>
-                            <td style="color:#8b949e">${val.date}</td>
-                            <td style="font-weight:800; color:#fff">${val.dept}</td>
-                            <td><span class="badge ${sCls}">${val.stat}</span></td>
-                            <td>${val.resp}</td>
-                            <td title="${val.obj}">${val.obj}</td>
-                        </tr>`;
-
+                        table.innerHTML += `<tr><td>${val.date}</td><td style="font-weight:800; color:#fff">${val.dept}</td><td><span class="badge ${sCls}">${val.stat}</span></td><td>${val.resp}</td><td title="${val.obj}">${val.obj}</td></tr>`;
                         if(val.ai && val.ai.trim().length > 10) {
-                            grid.innerHTML += `<div class="ai-card">
-                                <h3 style="margin:0; color:#fff; font-size:1rem;">${val.dept}</h3>
-                                <div style="font-size:0.8rem; line-height:1.5; margin-top:10px; color:#adbac7;">${val.ai.replace(/\*\*/g, '')}</div>
-                            </div>`;
+                            grid.innerHTML += `<div class="ai-card"><h3 style="margin:0; color:#fff; font-size:1rem;">${val.dept}</h3><div style="font-size:0.8rem; margin-top:10px; color:#adbac7;">${val.ai.replace(/\*\*/g, '')}</div></div>`;
                         }
                     }
                 });
