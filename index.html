@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>SISTEMA ACQUISTI | IIS SCARPA</title>
+    <title>SISTEMA ACQUISTI v11.0 | IIS SCARPA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -12,7 +12,7 @@
         * { box-sizing: border-box; }
         body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
 
-        /* HEADER FISSO BIANCO */
+        /* HEADER BIANCO */
         header { 
             background: #fff; color: #000; padding: 10px 30px; 
             display: flex; justify-content: space-between; align-items: center;
@@ -22,7 +22,7 @@
         .nav-btn { 
             padding: 10px 20px; cursor: pointer; border: none; background: transparent; 
             border-radius: 6px; font-weight: 700; color: #666; transition: 0.3s;
-            text-transform: uppercase; letter-spacing: 1px;
+            text-transform: uppercase;
         }
         .nav-btn.active { color: var(--blue); border-bottom: 3px solid var(--blue); border-radius: 0; }
 
@@ -30,27 +30,26 @@
         .view { display: none; }
         .view.active { display: block; animation: fadeIn 0.3s ease; }
 
-        /* TABELLA CORAZZATA */
+        /* TABELLA */
         .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
         th { background: rgba(255,255,255,0.03); padding: 20px 15px; text-align: left; font-size: 0.75rem; color: #8b949e; border-bottom: 2px solid var(--border); }
         td { padding: 18px 15px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* BADGE STATO */
+        /* BADGES */
         .badge { padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; border: 1px solid currentColor; }
         .ST-APPROVATO { color: var(--blue); background: rgba(88,166,255,0.1); }
         .ST-VALUTAZIONE { color: var(--yellow); background: rgba(210,153,34,0.1); }
         .ST-RESPINTO { color: var(--red); background: rgba(248,81,73,0.1); }
 
         /* REPORT AI CARD VIEW */
-        .ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px; }
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(450px, 1fr)); gap: 25px; }
         .ai-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
-            padding: 25px; border-left: 5px solid var(--purple); transition: 0.3s;
+            padding: 25px; border-left: 5px solid var(--purple);
         }
-        .ai-card:hover { transform: translateY(-5px); border-color: var(--purple); }
         .ai-card h3 { margin: 0 0 12px 0; font-size: 1.2rem; color: #fff; }
-        .ai-card p { font-size: 0.95rem; line-height: 1.7; color: #adbac7; }
+        .ai-card-body { font-size: 0.95rem; line-height: 1.7; color: #adbac7; white-space: pre-line; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
@@ -58,9 +57,7 @@
 <body>
 
     <header>
-        <div>
-            <h1 style="margin:0; font-size:1.3rem; letter-spacing:-1px;">ISTITUTO SCARPA <span style="font-weight:200; color:#888;">| Dashboard</span></h1>
-        </div>
+        <h1 style="margin:0; font-size:1.2rem;">SISTEMA ACQUISTI <span style="font-weight:200;">| IIS SCARPA</span></h1>
         <div class="nav-links">
             <button class="nav-btn active" onclick="switchView('tabella', this)">Monitoraggio</button>
             <button class="nav-btn" onclick="switchView('report', this)">Report AI</button>
@@ -73,15 +70,10 @@
             <div class="table-wrap">
                 <table>
                     <colgroup>
-                        <col style="width: 120px"> <col style="width: 200px"> <col style="width: 200px"> <col style="width: 180px"> <col style="width: auto">  </colgroup>
+                        <col style="width: 120px"><col style="width: 200px"><col style="width: 200px"><col style="width: 180px"><col style="width: auto">
+                    </colgroup>
                     <thead>
-                        <tr>
-                            <th>DATA (A)</th>
-                            <th>DIPARTIMENTO (B)</th>
-                            <th>STATO (D)</th>
-                            <th>RESPONSABILE (E)</th>
-                            <th>OBIETTIVO (F)</th>
-                        </tr>
+                        <tr><th>DATA</th><th>DIPARTIMENTO</th><th>STATO</th><th>RESPONSABILE</th><th>OBIETTIVO</th></tr>
                     </thead>
                     <tbody id="tbody"></tbody>
                 </table>
@@ -103,52 +95,56 @@
             btn.classList.add('active');
         }
 
+        // Funzione magica per leggere il CSV senza perdere colonne
+        function parseCSV(text) {
+            const rows = [];
+            let curr = [];
+            let field = '';
+            let inQuotes = false;
+            for (let i = 0; i < text.length; i++) {
+                let char = text[i], next = text[i+1];
+                if (char === '"' && inQuotes && next === '"') { field += '"'; i++; }
+                else if (char === '"') { inQuotes = !inQuotes; }
+                else if (char === ',' && !inQuotes) { curr.push(field); field = ''; }
+                else if (char === '\n' && !inQuotes) { curr.push(field); rows.push(curr); curr = []; field = ''; }
+                else { field += char; }
+            }
+            if (field || curr.length > 0) { curr.push(field); rows.push(curr); }
+            return rows;
+        }
+
         async function update() {
             try {
-                const r = await fetch(`${CSV_URL}&cache=` + Date.now());
-                const csv = await r.text();
+                const r = await fetch(`${CSV_URL}&nocache=` + Date.now());
+                const csvText = await r.text();
+                const data = parseCSV(csvText).slice(1);
                 
-                // PARSING INTELLIGENTE: Gestisce virgolette e virgole interne
-                const rows = csv.split(/\r?\n/).slice(1);
                 const table = document.getElementById('tbody');
                 const grid = document.getElementById('aiGrid');
-                
-                table.innerHTML = '';
-                grid.innerHTML = '';
+                table.innerHTML = ''; grid.innerHTML = '';
 
-                rows.forEach(row => {
-                    // Regex magica per dividere le colonne senza rompere il testo dell'AI
-                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
+                data.forEach(cols => {
                     if(cols.length >= 5) {
-                        const clean = (s) => (s || "").replace(/^"|"$/g, '').trim();
-                        
                         const val = {
-                            date: clean(cols[0]),
-                            dept: clean(cols[1]),
-                            ai:   clean(cols[2]),
-                            stat: clean(cols[3]),
-                            resp: clean(cols[4]),
-                            obj:  clean(cols[5])
+                            date: cols[0], dept: cols[1], ai: cols[2], 
+                            stat: cols[3] || 'IN VALUTAZIONE', resp: cols[4], obj: cols[5]
                         };
 
-                        // 1. Inserimento Tabella (Blindata)
+                        // Tabella
                         let sCls = 'ST-VALUTAZIONE';
                         if(val.stat.toUpperCase().includes('APPROVATO')) sCls = 'ST-APPROVATO';
                         if(val.stat.toUpperCase().includes('RESPINTO')) sCls = 'ST-RESPINTO';
 
-                        table.innerHTML += `
-                            <tr>
-                                <td style="color:#6e7681">${val.date}</td>
-                                <td style="font-weight:900; color:#fff">${val.dept}</td>
-                                <td><span class="badge ${sCls}">${val.stat}</span></td>
-                                <td style="color:#fff">${val.resp}</td>
-                                <td style="color:#8b949e" title="${val.obj}">${val.obj}</td>
-                            </tr>
-                        `;
+                        table.innerHTML += `<tr>
+                            <td style="color:#6e7681">${val.date}</td>
+                            <td style="font-weight:900; color:#fff">${val.dept}</td>
+                            <td><span class="badge ${sCls}">${val.stat}</span></td>
+                            <td style="color:#fff">${val.resp}</td>
+                            <td style="color:#8b949e">${val.obj}</td>
+                        </tr>`;
 
-                        // 2. Inserimento Report AI
-                        if(val.ai && val.ai.length > 10 && !val.ai.includes("Caricamento")) {
+                        // Card AI - Controllo rigoroso per farle apparire
+                        if(val.ai && val.ai.trim().length > 5 && !val.ai.includes("Caricamento")) {
                             grid.innerHTML += `
                                 <div class="ai-card">
                                     <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
@@ -156,12 +152,11 @@
                                         <span style="color:#666; font-size:0.7rem;">${val.date}</span>
                                     </div>
                                     <h3>${val.dept}</h3>
-                                    <p>${val.ai}</p>
+                                    <div class="ai-card-body">${val.ai.replace(/\*\*/g, '')}</div>
                                     <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px; font-size:0.75rem; color:#666;">
                                         Richiedente: <strong>${val.resp}</strong>
                                     </div>
-                                </div>
-                            `;
+                                </div>`;
                         }
                     }
                 });
