@@ -172,4 +172,33 @@
                             stat: cols[3] || 'INFO', resp: cols[4], obj: cols[5]
                         };
 
-                        let sCls = 'ST-VAL
+                        let sCls = 'ST-VALUTAZIONE';
+                        if(val.stat.toUpperCase().includes('APPROVATO')) sCls = 'ST-APPROVATO';
+                        if(val.stat.toUpperCase().includes('RESPINTO')) sCls = 'ST-RESPINTO';
+
+                        table.innerHTML += `<tr>
+                            <td style="color:#8b949e">${val.date}</td>
+                            <td style="font-weight:800; color:#fff">${val.dept}</td>
+                            <td><span class="badge ${sCls}">${val.stat}</span></td>
+                            <td>${val.resp}</td>
+                            <td title="${val.obj.replace(/"/g, '&quot;')}">${val.obj}</td>
+                        </tr>`;
+
+                        if(val.ai && val.ai.trim().length > 10 && !val.ai.includes("Caricamento")) {
+                            grid.innerHTML += `
+                                <div class="ai-card">
+                                    <h3 style="margin:0; color:#fff; font-size:1.1rem;">${val.dept}</h3>
+                                    <p style="font-size:0.65rem; color:var(--purple); margin: 5px 0 15px 0; font-weight:800;">DIPARTIMENTO - ${val.date}</p>
+                                    <div class="ai-card-body">${val.ai.replace(/\*\*/g, '')}</div>
+                                </div>`;
+                        }
+                    }
+                });
+            } catch (e) { console.error(e); }
+            btn.innerText = "SINCRO 🔄";
+        }
+
+        update();
+    </script>
+</body>
+</html>
