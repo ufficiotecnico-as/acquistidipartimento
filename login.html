@@ -2,16 +2,13 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login | Portale Acquisti Scarpa</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Login | Smart Portal Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00d2ff;
-            --secondary: #92fe9d;
-            --accent: #ff007a;
-            --bg-dark: #06090f;
-            --error: #ff4b2b;
+            --primary: #00d2ff; --secondary: #92fe9d; --accent: #ff007a;
+            --bg-dark: #06090f; --error: #ff4b2b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -19,124 +16,95 @@
         body {
             font-family: 'Inter', sans-serif;
             background: var(--bg-dark);
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: hidden; /* Evita scroll dei blob */
             position: relative;
+            padding: 20px;
         }
 
-        /* SFONDO CON BLOBS COLORATI ANIMATI */
-        .blobs {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            filter: blur(80px);
-        }
+        /* BLOBS RESPONSIVE */
+        .blobs { position: absolute; width: 100%; height: 100%; z-index: -1; filter: blur(60px); }
+        .blob { position: absolute; border-radius: 50%; opacity: 0.5; animation: move 20s infinite alternate; }
+        .blob-1 { width: 35vw; height: 35vw; background: var(--primary); top: -10%; left: -5%; }
+        .blob-2 { width: 40vw; height: 40vw; background: var(--accent); bottom: -10%; right: -5%; animation-duration: 15s; }
+        
+        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(30px, 50px) scale(1.1); } }
 
-        .blob {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: move 20s infinite alternate;
-        }
-
-        .blob-1 { width: 400px; height: 400px; background: var(--primary); top: -10%; left: -10%; }
-        .blob-2 { width: 450px; height: 450px; background: var(--accent); bottom: -10%; right: -10%; animation-duration: 15s; }
-        .blob-3 { width: 300px; height: 300px; background: var(--secondary); top: 40%; right: 20%; animation-duration: 12s; }
-
-        @keyframes move {
-            from { transform: translate(0, 0) scale(1); }
-            to { transform: translate(50px, 100px) scale(1.2); }
-        }
-
-        /* CARD EFFETTO VETRO COLORATO */
+        /* CARD */
         .login-card {
             background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(20px);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 50px 40px;
-            border-radius: 30px;
+            padding: 40px 30px;
+            border-radius: 24px;
             width: 100%;
-            max-width: 420px;
+            max-width: 400px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
             z-index: 10;
         }
 
-        .logo { 
-            height: 60px; 
-            margin-bottom: 25px; 
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.3));
-        }
+        .logo { height: 50px; margin-bottom: 20px; max-width: 100%; object-fit: contain; }
 
         h2 { 
-            color: #fff; 
-            font-weight: 800; 
-            font-size: 2rem; 
-            margin-bottom: 5px; 
+            color: #fff; font-weight: 800; font-size: 1.7rem; margin-bottom: 8px; 
             background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
         }
 
-        p { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 35px; letter-spacing: 0.5px; }
+        p { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 30px; }
 
         /* INPUTS */
-        .input-group { position: relative; margin-bottom: 25px; }
+        .input-group { position: relative; margin-bottom: 20px; }
         .input-group input {
-            width: 100%; padding: 16px 20px; 
+            width: 100%; padding: 14px 18px; 
             background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 15px; color: #fff;
-            font-size: 1rem; outline: none; transition: 0.3s;
+            border-radius: 12px; color: #fff; font-size: 1rem; outline: none; transition: 0.3s;
+            appearance: none; /* Rimuove ombre iOS */
         }
-        .input-group input:focus { 
-            border-color: var(--primary); 
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
-        }
+        .input-group input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.1); }
 
         .input-group label {
-            position: absolute; left: 20px; top: 50%; transform: translateY(-50%);
-            color: rgba(255,255,255,0.4); pointer-events: none; transition: 0.3s;
+            position: absolute; left: 18px; top: 50%; transform: translateY(-50%);
+            color: rgba(255,255,255,0.4); pointer-events: none; transition: 0.3s; font-size: 0.9rem;
         }
         .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label {
-            top: -12px; left: 15px; font-size: 0.75rem; font-weight: 800; 
-            color: var(--primary); text-transform: uppercase;
+            top: -10px; left: 12px; font-size: 0.7rem; font-weight: 800; color: var(--primary);
+            background: var(--bg-dark); padding: 0 6px; border-radius: 4px;
         }
 
-        /* BUTTON GRADIENT */
+        /* BUTTON */
         .login-btn {
-            width: 100%; padding: 18px; 
+            width: 100%; padding: 16px; 
             background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: #06090f; border: none; border-radius: 15px; 
-            font-size: 1rem; font-weight: 800;
-            cursor: pointer; transition: 0.3s; margin-top: 10px;
+            color: #06090f; border: none; border-radius: 12px; 
+            font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: 0.3s;
             text-transform: uppercase; letter-spacing: 1px;
         }
-        .login-btn:hover { 
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0, 210, 255, 0.4);
-            filter: brightness(1.1);
-        }
-        .login-btn:disabled { opacity: 0.5; cursor: wait; background: #333; color: #666; }
+        .login-btn:active { transform: scale(0.98); }
 
-        #error-msg { color: var(--error); font-size: 0.85rem; font-weight: 700; margin-top: 20px; display: none; text-shadow: 0 0 10px rgba(255, 75, 43, 0.3); }
+        #error-msg { color: var(--error); font-size: 0.8rem; font-weight: 700; margin-top: 15px; display: none; }
         
         .shake { animation: shake 0.4s; }
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
-            20% { transform: translateX(-10px); }
-            40% { transform: translateX(10px); }
-            60% { transform: translateX(-10px); }
-            80% { transform: translateX(10px); }
+            25% { transform: translateX(-8px); }
+            75% { transform: translateX(8px); }
         }
 
-        footer { position: absolute; bottom: 30px; color: rgba(255,255,255,0.2); font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 2px; }
+        footer { position: absolute; bottom: 15px; color: rgba(255,255,255,0.2); font-size: 0.6rem; letter-spacing: 1px; }
+
+        /* MEDIA QUERY PER MOBILE STRETTO */
+        @media (max-width: 400px) {
+            .login-card { padding: 30px 20px; }
+            h2 { font-size: 1.4rem; }
+            .logo { height: 40px; }
+        }
     </style>
 </head>
 <body>
@@ -144,30 +112,28 @@
     <div class="blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
-        <div class="blob blob-3"></div>
     </div>
 
     <div class="login-card" id="card">
         <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="logo">
-        <h2>Area Riservata</h2>
+        <h2 id="title">Accedi</h2>
         <p id="status-text">Sincronizzazione database...</p>
 
         <div class="input-group">
-            <input type="text" id="user" placeholder=" " required>
+            <input type="text" id="user" placeholder=" " required autocomplete="username">
             <label>Username</label>
         </div>
 
         <div class="input-group">
-            <input type="password" id="pass" placeholder=" " required>
+            <input type="password" id="pass" placeholder=" " required autocomplete="current-password">
             <label>Password</label>
         </div>
 
         <button class="login-btn" id="loginBtn" onclick="handleLogin()" disabled>Attendi...</button>
-        
-        <div id="error-msg">Accesso negato. Riprova.</div>
+        <div id="error-msg">Dati non corretti</div>
     </div>
 
-    <footer>IIS ANTONIO SCARPA — SMART PORTAL 2026</footer>
+    <footer>IIS SCARPA PORTAL © 2026</footer>
 
     <script>
         const USERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVgqrDiEAD3X6HclOFJoVo2xHgwS4TRmgJ8_HRFZFRNSS0ZVm_Hx6lSIsvj31paCckaWY2zY-HMb8J/pub?gid=0&single=true&output=csv';
@@ -180,14 +146,14 @@
                 const rows = data.split('\n').slice(1);
                 authorizedUsers = rows.map(row => {
                     const columns = row.split(',');
-                    return { username: columns[0]?.trim(), password: columns[1]?.trim() };
-                }).filter(u => u.username && u.password);
+                    return { u: columns[0]?.trim(), p: columns[1]?.trim() };
+                }).filter(user => user.u && user.p);
 
                 document.getElementById('loginBtn').disabled = false;
                 document.getElementById('loginBtn').innerText = "Accedi";
-                document.getElementById('status-text').innerText = "Pronto per l'autenticazione";
+                document.getElementById('status-text').innerText = "Database pronto";
             } catch (error) {
-                document.getElementById('status-text').innerText = "Errore di rete.";
+                document.getElementById('status-text').innerText = "Offline. Controlla connessione.";
             }
         }
 
@@ -197,13 +163,13 @@
             const card = document.getElementById('card');
             const error = document.getElementById('error-msg');
 
-            const userFound = authorizedUsers.find(u => u.username === uInput && u.password === pInput);
+            const found = authorizedUsers.find(user => user.u === uInput && user.p === pInput);
 
-            if (userFound) {
-                card.style.transform = 'translateY(-20px) scale(0.95)';
+            if (found) {
                 card.style.opacity = '0';
+                card.style.transform = 'translateY(-10px)';
                 localStorage.setItem('scarpa_auth', 'true');
-                setTimeout(() => { window.location.href = 'index.html'; }, 500);
+                setTimeout(() => { window.location.href = 'index.html'; }, 400);
             } else {
                 error.style.display = 'block';
                 card.classList.add('shake');
