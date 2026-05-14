@@ -7,8 +7,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00d2ff; --secondary: #92fe9d; --accent: #ff007a;
-            --bg-dark: #06090f; --error: #ff4b2b;
+            --primary: #00d2ff;
+            --accent: #ff007a;
+            --bg-dark: #06090f;
+            --error: #ff4b2b;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -21,93 +23,107 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            overflow: hidden;
             position: relative;
             padding: 20px;
-            overflow-x: hidden;
         }
 
-        /* SFONDO ANIMATO */
-        .blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(60px); pointer-events: none; }
-        .blob { position: absolute; border-radius: 50%; opacity: 0.4; animation: move 20s infinite alternate; }
-        .blob-1 { width: 60vw; height: 60vw; background: var(--primary); top: -20%; left: -10%; }
-        .blob-2 { width: 70vw; height: 70vw; background: var(--accent); bottom: -20%; right: -10%; animation-delay: -5s; }
-        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(20px, 40px) scale(1.1); } }
+        /* BLOBS ANIMATI (SFONDO) */
+        .blobs {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -1;
+            filter: blur(70px);
+            pointer-events: none;
+        }
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: move 15s infinite alternate ease-in-out;
+        }
+        .blob-1 { width: 50vw; height: 50vw; background: var(--primary); top: -10%; left: -10%; }
+        .blob-2 { width: 60vw; height: 60vw; background: var(--accent); bottom: -10%; right: -10%; animation-delay: -7s; }
+        .blob-3 { width: 30vw; height: 30vw; background: #0081ff; top: 30%; right: 10%; animation-duration: 20s; }
 
-        /* CARD */
+        @keyframes move {
+            from { transform: translate(0, 0) scale(1); }
+            to { transform: translate(40px, 60px) scale(1.2); }
+        }
+
+        /* CARD GLASSMORPHISM CON BORDO GRADIENTE */
         .login-card {
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 2.5rem 2rem;
-            border-radius: 28px;
+            /* Bordo sfumato come nell'immagine */
+            border: 2px solid transparent;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
+                              linear-gradient(135deg, var(--primary), var(--accent));
+            background-origin: border-box;
+            background-clip: padding-box, border-box;
+            
+            padding: 3rem 2rem;
+            border-radius: 30px;
             width: 100%;
-            max-width: 380px;
+            max-width: 400px;
             text-align: center;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            transition: all 0.4s ease;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6);
+            z-index: 10;
+            transition: transform 0.4s ease;
         }
 
-        /* FIX VISIBILITÀ LOGO */
+        /* LOGO CON GLOW BIANCO PER VISIBILITÀ */
         .logo-container {
-            background: rgba(255, 255, 255, 0.9); /* Sfondo chiaro per far vedere il nero del logo */
-            padding: 12px;
-            border-radius: 18px;
+            position: relative;
             display: inline-block;
             margin-bottom: 1.5rem;
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
-        .logo { height: 45px; width: auto; display: block; }
-
-        h2 { 
-            color: #fff; font-weight: 800; font-size: 1.6rem; margin-bottom: 0.5rem; 
-            background: linear-gradient(to right, #fff, var(--primary));
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        /* L'alone bianco che salva il logo */
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; height: 80%;
+            background: white;
+            filter: blur(35px);
+            opacity: 0.3;
+            z-index: -1;
         }
+        .logo { height: 65px; width: auto; filter: brightness(1.1); }
 
-        p { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 2rem; }
+        h2 { color: #fff; font-weight: 800; font-size: 2rem; margin-bottom: 0.2rem; }
+        .subtitle { color: rgba(255,255,255,0.8); font-size: 0.9rem; margin-bottom: 2rem; }
+        #status-text { color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-bottom: 1.5rem; }
 
         /* INPUTS */
-        .input-group { position: relative; margin-bottom: 1.5rem; width: 100%; text-align: left; }
+        .input-group { margin-bottom: 1rem; width: 100%; }
         .input-group input {
-            width: 100%; padding: 1rem 1.2rem; 
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            border-radius: 14px; color: #fff; font-size: 16px; 
-            outline: none; transition: 0.2s;
+            width: 100%; padding: 1.1rem; 
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.2); 
+            border-radius: 12px; color: #fff; font-size: 16px; 
+            outline: none; transition: 0.3s;
         }
-        .input-group input:focus { border-color: var(--primary); background: rgba(255, 255, 255, 0.08); }
+        .input-group input:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.5); }
+        .input-group input::placeholder { color: rgba(255,255,255,0.3); }
 
-        .input-group label {
-            position: absolute; left: 1.2rem; top: 50%; transform: translateY(-50%);
-            color: rgba(255,255,255,0.4); pointer-events: none; transition: 0.2s;
-        }
-        .input-group input:focus + label, .input-group input:not(:placeholder-shown) + label {
-            top: -0.6rem; left: 0.8rem; font-size: 0.7rem; font-weight: 800; color: var(--primary);
-            background: #0d1117; padding: 0 6px; border-radius: 4px;
-        }
-
-        /* BUTTON */
+        /* BUTTON GRADIENT COME IMMAGINE */
         .login-btn {
             width: 100%; padding: 1.1rem; 
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            color: #06090f; border: none; border-radius: 14px; 
-            font-size: 0.95rem; font-weight: 800; cursor: pointer; transition: 0.2s;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: #fff; border: none; border-radius: 12px; 
+            font-size: 1rem; font-weight: 800; cursor: pointer; transition: 0.3s;
             text-transform: uppercase; letter-spacing: 1px;
+            margin-top: 1rem;
         }
-        .login-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
-        .login-btn:disabled { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
+        .login-btn:hover { filter: brightness(1.1); transform: scale(1.02); }
+        .login-btn:disabled { opacity: 0.4; cursor: wait; }
 
         #error-msg { color: var(--error); font-size: 0.8rem; font-weight: 700; margin-top: 1rem; display: none; }
         
-        footer { margin-top: 2rem; color: rgba(255,255,255,0.2); font-size: 0.6rem; letter-spacing: 1px; }
-
-        /* MOBILE FIX */
-        @media (max-height: 600px) {
-            .login-card { padding: 1.5rem; }
-            .logo-container { margin-bottom: 1rem; padding: 8px; }
-            .logo { height: 35px; }
-        }
+        footer { position: fixed; bottom: 20px; color: rgba(255,255,255,0.4); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1px; }
 
         .shake { animation: shake 0.4s; }
         @keyframes shake {
@@ -122,28 +138,28 @@
     <div class="blobs">
         <div class="blob blob-1"></div>
         <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
     </div>
 
     <div class="login-card" id="card">
         <div class="logo-container">
-            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="logo" alt="IIS Scarpa">
+            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="logo" alt="Logo Scarpa">
         </div>
-        
         <h2>Area Riservata</h2>
-        <p id="status-text">Connessione al database...</p>
+        <div class="subtitle">Accesso Portale Acquisti</div>
+        
+        <p id="status-text">Sincronizzazione...</p>
 
         <div class="input-group">
-            <input type="text" id="user" placeholder=" " required autocomplete="username">
-            <label>Username</label>
+            <input type="text" id="user" placeholder="Username" required>
         </div>
 
         <div class="input-group">
-            <input type="password" id="pass" placeholder=" " required autocomplete="current-password">
-            <label>Password</label>
+            <input type="password" id="pass" placeholder="Password" required>
         </div>
 
-        <button class="login-btn" id="loginBtn" onclick="handleLogin()" disabled>Entra</button>
-        <div id="error-msg">Dati di accesso errati</div>
+        <button class="login-btn" id="loginBtn" onclick="handleLogin()" disabled>ACCEDI AL PORTALE</button>
+        <div id="error-msg">Credenziali non valide</div>
     </div>
 
     <footer>IIS ANTONIO SCARPA — SMART SYSTEM 2026</footer>
@@ -163,10 +179,10 @@
                 }).filter(user => user.u && user.p);
 
                 document.getElementById('loginBtn').disabled = false;
-                document.getElementById('loginBtn').innerText = "Accedi";
-                document.getElementById('status-text').innerText = "Database sincronizzato";
+                document.getElementById('loginBtn').innerText = "ACCEDI AL PORTALE";
+                document.getElementById('status-text').innerText = "Pronto per l'autenticazione";
             } catch (error) {
-                document.getElementById('status-text').innerText = "Errore di rete.";
+                document.getElementById('status-text').innerText = "Database offline.";
             }
         }
 
@@ -180,9 +196,9 @@
 
             if (found) {
                 card.style.opacity = '0';
-                card.style.transform = 'translateY(-10px) scale(0.95)';
+                card.style.transform = 'translateY(-20px) scale(0.95)';
                 localStorage.setItem('scarpa_auth', 'true');
-                setTimeout(() => { window.location.href = 'index.html'; }, 400);
+                setTimeout(() => { window.location.href = 'index.html'; }, 500);
             } else {
                 error.style.display = 'block';
                 card.classList.add('shake');
