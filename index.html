@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>SISTEMA MONITORAGGIO | IIS SCARPA</title>
+    <title>SISTEMA ACQUISTI | IIS SCARPA</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -10,57 +10,60 @@
             --blue: #58a6ff; --purple: #bc8cff; --green: #3fb950; --red: #f85149; --yellow: #d29922;
         }
         * { box-sizing: border-box; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; overflow-x: hidden; }
 
-        /* HEADER FISSO */
+        /* HEADER FISSO BIANCO */
         header { 
             background: #fff; color: #000; padding: 10px 30px; 
             display: flex; justify-content: space-between; align-items: center;
             position: sticky; top: 0; z-index: 999; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
         }
-        .nav-links { display: flex; gap: 20px; }
+        .nav-links { display: flex; gap: 10px; }
         .nav-btn { 
-            padding: 10px 20px; cursor: pointer; border: none; background: #eee; 
-            border-radius: 6px; font-weight: 700; transition: 0.3s;
+            padding: 10px 20px; cursor: pointer; border: none; background: transparent; 
+            border-radius: 6px; font-weight: 700; color: #666; transition: 0.3s;
+            text-transform: uppercase; letter-spacing: 1px;
         }
-        .nav-btn.active { background: var(--blue); color: #fff; }
+        .nav-btn.active { color: var(--blue); border-bottom: 3px solid var(--blue); border-radius: 0; }
 
         .container { padding: 30px; max-width: 1600px; margin: 0 auto; }
         .view { display: none; }
-        .view.active { display: block; }
+        .view.active { display: block; animation: fadeIn 0.3s ease; }
 
-        /* TABELLA BLINDATA (NON PUÒ SMERDARSI) */
+        /* TABELLA CORAZZATA */
         .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th { background: rgba(255,255,255,0.03); padding: 15px; text-align: left; font-size: 0.7rem; color: #8b949e; border-bottom: 2px solid var(--border); }
-        td { padding: 15px; border-bottom: 1px solid var(--border); vertical-align: middle; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        th { background: rgba(255,255,255,0.03); padding: 20px 15px; text-align: left; font-size: 0.75rem; color: #8b949e; border-bottom: 2px solid var(--border); }
+        td { padding: 18px 15px; border-bottom: 1px solid var(--border); vertical-align: middle; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
-        /* BADGE */
-        .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border: 1px solid currentColor; }
-        .STATUS-APPROVATO { color: var(--blue); background: rgba(88,166,255,0.1); }
-        .STATUS-IN-VALUTAZIONE { color: var(--yellow); background: rgba(210,153,34,0.1); }
-        .STATUS-RESPINTO { color: var(--red); background: rgba(248,81,73,0.1); }
+        /* BADGE STATO */
+        .badge { padding: 6px 14px; border-radius: 20px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; border: 1px solid currentColor; }
+        .ST-APPROVATO { color: var(--blue); background: rgba(88,166,255,0.1); }
+        .ST-VALUTAZIONE { color: var(--yellow); background: rgba(210,153,34,0.1); }
+        .ST-RESPINTO { color: var(--red); background: rgba(248,81,73,0.1); }
 
-        /* GRID REPORT AI */
-        .ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        /* REPORT AI CARD VIEW */
+        .ai-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(400px, 1fr)); gap: 25px; }
         .ai-card { 
             background: var(--card); border: 1px solid var(--border); border-radius: 12px; 
-            padding: 20px; border-top: 4px solid var(--purple); position: relative;
+            padding: 25px; border-left: 5px solid var(--purple); transition: 0.3s;
         }
-        .ai-card h3 { margin: 0 0 10px 0; font-size: 1.1rem; color: #fff; }
-        .ai-card p { font-size: 0.85rem; line-height: 1.6; color: #adbac7; }
+        .ai-card:hover { transform: translateY(-5px); border-color: var(--purple); }
+        .ai-card h3 { margin: 0 0 12px 0; font-size: 1.2rem; color: #fff; }
+        .ai-card p { font-size: 0.95rem; line-height: 1.7; color: #adbac7; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
     <header>
         <div>
-            <h1 style="margin:0; font-size:1.2rem;">SISTEMA ACQUISTI v9.0</h1>
-            <small>IIS ANTONIO SCARPA</small>
+            <h1 style="margin:0; font-size:1.3rem; letter-spacing:-1px;">ISTITUTO SCARPA <span style="font-weight:200; color:#888;">| Dashboard</span></h1>
         </div>
         <div class="nav-links">
-            <button class="nav-btn active" onclick="switchView('tabella', this)">MONITORAGGIO</button>
-            <button class="nav-btn" onclick="switchView('report', this)">REPORT AI</button>
+            <button class="nav-btn active" onclick="switchView('tabella', this)">Monitoraggio</button>
+            <button class="nav-btn" onclick="switchView('report', this)">Report AI</button>
         </div>
         <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" height="40">
     </header>
@@ -70,14 +73,14 @@
             <div class="table-wrap">
                 <table>
                     <colgroup>
-                        <col style="width: 100px"> <col style="width: 150px"> <col style="width: 180px"> <col style="width: 150px"> <col style="">             </colgroup>
+                        <col style="width: 120px"> <col style="width: 200px"> <col style="width: 200px"> <col style="width: 180px"> <col style="width: auto">  </colgroup>
                     <thead>
                         <tr>
-                            <th>DATA</th>
-                            <th>DIPARTIMENTO</th>
-                            <th>STATO</th>
-                            <th>RESPONSABILE</th>
-                            <th>OGGETTO</th>
+                            <th>DATA (A)</th>
+                            <th>DIPARTIMENTO (B)</th>
+                            <th>STATO (D)</th>
+                            <th>RESPONSABILE (E)</th>
+                            <th>OBIETTIVO (F)</th>
                         </tr>
                     </thead>
                     <tbody id="tbody"></tbody>
@@ -91,7 +94,7 @@
     </div>
 
     <script>
-        const URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
+        const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
 
         function switchView(id, btn) {
             document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
@@ -100,63 +103,73 @@
             btn.classList.add('active');
         }
 
-        async function fetchData() {
+        async function update() {
             try {
-                const response = await fetch(`${URL}&nocache=${Date.now()}`);
-                const text = await response.text();
+                const r = await fetch(`${CSV_URL}&cache=` + Date.now());
+                const csv = await r.text();
                 
-                // PARSING AVANZATO (Protegge dalle virgole interne)
-                const rows = text.split(/\r?\n/).slice(1);
-                const tableBody = document.getElementById('tbody');
-                const aiGrid = document.getElementById('aiGrid');
+                // PARSING INTELLIGENTE: Gestisce virgolette e virgole interne
+                const rows = csv.split(/\r?\n/).slice(1);
+                const table = document.getElementById('tbody');
+                const grid = document.getElementById('aiGrid');
                 
-                tableBody.innerHTML = '';
-                aiGrid.innerHTML = '';
+                table.innerHTML = '';
+                grid.innerHTML = '';
 
                 rows.forEach(row => {
-                    const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    if(c.length >= 5) {
+                    // Regex magica per dividere le colonne senza rompere il testo dell'AI
+                    const cols = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    
+                    if(cols.length >= 5) {
                         const clean = (s) => (s || "").replace(/^"|"$/g, '').trim();
                         
-                        const d = {
-                            date: clean(c[0]),
-                            dept: clean(c[1]),
-                            ai:   clean(c[2]),
-                            stat: clean(c[3]) || "IN VALUTAZIONE",
-                            resp: clean(c[4]),
-                            obj:  clean(c[5])
+                        const val = {
+                            date: clean(cols[0]),
+                            dept: clean(cols[1]),
+                            ai:   clean(cols[2]),
+                            stat: clean(cols[3]),
+                            resp: clean(cols[4]),
+                            obj:  clean(cols[5])
                         };
 
-                        // 1. Riga Tabella
-                        const tr = document.createElement('tr');
-                        const sClass = `STATUS-${d.stat.replace(/\s+/g, '-')}`;
-                        tr.innerHTML = `
-                            <td style="color:#666">${d.date}</td>
-                            <td style="font-weight:bold; color:#fff">${d.dept}</td>
-                            <td><span class="badge ${sClass}">${d.stat}</span></td>
-                            <td>${d.resp}</td>
-                            <td title="${d.obj}">${d.obj}</td>
-                        `;
-                        tableBody.appendChild(tr);
+                        // 1. Inserimento Tabella (Blindata)
+                        let sCls = 'ST-VALUTAZIONE';
+                        if(val.stat.toUpperCase().includes('APPROVATO')) sCls = 'ST-APPROVATO';
+                        if(val.stat.toUpperCase().includes('RESPINTO')) sCls = 'ST-RESPINTO';
 
-                        // 2. Card AI
-                        if(d.ai && d.ai.length > 10 && !d.ai.includes("Caricamento")) {
-                            const card = document.createElement('div');
-                            card.className = 'ai-card';
-                            card.innerHTML = `
-                                <small style="color:var(--purple)">${d.date} - ${d.resp}</small>
-                                <h3>${d.dept}</h3>
-                                <p>${d.ai}</p>
+                        table.innerHTML += `
+                            <tr>
+                                <td style="color:#6e7681">${val.date}</td>
+                                <td style="font-weight:900; color:#fff">${val.dept}</td>
+                                <td><span class="badge ${sCls}">${val.stat}</span></td>
+                                <td style="color:#fff">${val.resp}</td>
+                                <td style="color:#8b949e" title="${val.obj}">${val.obj}</td>
+                            </tr>
+                        `;
+
+                        // 2. Inserimento Report AI
+                        if(val.ai && val.ai.length > 10 && !val.ai.includes("Caricamento")) {
+                            grid.innerHTML += `
+                                <div class="ai-card">
+                                    <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+                                        <span style="color:var(--purple); font-weight:800; font-size:0.7rem; text-transform:uppercase;">Analisi Groq</span>
+                                        <span style="color:#666; font-size:0.7rem;">${val.date}</span>
+                                    </div>
+                                    <h3>${val.dept}</h3>
+                                    <p>${val.ai}</p>
+                                    <div style="margin-top:15px; border-top:1px solid var(--border); padding-top:10px; font-size:0.75rem; color:#666;">
+                                        Richiedente: <strong>${val.resp}</strong>
+                                    </div>
+                                </div>
                             `;
-                            aiGrid.appendChild(card);
                         }
                     }
                 });
-            } catch (e) { console.error("Errore Caricamento:", e); }
+            } catch (e) { console.error(e); }
         }
 
-        fetchData();
-        setInterval(fetchData, 15000);
+        update();
+        setInterval(update, 20000);
     </script>
 </body>
 </html>
