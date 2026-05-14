@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | IIS Scarpa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --blue: #58a6ff; --red: #f85149; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); color: #fff; display: flex; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .login-box { background: var(--card); border: 1px solid var(--border); padding: 40px; border-radius: 15px; width: 90%; max-width: 380px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        img { height: 45px; margin-bottom: 25px; }
+        h2 { margin: 0 0 10px 0; font-weight: 800; font-size: 1.4rem; }
+        p { color: #8b949e; font-size: 0.85rem; margin-bottom: 30px; }
+        input { width: 100%; padding: 14px; margin-bottom: 15px; background: #0d1117; border: 1px solid var(--border); border-radius: 8px; color: #fff; outline: none; transition: 0.2s; }
+        input:focus { border-color: var(--blue); }
+        button { width: 100%; padding: 14px; background: var(--blue); color: #fff; border: none; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; letter-spacing: 1px; }
+        button:hover { opacity: 0.9; transform: translateY(-1px); }
+        #error { color: var(--red); font-size: 0.8rem; margin-top: 15px; display: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868">
+        <h2>Area Riservata</h2>
+        <p>Accesso Portale Acquisti</p>
+        <input type="text" id="user" placeholder="Username">
+        <input type="password" id="pass" placeholder="Password">
+        <button onclick="doLogin()">ACCEDI</button>
+        <div id="error">Credenziali non valide. Riprova.</div>
+    </div>
+
+    <script>
+        // Per ora usiamo credenziali fisse, potrai collegare il CSV utenti in seguito
+        function doLogin() {
+            const u = document.getElementById('user').value;
+            const p = document.getElementById('pass').value;
+            const error = document.getElementById('error');
+            
+            // Credenziali di esempio
+            if (u === 'admin' && p === 'scarpa2026') {
+                localStorage.setItem('scarpa_auth', 'true');
+                window.location.href = 'index.html'; // Vai alla dashboard
+            } else {
+                error.style.display = 'block';
+                // Effetto vibrazione per errore
+                document.querySelector('.login-box').style.animation = "shake 0.2s ease-in-out 0s 2";
+            }
+        }
+
+        // Permetti l'invio con il tasto Enter
+        document.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') doLogin();
+        });
+    </script>
+</body>
+</html>
