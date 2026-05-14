@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Ordini Integrale | IIS Scarpa</title>
+    <title>Dashboard Ordini v6.5 | IIS Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0e14; --card: #161b22; --border: #30363d; --text: #c9d1d9;
-            --yellow: #d29922; --purple: #a371f7; --blue: #1f6feb; --green: #238636; --red: #da3633;
+            --yellow: #d29922; --purple: #a371f7; --blue: #1f6feb; --green: #238636; --red: #f85149;
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; overflow-x: hidden; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
         
         .white-header { 
             background-color: #ffffff; padding: 12px 30px; display: flex; 
@@ -20,46 +20,59 @@
         .white-header h1 { color: #000; margin: 0; font-size: 1.3rem; font-weight: 800; }
         .school-logo { max-height: 45px; }
 
-        .main-content { padding: 15px; width: 99%; margin: 0 auto; box-sizing: border-box; }
-        
+        .main-content { padding: 20px; width: 100%; box-sizing: border-box; }
         .table-container { 
             background: var(--card); border: 1px solid var(--border); 
             border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.5); 
         }
         
-        table { width: 100%; border-collapse: collapse; font-size: 0.82rem; table-layout: fixed; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; table-layout: fixed; }
         
         th { 
             background: rgba(255,255,255,0.03); text-align: left; padding: 15px; 
-            color: #8b949e; text-transform: uppercase; font-size: 0.65rem; 
+            color: #8b949e; text-transform: uppercase; font-size: 0.7rem; 
             border-bottom: 2px solid var(--border); letter-spacing: 0.5px;
         }
         
         td { 
             padding: 15px; border-bottom: 1px solid var(--border); 
-            vertical-align: top; word-wrap: break-word; line-height: 1.4; 
+            vertical-align: middle; /* Allinea tutto al centro verticalmente */
+            word-wrap: break-word; 
         }
 
-        /* Badge Stati Colonna D */
+        /* Badge Stato (Colonna D) */
         .badge { 
-            padding: 5px 10px; border-radius: 12px; font-size: 0.65rem; 
+            padding: 6px 12px; border-radius: 20px; font-size: 0.65rem; 
             font-weight: 800; text-transform: uppercase; border: 1px solid transparent; 
             display: inline-block; white-space: nowrap;
         }
         .b-valutazione { border-color: var(--yellow); color: var(--yellow); background: rgba(210,153,34,0.1); }
         .b-approvato { border-color: var(--blue); color: var(--blue); background: rgba(31,111,235,0.1); }
         .b-completato { border-color: var(--green); color: var(--green); background: rgba(35,134,54,0.1); }
-        .b-respinto { border-color: var(--red); color: var(--red); background: rgba(218,54,51,0.1); }
+        .b-respinto { border-color: var(--red); color: var(--red); background: rgba(248,81,73,0.1); }
 
-        .timestamp { color: #6e7681; font-family: monospace; font-size: 0.75rem; }
-        .ai-text { color: var(--purple); font-style: italic; font-size: 0.8rem; }
+        /* FIX PER TESTO LUNGO AI */
+        .ai-container {
+            max-height: 120px; /* Altezza massima della cella */
+            overflow-y: auto;  /* Scroll se il testo è troppo lungo */
+            padding-right: 5px;
+            font-size: 0.8rem;
+            line-height: 1.5;
+            color: var(--purple);
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        .ai-container::-webkit-scrollbar { width: 4px; }
+        .ai-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        .timestamp { color: #6e7681; font-family: monospace; font-size: 0.8rem; }
         tr:hover td { background: rgba(255,255,255,0.02); }
     </style>
 </head>
 <body>
 
     <header class="white-header">
-        <h1>SISTEMA MONITORAGGIO ACQUISTI v6.0</h1>
+        <h1>SISTEMA MONITORAGGIO ACQUISTI</h1>
         <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo">
     </header>
 
@@ -67,21 +80,19 @@
         <div class="table-container">
             <table>
                 <colgroup>
-                    <col style="width: 8%">  <col style="width: 10%"> <col style="width: 10%"> <col style="width: 12%"> <col style="width: 18%"> <col style="width: 30%"> <col style="width: 12%"> </colgroup>
+                    <col style="width: 10%"> <col style="width: 12%"> <col style="width: 12%"> <col style="width: 10%"> <col style="width: 15%"> <col style="width: 28%"> <col style="width: 13%"> </colgroup>
                 <thead>
                     <tr>
                         <th>DATA (A)</th>
                         <th>DIPARTIMENTO (B)</th>
                         <th>STATO (D)</th>
-                        <th>RESPONSABILE (E)</th>
+                        <th>RESP. (E)</th>
                         <th>OBIETTIVO (F)</th>
                         <th>ANALISI GROQ (C)</th>
                         <th>NOTE (H)</th>
                     </tr>
                 </thead>
-                <tbody id="tableBody">
-                    <tr><td colspan="7" style="text-align:center; padding:50px; color:#666;">Sincronizzazione dati in corso...</td></tr>
-                </tbody>
+                <tbody id="tableBody"></tbody>
             </table>
         </div>
     </div>
@@ -91,69 +102,55 @@
 
         async function syncData() {
             try {
-                // nocache= Date.now() forza il download di dati nuovi bypassando la memoria del browser
                 const response = await fetch(`${CSV_URL}&nocache=${Date.now()}`);
                 const csvText = await response.text();
-                
-                // Dividiamo le righe e puliamo quelle vuote
-                const rows = csvText.split(/\r?\n/).slice(1).filter(row => row.trim() !== "");
+                const rows = csvText.split(/\r?\n/).slice(1).filter(r => r.trim() !== "");
                 
                 const tbody = document.getElementById('tableBody');
-                let htmlContent = '';
+                let html = '';
 
                 rows.forEach(row => {
-                    // Split che rispetta le virgole dentro i doppi apici (fondamentale per la colonna C di Groq)
                     const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
                     if(c.length >= 6) {
-                        // Funzione per pulire virgolette e spazi bianchi
                         const clean = (val) => (val || "").replace(/^"|"$/g, '').trim();
 
-                        const colA = clean(c[0]); // Timestamp
-                        const colB = clean(c[1]); // Dipartimento
-                        const colC = clean(c[2]); // Analisi AI
-                        const colD = clean(c[3]); // Stato
-                        const colE = clean(c[4]); // Responsabile
-                        const colF = clean(c[5]); // Obiettivo
-                        const colH = clean(c[7]) || "-"; // Note (Indice 7 = H)
+                        const dataA = clean(c[0]);
+                        const deptB = clean(c[1]);
+                        const aiC   = clean(c[2]);
+                        const statD = clean(c[3]);
+                        const respE = clean(c[4]);
+                        const objF  = clean(c[5]);
+                        const noteH = clean(c[7]) || "-";
 
-                        // Controllo se l'analisi è ancora in caricamento nel foglio
-                        const displayAI = (colC.toLowerCase().includes("caricamento") || colC === "") 
-                            ? `<span style="color:#666; font-size:0.7rem;">[ Elaborazione IA in corso... ]</span>` 
-                            : `<span class="ai-text">${colC}</span>`;
+                        // Logica Colori
+                        let bCls = 'b-valutazione';
+                        const s = statD.toUpperCase();
+                        if(s.includes('APPROVATO')) bCls = 'b-approvato';
+                        else if(s.includes('COMPLETATO')) bCls = 'b-completato';
+                        else if(s.includes('RESPINTO')) bCls = 'b-respinto';
 
-                        // Logica Colori Badge (Colonna D)
-                        let badgeClass = 'b-valutazione';
-                        const s = colD.toUpperCase();
-                        if(s.includes('APPROVATO')) badgeClass = 'b-approvato';
-                        else if(s.includes('COMPLETATO')) badgeClass = 'b-completato';
-                        else if(s.includes('RESPINTO')) badgeClass = 'b-respinto';
-
-                        htmlContent += `
+                        html += `
                             <tr>
-                                <td class="timestamp">${colA}</td>
-                                <td style="font-weight:800; color:#fff;">${colB}</td>
-                                <td><span class="badge ${badgeClass}">${colD}</span></td>
-                                <td style="color:#fff;">${colE}</td>
-                                <td style="font-size: 0.75rem; color:#adbac7;">${colF}</td>
-                                <td>${displayAI}</td>
-                                <td style="color:#8b949e; font-size: 0.75rem;">${colH}</td>
+                                <td class="timestamp">${dataA}</td>
+                                <td style="font-weight:800; color:#fff;">${deptB}</td>
+                                <td><span class="badge ${bCls}">${statD}</span></td>
+                                <td style="color:#fff;">${respE}</td>
+                                <td style="color:#adbac7; font-size:0.8rem;">${objF}</td>
+                                <td>
+                                    <div class="ai-container">
+                                        ${aiC.includes("Error") ? '<span style="color:var(--red)">⚠️ Errore API</span>' : aiC}
+                                    </div>
+                                </td>
+                                <td style="color:#8b949e; font-size: 0.8rem;">${noteH}</td>
                             </tr>
                         `;
                     }
                 });
-
-                tbody.innerHTML = htmlContent || '<tr><td colspan="7" style="text-align:center;">Nessun dato trovato.</td></tr>';
-            } catch (error) {
-                console.error("Errore Fetch:", error);
-                document.getElementById('tableBody').innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Errore nel caricamento dei dati. Controlla la connessione.</td></tr>';
-            }
+                tbody.innerHTML = html;
+            } catch (e) { console.error(e); }
         }
 
-        // Prima esecuzione
         syncData();
-        
-        // Aggiornamento ogni 15 secondi
         setInterval(syncData, 15000);
     </script>
 </body>
