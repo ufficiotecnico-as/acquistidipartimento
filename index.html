@@ -3,203 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Tracker Pro | Elite Management</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <title>Ordini di Dipartimento | IIS Antonio Scarpa</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg: #05070a;
-            --glass: rgba(22, 27, 34, 0.7);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --accent-valutazione: #ffc107;
-            --accent-integrazione: #a855f7;
-            --accent-approvato: #3b82f6;
-            --accent-completato: #10b981;
-            --accent-respinto: #ef4444;
-            --text-main: #f0f6fc;
-            --text-dim: #8b949e;
+            --bg: #030508;
+            --surface: rgba(17, 25, 40, 0.75);
+            --border: rgba(255, 255, 255, 0.1);
+            --valutazione: #ffc107;
+            --integrazione: #a855f7;
+            --approvato: #3b82f6;
+            --completato: #10b981;
+            --respinto: #ef4444;
+            --text-dim: #94a3b8;
         }
+
+        * { box-sizing: border-box; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg);
-            background-image: radial-gradient(circle at 20% 20%, rgba(59, 130, 246, 0.05) 0%, transparent 40%), radial-gradient(circle at 80% 80%, rgba(168, 85, 247, 0.05) 0%, transparent 40%);
-            color: var(--text-main);
+            background-image: radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.1) 0px, transparent 50%), radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.1) 0px, transparent 50%);
+            color: #fff;
             margin: 0;
-            padding: 20px;
+            padding: 30px;
             min-height: 100vh;
         }
 
-        .container { max-width: 1400px; margin: 0 auto; }
+        .container { max-width: 1440px; margin: 0 auto; }
 
-        header { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; margin-bottom: 20px; }
+        header { text-align: center; margin-bottom: 40px; }
+        h1 { font-size: 3.5rem; font-weight: 900; margin: 0; letter-spacing: -2px; background: linear-gradient(#fff, #64748b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .subtitle { font-size: 1.1rem; letter-spacing: 6px; color: var(--text-dim); text-transform: uppercase; margin-top: 5px; font-weight: 300; }
 
-        .hero-title h1 { font-size: 2.2rem; font-weight: 800; margin: 0; letter-spacing: -1px; }
-        .hero-title p { color: var(--text-dim); margin: 5px 0 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; }
+        .dashboard-grid { display: grid; grid-template-columns: 320px 1fr; gap: 30px; }
 
-        .sync-status { background: var(--glass); padding: 10px 20px; border-radius: 50px; border: 1px solid var(--glass-border); font-size: 0.8rem; display: flex; align-items: center; gap: 10px; }
-        .dot { width: 8px; height: 8px; background: var(--accent-completato); border-radius: 50%; box-shadow: 0 0 10px var(--accent-completato); animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        .glass-panel { background: var(--surface); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 24px; padding: 25px; }
 
-        .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 15px; margin-bottom: 25px; }
-        .kpi-card { background: var(--glass); border: 1px solid var(--glass-border); padding: 20px; border-radius: 16px; cursor: pointer; transition: all 0.3s ease; }
-        .kpi-card:hover { transform: translateY(-5px); border-color: rgba(255, 255, 255, 0.3); }
-        .kpi-card.active { border: 2px solid var(--accent-approvato); background: rgba(59, 130, 246, 0.1); }
-        .kpi-label { font-size: 0.65rem; font-weight: 600; color: var(--text-dim); text-transform: uppercase; }
-        .kpi-value { font-size: 2rem; font-weight: 800; display: block; margin-top: 5px; }
+        .kpi-tile { padding: 12px 18px; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid transparent; cursor: pointer; display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .kpi-tile:hover { background: rgba(255,255,255,0.08); transform: translateX(8px); }
+        .kpi-tile.active { background: rgba(59, 130, 246, 0.2); border-color: var(--approvato); }
 
-        .viz-row { display: grid; grid-template-columns: 1fr 2fr; gap: 20px; margin-bottom: 25px; }
-        .viz-card { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; padding: 20px; height: 320px; }
-
-        .data-section { background: var(--glass); border: 1px solid var(--glass-border); border-radius: 20px; overflow: hidden; }
-        .table-controls { padding: 20px; display: flex; gap: 15px; border-bottom: 1px solid var(--glass-border); }
-        #searchInput { flex: 1; background: rgba(255, 255, 255, 0.05); border: 1px solid var(--glass-border); padding: 12px; border-radius: 10px; color: white; }
+        .tiles-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+        .order-tile { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 20px; position: relative; overflow: hidden; }
+        .order-tile::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 4px; }
         
-        table { width: 100%; border-collapse: collapse; }
-        th { text-align: left; padding: 15px 20px; font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
-        td { padding: 15px 20px; border-bottom: 1px solid var(--glass-border); }
-        .dept-cell { font-weight: 600; font-size: 1.05rem; }
-        
-        .pill { padding: 5px 12px; border-radius: 50px; font-size: 0.65rem; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; }
-        .p-valutazione { background: rgba(255, 193, 7, 0.1); color: var(--accent-valutazione); border-color: var(--accent-valutazione); }
-        .p-integrazione { background: rgba(168, 85, 247, 0.1); color: var(--accent-integrazione); border-color: var(--accent-integrazione); }
-        .p-approvato { background: rgba(59, 130, 246, 0.1); color: var(--accent-approvato); border-color: var(--accent-approvato); }
-        .p-completato { background: rgba(16, 185, 129, 0.1); color: var(--accent-completato); border-color: var(--accent-completato); }
-        .p-respinto { background: rgba(239, 68, 68, 0.1); color: var(--accent-respinto); border-color: var(--accent-respinto); }
+        .t-valutazione::before { background: var(--valutazione); }
+        .t-integrazione::before { background: var(--integrazione); }
+        .t-approvato::before { background: var(--approvato); }
+        .t-completato::before { background: var(--completato); }
+        .t-respinto::before { background: var(--respinto); }
 
-        .time-cell { color: var(--text-dim); font-size: 0.8rem; font-family: monospace; }
-        button { background: #1f2937; border: 1px solid var(--glass-border); color: white; border-radius: 8px; padding: 8px 16px; cursor: pointer; }
+        .tile-dept { font-size: 1.3rem; font-weight: 800; margin-top: 10px; display: block; }
+        .status-pill { display: inline-block; padding: 3px 10px; border-radius: 50px; font-size: 0.65rem; font-weight: 700; background: rgba(255,255,255,0.05); border: 1px solid var(--border); }
+        .tile-time { display: block; margin-top: 15px; font-size: 0.7rem; color: var(--text-dim); font-family: monospace; }
+
+        #searchInput { width: 100%; background: var(--surface); border: 1px solid var(--border); padding: 18px 25px; border-radius: 50px; color: white; font-size: 1rem; margin-bottom: 30px; outline: none; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <div class="hero-title">
-            <h1>ORDER TRACKER ELITE</h1>
-            <p>Analysis & Workflow Control</p>
-        </div>
-        <div class="sync-status"><div class="dot"></div><span id="sync-time">Inizializzazione...</span></div>
+        <h1>Ordini di Dipartimento</h1>
+        <div class="subtitle">IIS ANTONIO SCARPA</div>
     </header>
 
-    <div class="kpi-grid">
-        <div class="kpi-card" onclick="setFilter('IN VALUTAZIONE', this)"><span class="kpi-label">In Valutazione</span><span class="kpi-value" id="count-val">0</span></div>
-        <div class="kpi-card" onclick="setFilter('RICHIESTA INTEGRAZIONE', this)"><span class="kpi-label">Integrazione</span><span class="kpi-value" id="count-int">0</span></div>
-        <div class="kpi-card" onclick="setFilter('APPROVATO - IN ORDINE', this)"><span class="kpi-label">Approvati</span><span class="kpi-value" id="count-app">0</span></div>
-        <div class="kpi-card" onclick="setFilter('COMPLETATO / CONSEGNATO', this)"><span class="kpi-label">Completati</span><span class="kpi-value" id="count-com">0</span></div>
-        <div class="kpi-card" onclick="setFilter('RESPINTO', this)"><span class="kpi-label">Respinti</span><span class="kpi-value" id="count-res">0</span></div>
-    </div>
+    <input type="text" id="searchInput" placeholder="Cerca dipartimento..." onkeyup="renderAll()">
 
-    <div class="viz-row">
-        <div class="viz-card"><canvas id="statusChart"></canvas></div>
-        <div class="viz-card"><canvas id="deptChart"></canvas></div>
-    </div>
+    <div class="dashboard-grid">
+        <aside class="glass-panel">
+            <canvas id="mainChart" style="max-height: 200px; margin-bottom: 25px;"></canvas>
+            <div class="kpi-tile" onclick="setFilter('IN VALUTAZIONE', this)"><span>Valutazione</span><b id="c-val" style="color:var(--valutazione)">0</b></div>
+            <div class="kpi-tile" onclick="setFilter('RICHIESTA INTEGRAZIONE', this)"><span>Integrazione</span><b id="c-int" style="color:var(--integrazione)">0</b></div>
+            <div class="kpi-tile" onclick="setFilter('APPROVATO - IN ORDINE', this)"><span>Approvati</span><b id="c-app" style="color:var(--approvato)">0</b></div>
+            <div class="kpi-tile" onclick="setFilter('COMPLETATO / CONSEGNATO', this)"><span>Completati</span><b id="c-com" style="color:var(--completato)">0</b></div>
+            <div class="kpi-tile" onclick="setFilter('RESPINTO', this)"><span>Respinti</span><b id="c-res" style="color:var(--respinto)">0</b></div>
+            <button onclick="resetFilters()" style="width:100%; margin-top:15px; background:none; border:1px solid var(--border); color:var(--text-dim); padding:10px; border-radius:10px; cursor:pointer;">Reset</button>
+        </aside>
 
-    <div class="data-section">
-        <div class="table-controls">
-            <input type="text" id="searchInput" placeholder="Cerca per dipartimento..." onkeyup="renderTable()">
-            <button onclick="resetFilters()">Reset</button>
-        </div>
-        <table>
-            <thead>
-                <tr><th width="40%">Dipartimento</th><th width="30%">Stato</th><th width="30%">Informazioni Cronologiche</th></tr>
-            </thead>
-            <tbody id="tableBody"></tbody>
-        </table>
+        <main id="tilesGrid" class="tiles-container"></main>
     </div>
 </div>
 
 <script>
     const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
-    let orders = [], activeFilter = null, statusChart, deptChart;
+    let rawData = [], activeStatus = null, chartObj = null;
 
-    async function sync() {
+    async function loadData() {
         try {
-            const res = await fetch(CSV_URL + '&cb=' + Date.now());
-            const text = await res.text();
-            const lines = text.split('\n').slice(1);
-            const mapping = {};
-            lines.forEach(l => {
-                const c = l.split(',');
+            const r = await fetch(CSV_URL + '&t=' + Date.now());
+            const text = await r.text();
+            const rows = text.split('\n').slice(1);
+            const unique = {};
+            rows.forEach(row => {
+                const c = row.split(',');
                 if(c.length < 3) return;
                 const d = c[1].replace(/"/g, '').trim();
-                if(!d) return;
-                mapping[d] = { dept: d, status: c[2].replace(/"/g, '').trim().toUpperCase(), time: c[0].replace(/"/g, '').trim() };
+                if(d) unique[d] = { dept: d, status: c[2].replace(/"/g, '').trim().toUpperCase(), time: c[0].replace(/"/g, '').trim() };
             });
-            orders = Object.values(mapping);
-            updateUI();
-            document.getElementById('sync-time').innerText = 'Aggiornato: ' + new Date().toLocaleTimeString();
-        } catch (e) { console.error(e); }
+            rawData = Object.values(unique);
+            renderAll();
+        } catch(e) { console.error(e); }
     }
 
-    function updateUI() {
-        const stats = {
-            'IN VALUTAZIONE': orders.filter(o => o.status === 'IN VALUTAZIONE').length,
-            'RICHIESTA INTEGRAZIONE': orders.filter(o => o.status === 'RICHIESTA INTEGRAZIONE').length,
-            'APPROVATO - IN ORDINE': orders.filter(o => o.status === 'APPROVATO - IN ORDINE').length,
-            'COMPLETATO / CONSEGNATO': orders.filter(o => o.status === 'COMPLETATO / CONSEGNATO').length,
-            'RESPINTO': orders.filter(o => o.status === 'RESPINTO').length
-        };
+    function renderAll() {
+        const query = document.getElementById('searchInput').value.toLowerCase();
+        const filtered = rawData.filter(o => (!activeStatus || o.status === activeStatus) && o.dept.toLowerCase().includes(query));
 
-        document.getElementById('count-val').innerText = stats['IN VALUTAZIONE'];
-        document.getElementById('count-int').innerText = stats['RICHIESTA INTEGRAZIONE'];
-        document.getElementById('count-app').innerText = stats['APPROVATO - IN ORDINE'];
-        document.getElementById('count-com').innerText = stats['COMPLETATO / CONSEGNATO'];
-        document.getElementById('count-res').innerText = stats['RESPINTO'];
+        const stats = { 'IN VALUTAZIONE': 0, 'RICHIESTA INTEGRAZIONE': 0, 'APPROVATO - IN ORDINE': 0, 'COMPLETATO / CONSEGNATO': 0, 'RESPINTO': 0 };
+        rawData.forEach(o => { if(stats[o.status] !== undefined) stats[o.status]++; });
 
-        updateCharts(stats);
-        renderTable();
+        ['val','int','app','com','res'].forEach((k, i) => document.getElementById('c-'+k).innerText = Object.values(stats)[i]);
+        updateChart(stats);
+
+        document.getElementById('tilesGrid').innerHTML = filtered.map(o => {
+            let type = 't-valutazione';
+            if(o.status.includes('INTEGRAZIONE')) type = 't-integrazione';
+            if(o.status.includes('APPROVATO')) type = 't-approvato';
+            if(o.status.includes('COMPLETATO')) type = 't-completato';
+            if(o.status.includes('RESPINTO')) type = 't-respinto';
+            return `<div class="order-tile ${type}"><span class="status-pill">${o.status}</span><span class="tile-dept">${o.dept}</span><span class="tile-time">Aggiornato: ${o.time}</span></div>`;
+        }).join('');
     }
 
-    function updateCharts(stats) {
-        if(statusChart) statusChart.destroy();
-        statusChart = new Chart(document.getElementById('statusChart'), {
+    function updateChart(s) {
+        const ctx = document.getElementById('mainChart').getContext('2d');
+        if(chartObj) chartObj.destroy();
+        chartObj = new Chart(ctx, {
             type: 'doughnut',
-            data: {
-                labels: Object.keys(stats),
-                datasets: [{ data: Object.values(stats), backgroundColor: ['#ffc107', '#a855f7', '#3b82f6', '#10b981', '#ef4444'], borderWidth: 0 }]
-            },
-            options: { maintainAspectRatio: false, plugins: { legend: { position: 'bottom', labels: { color: '#8b949e', font: { size: 9 } } } } }
-        });
-
-        const depts = {};
-        orders.forEach(o => depts[o.dept] = (depts[o.dept] || 0) + 1);
-        if(deptChart) deptChart.destroy();
-        deptChart = new Chart(document.getElementById('deptChart'), {
-            type: 'bar',
-            data: {
-                labels: Object.keys(depts),
-                datasets: [{ label: 'Richieste', data: Object.values(depts), backgroundColor: '#3b82f6', borderRadius: 5 }]
-            },
-            options: { maintainAspectRatio: false, scales: { y: { ticks: { color: '#8b949e' } }, x: { ticks: { color: '#8b949e' } } }, plugins: { legend: { display: false } } }
+            data: { labels: ['Val', 'Int', 'App', 'Com', 'Res'], datasets: [{ data: Object.values(s), backgroundColor: ['#ffc107', '#a855f7', '#3b82f6', '#10b981', '#ef4444'], borderWidth: 0 }] },
+            options: { cutout: '80%', plugins: { legend: { display: false } }, maintainAspectRatio: false }
         });
     }
 
     function setFilter(s, el) {
-        document.querySelectorAll('.kpi-card').forEach(c => c.classList.remove('active'));
-        if(activeFilter === s) { activeFilter = null; } 
-        else { activeFilter = s; el.classList.add('active'); }
-        renderTable();
+        document.querySelectorAll('.kpi-tile').forEach(t => t.classList.remove('active'));
+        if(activeStatus === s) activeStatus = null;
+        else { activeStatus = s; el.classList.add('active'); }
+        renderAll();
     }
 
-    function resetFilters() { activeFilter = null; document.getElementById('searchInput').value = ''; document.querySelectorAll('.kpi-card').forEach(c => c.classList.remove('active')); renderTable(); }
+    function resetFilters() { activeStatus = null; document.getElementById('searchInput').value = ''; document.querySelectorAll('.kpi-tile').forEach(t => t.classList.remove('active')); renderAll(); }
 
-    function renderTable() {
-        const q = document.getElementById('searchInput').value.toLowerCase();
-        const f = orders.filter(o => (!activeFilter || o.status === activeFilter) && o.dept.toLowerCase().includes(q));
-        document.getElementById('tableBody').innerHTML = f.map(o => {
-            let cls = 'p-valutazione';
-            if(o.status.includes('INTEGRAZIONE')) cls = 'p-integrazione';
-            if(o.status.includes('APPROVATO')) cls = 'p-approvato';
-            if(o.status.includes('COMPLETATO')) cls = 'p-completato';
-            if(o.status.includes('RESPINTO')) cls = 'p-respinto';
-            return `<tr><td class="dept-cell">${o.dept}</td><td><span class="pill ${cls}">${o.status}</span></td><td class="time-cell">${o.time}</td></tr>`;
-        }).join('');
-    }
-
-    sync();
-    setInterval(sync, 30000);
+    loadData();
+    setInterval(loadData, 30000);
 </script>
 </body>
-</html>
 </html>
