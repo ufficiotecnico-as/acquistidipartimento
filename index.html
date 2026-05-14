@@ -2,105 +2,51 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard Ordini v5.0 | IIS Scarpa</title>
+    <title>Dashboard Ordini Integrale | IIS Scarpa</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0b0e14; --card: #161b22; --border: #30363d; --text: #c9d1d9;
             --yellow: #d29922; --purple: #8957e5; --blue: #1f6feb; --green: #238636; --red: #da3633;
         }
-        body {
-            font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); 
-            margin: 0; padding: 0; overflow-x: hidden;
-            background-image: radial-gradient(circle at 2px 2px, var(--border) 1px, transparent 0);
-            background-size: 40px 40px;
-        }
-        
-        /* HEADER */
-        .white-header {
-            background-color: #ffffff; padding: 15px 40px; display: flex; justify-content: space-between;
-            align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.4); position: sticky; top: 0; z-index: 100;
-        }
-        .white-header h1 { color: #000; margin: 0; font-size: 1.6rem; font-weight: 800; letter-spacing: -1px; }
-        .school-logo { max-height: 50px; }
-
-        .main-content { padding: 30px; max-width: 1500px; margin: 0 auto; }
-
-        /* TABELLA */
-        .table-container { background: var(--card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        table { width: 100%; border-collapse: collapse; }
-        th { background: rgba(255,255,255,0.02); text-align: left; padding: 18px 20px; font-size: 0.7rem; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; }
-        td { padding: 18px 20px; border-top: 1px solid var(--border); cursor: pointer; transition: 0.2s; }
-        tr:hover td { background: rgba(255,255,255,0.05); }
-        
-        .dept-column { font-weight: 800; color: #fff; font-size: 1rem; }
-        .badge { padding: 6px 12px; border-radius: 20px; font-size: 0.65rem; font-weight: 800; text-transform: uppercase; border: 1px solid transparent; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 0; }
+        .white-header { background-color: #ffffff; padding: 10px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.3); position: sticky; top: 0; z-index: 100; }
+        .white-header h1 { color: #000; margin: 0; font-size: 1.4rem; font-weight: 800; }
+        .school-logo { max-height: 45px; }
+        .main-content { padding: 20px; width: 98%; margin: 0 auto; }
+        .table-container { background: var(--card); border: 1px solid var(--border); border-radius: 8px; overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.85rem; table-layout: fixed; }
+        th { background: rgba(255,255,255,0.03); text-align: left; padding: 15px; color: #8b949e; text-transform: uppercase; font-size: 0.7rem; border-bottom: 2px solid var(--border); }
+        td { padding: 15px; border-bottom: 1px solid var(--border); vertical-align: top; overflow: hidden; word-wrap: break-word; }
+        .badge { padding: 4px 10px; border-radius: 12px; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; border: 1px solid transparent; white-space: nowrap; }
         .b-valutazione { border-color: var(--yellow); color: var(--yellow); background: rgba(210,153,34,0.1); }
         .b-approvato { border-color: var(--blue); color: var(--blue); background: rgba(31,111,235,0.1); }
+        .b-completato { border-color: var(--green); color: var(--green); background: rgba(35,134,54,0.1); }
         .b-respinto { border-color: var(--red); color: var(--red); background: rgba(218,54,51,0.1); }
-
-        /* DRAWER */
-        .side-drawer {
-            position: fixed; top: 0; right: -550px; width: 480px; height: 100%;
-            background: rgba(13, 17, 23, 0.98); backdrop-filter: blur(20px);
-            border-left: 1px solid var(--border); z-index: 1000;
-            transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); padding: 40px; overflow-y: auto;
-            box-shadow: -10px 0 40px rgba(0,0,0,0.8);
-        }
-        .side-drawer.open { right: 0; }
-        .drawer-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); display: none; z-index: 999; backdrop-filter: blur(3px); }
-        
-        .ai-box { background: linear-gradient(145deg, rgba(137, 87, 229, 0.1), rgba(31, 111, 235, 0.1)); border: 1px solid rgba(137, 87, 229, 0.3); border-radius: 16px; padding: 20px; margin-top: 25px; }
-        .detail-label { color: #8b949e; font-size: 0.7rem; text-transform: uppercase; margin-top: 25px; display: block; font-weight: 600; letter-spacing: 1px; }
-        .detail-value { color: #fff; font-size: 1.1rem; font-weight: 600; display: block; margin-top: 5px; }
-        .close-btn { background: rgba(255,255,255,0.05); border: none; color: #fff; width: 35px; height: 35px; border-radius: 50%; cursor: pointer; position: absolute; top: 25px; right: 25px; font-weight: bold; }
+        .timestamp { color: #666; font-family: monospace; font-size: 0.75rem; }
     </style>
 </head>
 <body>
 
-    <div class="drawer-overlay" id="overlay" onclick="closeDrawer()"></div>
-    
-    <div class="side-drawer" id="drawer">
-        <button class="close-btn" onclick="closeDrawer()">✕</button>
-        <span id="d-status" class="badge">STATO</span>
-        <h2 id="d-name" style="color: #fff; font-size: 2rem; margin: 15px 0 5px 0; letter-spacing: -1px;">Dipartimento</h2>
-        <span id="d-time" style="color: #666; font-size: 0.8rem;">Timestamp</span>
-        
-        <span class="detail-label">Responsabile / Docente</span>
-        <span id="d-docente" class="detail-value">-</span>
-
-        <span class="detail-label">Oggetto dell'acquisto</span>
-        <div id="d-specs" style="color: #adbac7; line-height: 1.6; margin-top: 10px; background: rgba(255,255,255,0.03); padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
-            -
-        </div>
-
-        <div class="ai-box">
-            <div style="color: var(--purple); font-weight: 800; font-size: 0.75rem; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;">
-                <span>✦</span> ANALISI INTELLIGENTE GROQ
-            </div>
-            <div id="d-ai" style="font-size: 0.95rem; line-height: 1.6; color: #e6edf3;">-</div>
-        </div>
-    </div>
-
     <header class="white-header">
-        <div>
-            <h1>ORDINI DI DIPARTIMENTO</h1>
-            <p style="color:#666; margin:0; font-size:0.75rem; font-weight: 600; letter-spacing: 2px;">IIS ANTONIO SCARPA</p>
-        </div>
-        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo" alt="Logo">
+        <h1>SISTEMA MONITORAGGIO ACQUISTI</h1>
+        <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png?_t=1712923868" class="school-logo">
     </header>
 
     <div class="main-content">
         <div class="table-container">
             <table>
+                <colgroup>
+                    <col style="width: 10%"> <col style="width: 12%"> <col style="width: 12%"> <col style="width: 12%"> <col style="width: 15%"> <col style="width: 25%"> <col style="width: 14%"> </colgroup>
                 <thead>
                     <tr>
-                        <th>Dipartimento</th>
-                        <th>Stato Pratica</th>
-                        <th>Responsabile</th>
-                        <th>Oggetto</th>
-                        <th>Data Invio</th>
+                        <th>DATA (A)</th>
+                        <th>DIPARTIMENTO (B)</th>
+                        <th>STATO (D)</th>
+                        <th>RESPONSABILE (E)</th>
+                        <th>OBIETTIVO (F)</th>
+                        <th>ANALISI GROQ (C)</th>
+                        <th>NOTE/ALTRO (H)</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
@@ -110,83 +56,61 @@
 
     <script>
         const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
-        let ordersData = [];
 
-        async function fetchData() {
+        async function syncData() {
             try {
-                const response = await fetch(CSV_URL + '&t=' + Date.now());
-                const csvText = await response.text();
-                const lines = csvText.split(/\r?\n/);
-                const rows = lines.slice(1); // Salta l'intestazione
+                // Il parametro dummy 'nocache' forza il browser a scaricare il CSV nuovo
+                const response = await fetch(CSV_URL + '&nocache=' + new Date().getTime());
+                const text = await response.text();
+                const rows = text.split(/\r?\n/).slice(1);
                 
-                ordersData = [];
-                rows.forEach(line => {
-                    // Regex per dividere le colonne gestendo le virgole nei testi tra virgolette
-                    const cols = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
-                    
-                    if(cols.length >= 5) {
-                        const dept = (cols[1] || "").replace(/"/g,'').trim();
-                        if(dept === "") return; // Salta righe vuote
+                const tbody = document.getElementById('tableBody');
+                tbody.innerHTML = '';
 
-                        ordersData.push({
-                            timestamp: (cols[0] || "").replace(/"/g,'').trim(),
-                            department: dept,
-                            aiAnalysis: (cols[2] || "Non disponibile").replace(/"/g,'').trim(),
-                            status: (cols[3] || "In Valutazione").replace(/"/g,'').trim().toUpperCase(),
-                            teacher: (cols[4] || "N/D").replace(/"/g,'').trim(),
-                            object: (cols[5] || "Vedi dettagli").replace(/"/g,'').trim()
-                        });
+                rows.forEach(row => {
+                    // Split corretto per CSV che ignora le virgole dentro i doppi apici
+                    const c = row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    
+                    // Verifichiamo che la riga non sia vuota e abbia le colonne necessarie
+                    if(c.length >= 6 && c[1] && c[1].trim() !== "") {
+                        const tr = document.createElement('tr');
+                        
+                        // Pulizia dei dati dalle virgolette di Excel
+                        const clean = (val) => (val || "").replace(/^"|"$/g, '').trim();
+
+                        const dataA = clean(c[0]); // Timestamp
+                        const deptB = clean(c[1]); // Dipartimento
+                        const aiC   = clean(c[2]); // Analisi Groq
+                        const statD = clean(c[3]); // STATO
+                        const respE = clean(c[4]); // Responsabile
+                        const objF  = clean(c[5]); // Obiettivo
+                        const noteH = clean(c[7]); // Note (Colonna H è indice 7)
+
+                        // Logica Colori Stato
+                        let badgeClass = 'b-valutazione';
+                        const s = statD.toUpperCase();
+                        if(s.includes('APPROVATO')) badgeClass = 'b-approvato';
+                        else if(s.includes('COMPLETATO')) badgeClass = 'b-completato';
+                        else if(s.includes('RESPINTO')) badgeClass = 'b-respinto';
+
+                        tr.innerHTML = `
+                            <td class="timestamp">${dataA}</td>
+                            <td style="font-weight:800; color:#fff;">${deptB}</td>
+                            <td><span class="badge ${badgeClass}">${statD}</span></td>
+                            <td style="color:#fff;">${respE}</td>
+                            <td style="font-size: 0.8rem; color:#c9d1d9;">${objF}</td>
+                            <td style="font-size: 0.75rem; color:var(--purple); line-height:1.2;">${aiC}</td>
+                            <td style="color:#8b949e; font-size: 0.8rem;">${noteH}</td>
+                        `;
+                        tbody.appendChild(tr);
                     }
                 });
-                renderTable();
-            } catch (error) {
-                console.error("Errore nel caricamento dati:", error);
-            }
+            } catch (e) { console.error("Errore critico sync:", e); }
         }
 
-        function renderTable() {
-            const container = document.getElementById('tableBody');
-            container.innerHTML = ordersData.map((order, index) => {
-                let badgeClass = 'b-valutazione';
-                if(order.status.includes('APPROVATO')) badgeClass = 'b-approvato';
-                else if(order.status.includes('RESPINTO')) badgeClass = 'b-respinto';
-
-                return `<tr onclick="openDrawer(${index})">
-                    <td class="dept-column">${order.department}</td>
-                    <td><span class="badge ${badgeClass}">${order.status}</span></td>
-                    <td style="color:#fff;">${order.teacher}</td>
-                    <td style="color:#8b949e; font-size:0.85rem;">${order.object.substring(0, 45)}${order.object.length > 45 ? '...' : ''}</td>
-                    <td style="color:#666; font-size:0.8rem;">${order.timestamp}</td>
-                </tr>`;
-            }).join('');
-        }
-
-        function openDrawer(index) {
-            const data = ordersData[index];
-            if(!data) return;
-
-            document.getElementById('d-name').innerText = data.department;
-            document.getElementById('d-status').innerText = data.status;
-            document.getElementById('d-status').className = 'badge ' + 
-                (data.status.includes('APPROVATO') ? 'b-approvato' : data.status.includes('RESPINTO') ? 'b-respinto' : 'b-valutazione');
-            
-            document.getElementById('d-docente').innerText = data.teacher;
-            document.getElementById('d-specs').innerText = data.object;
-            document.getElementById('d-ai').innerText = data.aiAnalysis;
-            document.getElementById('d-time').innerText = "Inviato il: " + data.timestamp;
-
-            document.getElementById('drawer').classList.add('open');
-            document.getElementById('overlay').style.display = 'block';
-        }
-
-        function closeDrawer() {
-            document.getElementById('drawer').classList.remove('open');
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        // Avvio e aggiornamento automatico
-        fetchData();
-        setInterval(fetchData, 20000); // Aggiorna ogni 20 secondi
+        // Carica subito e poi ogni 15 secondi
+        syncData();
+        setInterval(syncData, 15000);
     </script>
 </body>
 </html>
