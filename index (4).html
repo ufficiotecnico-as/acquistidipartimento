@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Tracker Dashboard</title>
+    <style>
+        :root {
+            --bg-dark: #0f1216;
+            --card-bg: #1a1e23;
+            --accent-green: #4ade80;
+            --accent-yellow: #facc15;
+            --accent-blue: #3b82f6;
+            --accent-red: #f87171;
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --grid-color: rgba(255, 255, 255, 0.03);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-dark);
+            background-image: linear-gradient(var(--grid-color) 1px, transparent 1px),
+                              linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 30px 30px;
+            color: var(--text-main);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1100px;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 40px;
+        }
+
+        .title-section h1 {
+            font-size: 3rem;
+            font-weight: 900;
+            letter-spacing: -1px;
+            color: #7dd3fc; /* Colore simile all'immagine */
+            margin: 0;
+            text-transform: uppercase;
+        }
+
+        .title-section p {
+            color: var(--text-muted);
+            margin: 5px 0 0 0;
+            letter-spacing: 2px;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .live-badge {
+            background: rgba(74, 222, 128, 0.1);
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+            padding: 6px 16px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-green);
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.4; }
+            100% { opacity: 1; }
+        }
+
+        /* Stat Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            border-top: 4px solid #333;
+            position: relative;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
+        }
+
+        .stat-card.dipartimenti { border-color: var(--accent-green); }
+        .stat-card.in-corso { border-color: var(--accent-yellow); }
+        .stat-card.completati { border-color: var(--accent-blue); }
+        .stat-card.bloccati { border-color: var(--accent-red); }
+
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: block;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 0;
+        }
+
+        /* Table/List Area */
+        .search-row {
+            display: grid;
+            grid-template-columns: 1fr 250px;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        input, select {
+            background: #1e293b;
+            border: 1px solid #334155;
+            padding: 12px 16px;
+            border-radius: 8px;
+            color: white;
+            outline: none;
+        }
+
+        .data-list {
+            background: var(--card-bg);
+            border-radius: 12px;
+            margin-top: 20px;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+
+        .data-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            padding: 15px 24px;
+            border-bottom: 1px solid #334155;
+            transition: background 0.2s;
+        }
+
+        .data-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .data-item .dept { font-weight: bold; }
+        .data-item .status { text-align: right; font-family: monospace; }
+
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .search-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <div class="title-section">
+                <h1>ORDER TRACKER</h1>
+                <p>Stato avanzamento ordini per dipartimento</p>
+            </div>
+            <div class="live-badge">
+                <div class="live-dot"></div> LIVE
+            </div>
+        </header>
+
+        <div class="stats-grid">
+            <div class="stat-card dipartimenti">
+                <span class="stat-label">Dipartimenti</span>
+                <p class="stat-value" id="count-total">-</p>
+            </div>
+            <div class="stat-card in-corso">
+                <span class="stat-label">In Corso</span>
+                <p class="stat-value" id="count-corso">-</p>
+            </div>
+            <div class="stat-card completati">
+                <span class="stat-label">Completati</span>
+                <p class="stat-value" id="count-completati">-</p>
+            </div>
+            <div class="stat-card bloccati">
+                <span class="stat-label">Bloccati</span>
+                <p class="stat-value" id="count-bloccati">-</p>
+            </div>
+        </div>
+
+        <div class="search-row">
+            <input type="text" id="search" placeholder="Cerca dipartimento..." onkeyup="filterData()">
+            <select id="status-filter" onchange="filterData()">
+                <option value="all">Tutti gli stati</option>
+                <option value="In Corso">In Corso</option>
+                <option value="Completato">Completati</option>
+                <option value="Bloccato">Bloccati</option>
+            </select>
+        </div>
+
+        <div id="data-container" class="data-list">
+            <!-- Dati caricati qui -->
+        </div>
+    </div>
+
+    <script>
+        const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vStwBeDM8iQP9AQCvZP0ZPVaddOqmaGc9Iqpt_cFB8KNbEMhGH2apC2zkC1yJ5bU9HGZljDLTYMAcgw/pub?gid=1101694915&single=true&output=csv';
+        let allData = [];
+
+        async function updateDashboard() {
+            try {
+                const response = await fetch(csvUrl);
+                const text = await response.text();
+                const rows = text.split('\n').slice(1);
+                
+                allData = rows.map(row => {
+                    const cols = row.split(',');
+                    return {
+                        dept: cols[0]?.replace(/"/g, '').trim(),
+                        status: cols[1]?.replace(/"/g, '').trim()
+                    };
+                }).filter(item => item.dept);
+
+                renderStats();
+                filterData();
+            } catch (e) {
+                console.error("Errore fetch:", e);
+            }
+        }
+
+        function renderStats() {
+            document.getElementById('count-total').innerText = allData.length;
+            document.getElementById('count-corso').innerText = allData.filter(d => d.status.toLowerCase().includes('corso')).length;
+            document.getElementById('count-completati').innerText = allData.filter(d => d.status.toLowerCase().includes('complet')).length;
+            document.getElementById('count-bloccati').innerText = allData.filter(d => d.status.toLowerCase().includes('blocc') || d.status.toLowerCase().includes('ritard')).length;
+        }
+
+        function filterData() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const statusFilter = document.getElementById('status-filter').value;
+            const container = document.getElementById('data-container');
+            
+            const filtered = allData.filter(item => {
+                const matchesSearch = item.dept.toLowerCase().includes(searchTerm);
+                const matchesStatus = statusFilter === 'all' || item.status.includes(statusFilter);
+                return matchesSearch && matchesStatus;
+            });
+
+            container.innerHTML = filtered.map(item => `
+                <div class="data-item">
+                    <span class="dept">${item.dept}</span>
+                    <span class="status">${item.status}</span>
+                </div>
+            `).join('');
+        }
+
+        // Init & Auto-refresh ogni 60s
+        updateDashboard();
+        setInterval(updateDashboard, 60000);
+    </script>
+</body>
+</html>
