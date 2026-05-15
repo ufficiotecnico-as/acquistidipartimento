@@ -1,0 +1,15 @@
+{
+  "name": "Acquisti IIS Scarpa",
+  "short_name": "Acquisti",
+  "start_url": "login.html",
+  "display": "standalone",
+  "background_color": "#06090f",
+  "theme_color": "#00d2ff",
+  "icons": [
+    {
+      "src": "https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
