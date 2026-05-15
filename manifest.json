@@ -1,15 +1,27 @@
 {
-  "name": "Acquisti IIS Scarpa",
-  "short_name": "Acquisti",
-  "start_url": "login.html",
+  "id": "/scarpa-portal-v1",
+  "name": "Smart Portal IIS Scarpa",
+  "short_name": "Scarpa App",
+  "start_url": "./login.html",
   "display": "standalone",
-  "background_color": "#06090f",
-  "theme_color": "#00d2ff",
+  "background_color": "#05080d",
+  "theme_color": "#05080d",
+  "orientation": "portrait",
+  "scope": "./",
+  "lang": "it",
+  "dir": "ltr",
   "icons": [
     {
       "src": "https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
