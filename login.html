@@ -4,6 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Login | Smart Portal Scarpa</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Scarpa App">
+    <link rel="apple-touch-icon" href="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png">
+    <meta name="theme-color" content="#05080d">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -104,7 +111,169 @@
     <footer>IIS ANTONIO SCARPA — SMART SYSTEM 2026</footer>
 
     <script>
-        // Logica CSV per le utenze (già configurata con il tuo link)
+        // --- REGISTRAZIONE SERVICE WORKER PER APP ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('App pronta!'))
+                .catch(err => console.log('Errore app', err));
+            });
+        }
+        // --------------------------------------------
+
+        const USERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVgqrDiEAD3X6HclOFJoVo2xHgwS4TRmgJ8_HRFZFRNSS0ZVm_Hx6lSIsvj31paCckaWY2zY-HMb8J/pub?gid=0&single=true&output=csv';
+        let authorizedUsers = [];
+
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${USERS_CSV_URL}&t=${Date.now()}`);
+                const data = await response.text();
+                const rows = data.split('\n').slice(1);
+                authorizedUsers = rows.map(row => {
+                    const cols = row.split(',');
+                    return { u: cols[0]?.trim(), p: cols[1]?.trim() };
+                }).filter(user => user.u && user.p);
+            } catch (e) { console.error("Database offline"); }
+        }
+
+        function handleLogin() {
+            const u = document.getElementById('user').value.trim();
+            const p = document.getElementById('pass').value.trim();
+            const found = authorizedUsers.find(user => user.u === u && user.p === p);
+
+            if (found) {
+                localStorage.setItem('scarpa_auth', 'true');
+                window.location.href = 'index.html';
+            } else {
+                alert("Accesso negato: credenziali non valide");
+            }
+        }
+        loadUsers();
+    </script>
+</body>
+</html><!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Login | Smart Portal Scarpa</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Scarpa App">
+    <link rel="apple-touch-icon" href="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png">
+    <meta name="theme-color" content="#05080d">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00d2ff; --accent: #ff007a; --bg-dark: #05080d;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', sans-serif; background: var(--bg-dark);
+            min-height: 100dvh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; overflow: hidden;
+            position: relative; padding: 20px;
+        }
+
+        /* SFONDO CON BLOB ANIMATI */
+        .blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(60px); }
+        .blob { position: absolute; border-radius: 50%; opacity: 0.5; animation: move 18s infinite alternate ease-in-out; }
+        .blob-1 { width: 55vw; height: 55vw; background: var(--primary); top: -15%; left: -10%; }
+        .blob-2 { width: 65vw; height: 65vw; background: var(--accent); bottom: -15%; right: -10%; animation-delay: -5s; }
+        .blob-3 { width: 35vw; height: 35vw; background: #0066ff; top: 20%; right: 15%; animation-duration: 22s; }
+
+        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(40px, 50px) scale(1.1); } }
+
+        /* CARD GLASSMORPHISM DEFINITIVA */
+        .login-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
+            border: 2px solid transparent;
+            background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
+                              linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            background-origin: border-box; background-clip: padding-box, border-box;
+            padding: 3.5rem 2rem; border-radius: 30px; width: 100%; max-width: 420px;
+            text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); z-index: 10;
+        }
+
+        /* LOGO RICOSTRUITO IDENTICO (SVG + GLOW) */
+        .logo-wrap {
+            position: relative; margin-bottom: 1rem;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
+        }
+        .logo-svg { width: 110px; height: auto; }
+        .school-name { color: white; font-weight: 400; font-size: 0.9rem; letter-spacing: 1px; margin-top: 5px; opacity: 0.9; }
+        .school-brand { color: white; font-weight: 800; font-size: 1.4rem; letter-spacing: 2px; line-height: 1; }
+
+        h2 { color: #fff; font-weight: 700; font-size: 2.2rem; margin-top: 1.5rem; letter-spacing: -1px; }
+        .subtitle { color: rgba(255,255,255,0.8); font-size: 1rem; margin-bottom: 2rem; font-weight: 300; }
+        .status-ready { color: rgba(255,255,255,0.5); font-size: 0.85rem; margin-bottom: 1.5rem; }
+
+        /* INPUTS */
+        .input-field {
+            width: 100%; padding: 1.1rem; background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px;
+            color: #fff; font-size: 1rem; outline: none; transition: 0.3s; margin-bottom: 1rem;
+        }
+        .input-field:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.4); }
+
+        /* BUTTON CON GRADIENTE ESATTO */
+        .login-btn {
+            width: 100%; padding: 1.1rem; 
+            background: linear-gradient(90deg, #00d2ff, #ff007a);
+            color: #fff; border: none; border-radius: 12px; font-size: 1rem;
+            font-weight: 800; cursor: pointer; transition: 0.4s; text-transform: uppercase;
+            margin-top: 0.5rem; letter-spacing: 1px;
+        }
+        .login-btn:hover { filter: brightness(1.2); box-shadow: 0 0 25px rgba(0, 210, 255, 0.4); }
+
+        footer { position: fixed; bottom: 15px; color: rgba(255,255,255,0.3); font-size: 0.6rem; letter-spacing: 2px; }
+    </style>
+</head>
+<body>
+
+    <div class="blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+
+    <div class="login-card">
+        <div class="logo-wrap">
+            <svg class="logo-svg" viewBox="0 0 100 80" xmlns="http://www.w3.org/2000/svg">
+                <path d="M25 55 Q15 45 20 25 M75 55 Q85 45 80 25" fill="none" stroke="white" stroke-width="2" opacity="0.8"/>
+                <path d="M50 50 L75 40 L75 20 L50 30 L25 20 L25 40 Z" fill="none" stroke="white" stroke-width="3"/>
+                <path d="M50 30 L50 50" fill="none" stroke="white" stroke-width="3"/>
+                <circle cx="50" cy="20" r="4" fill="white"/>
+                <path d="M40 28 Q50 15 60 28" fill="none" stroke="white" stroke-width="3"/>
+            </svg>
+            <div class="school-name">IIS ANTONIO</div>
+            <div class="school-brand">SCARPA</div>
+        </div>
+
+        <h2>Area Riservata</h2>
+        <div class="subtitle">Accesso Portale Acquisti</div>
+        <p class="status-ready">Pronto per l'autenticazione</p>
+
+        <input type="text" class="input-field" id="user" placeholder="Username" spellcheck="false">
+        <input type="password" class="input-field" id="pass" placeholder="Password">
+
+        <button class="login-btn" onclick="handleLogin()">Accedi al Portale</button>
+    </div>
+
+    <footer>IIS ANTONIO SCARPA — SMART SYSTEM 2026</footer>
+
+    <script>
+        // --- REGISTRAZIONE SERVICE WORKER PER APP ---
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('sw.js')
+                .then(reg => console.log('App pronta!'))
+                .catch(err => console.log('Errore app', err));
+            });
+        }
+        // --------------------------------------------
+
         const USERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVgqrDiEAD3X6HclOFJoVo2xHgwS4TRmgJ8_HRFZFRNSS0ZVm_Hx6lSIsvj31paCckaWY2zY-HMb8J/pub?gid=0&single=true&output=csv';
         let authorizedUsers = [];
 
