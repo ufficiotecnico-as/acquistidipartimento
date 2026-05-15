@@ -2,318 +2,137 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Login | Smart Portal Scarpa</title>
     
     <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#05080d">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#05080d">
     
-    <link rel="apple-touch-icon" href="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png">
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
-        :root {
-            --primary: #00d2ff; --accent: #ff007a; --bg-dark: #05080d;
-        }
-
+        :root { --primary: #00d2ff; --accent: #ff007a; --bg: #05080d; }
+        
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Inter', sans-serif; background: var(--bg-dark);
-            min-height: 100dvh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; overflow: hidden;
-            position: relative; padding: 20px;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* FIX: Impedisce al logo di sdoppiarsi scrollando */
+            position: relative;
         }
 
-        /* SFONDO ANIMATO */
-        .blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(60px); }
-        .blob { position: absolute; border-radius: 50%; opacity: 0.5; animation: move 18s infinite alternate ease-in-out; }
-        .blob-1 { width: 55vw; height: 55vw; background: var(--primary); top: -15%; left: -10%; }
-        .blob-2 { width: 65vw; height: 65vw; background: var(--accent); bottom: -15%; right: -10%; animation-delay: -5s; }
-        .blob-3 { width: 35vw; height: 35vw; background: #0066ff; top: 20%; right: 15%; animation-duration: 22s; }
+        /* SFONDO ANIMATO OTTIMIZZATO */
+        .blobs { position: absolute; width: 100%; height: 100%; overflow: hidden; z-index: 1; filter: blur(50px); }
+        .blob { position: absolute; border-radius: 50%; opacity: 0.4; animation: move 20s infinite alternate; }
+        .blob-1 { width: 300px; height: 300px; background: var(--primary); top: -50px; left: -50px; }
+        .blob-2 { width: 350px; height: 350px; background: var(--accent); bottom: -50px; right: -50px; }
 
-        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(40px, 50px) scale(1.1); } }
+        @keyframes move { from { transform: translate(0, 0); } to { transform: translate(30px, 30px); } }
 
         /* CARD GLASSMORPHISM */
         .login-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            border: 2px solid transparent;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
-                              linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            background-origin: border-box; background-clip: padding-box, border-box;
-            padding: 3rem 2rem; border-radius: 30px; width: 100%; max-width: 400px;
-            text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); z-index: 10;
-            display: flex; flex-direction: column; align-items: center;
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2.5rem 2rem;
+            border-radius: 28px;
+            width: 90%;
+            max-width: 380px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
         }
 
-        /* FIX 2: LOGO UNICO E PULITO */
-        .logo-container {
-            margin-bottom: 1.5rem;
+        .logo-container { margin-bottom: 1.5rem; }
+        .main-logo { width: 140px; height: auto; filter: drop-shadow(0 0 10px rgba(255,255,255,0.2)); }
+        .school-brand { color: white; font-weight: 800; font-size: 1.1rem; letter-spacing: 1px; }
+
+        h2 { color: #fff; margin: 10px 0 5px; font-size: 1.5rem; }
+        .subtitle { color: rgba(255,255,255,0.6); font-size: 0.9rem; margin-bottom: 1.5rem; }
+
+        .input-field {
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
+            padding: 14px;
+            margin-bottom: 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(0,0,0,0.4);
+            color: white;
+            font-size: 1rem;
+            outline: none;
         }
 
-        .main-logo {
-            width: 180px; /* Ingrandito per leggibilità */
-            height: auto;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
-            margin-bottom: 10px;
-        }
-
-        .school-brand { 
-            color: white; 
-            font-weight: 800; 
-            font-size: 1.2rem; 
-            letter-spacing: 2px; 
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            color: white;
+            font-weight: 800;
+            cursor: pointer;
             text-transform: uppercase;
         }
 
-        h2 { color: #fff; font-weight: 700; font-size: 1.8rem; margin-top: 0.5rem; letter-spacing: -0.5px; }
-        .subtitle { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 2rem; font-weight: 300; }
-
-        /* INPUTS */
-        .input-field {
-            width: 100%; padding: 1.1rem; background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px;
-            color: #fff; font-size: 1rem; outline: none; transition: 0.3s; margin-bottom: 1rem;
-        }
-        .input-field:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
-
-        /* BUTTON */
-        .login-btn {
-            width: 100%; padding: 1.1rem; 
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            color: #fff; border: none; border-radius: 14px; font-size: 1rem;
-            font-weight: 800; cursor: pointer; transition: 0.4s; text-transform: uppercase;
-            margin-top: 0.5rem; letter-spacing: 1px;
-        }
-        .login-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3); }
-
-        footer { position: fixed; bottom: 15px; color: rgba(255,255,255,0.2); font-size: 0.65rem; letter-spacing: 2px; }
+        footer { position: absolute; bottom: 20px; color: rgba(255,255,255,0.2); font-size: 0.7rem; z-index: 5; }
     </style>
 </head>
 <body>
 
-    <div class="blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
+    <div class="blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
 
     <div class="login-card">
         <div class="logo-container">
-            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png" alt="Logo Scarpa" class="main-logo">
+            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png" class="main-logo">
             <div class="school-brand">IIS A. SCARPA</div>
         </div>
 
         <h2>Area Riservata</h2>
-        <div class="subtitle">Smart Portal Accedi</div>
+        <div class="subtitle">Accesso Portal 2026</div>
 
-        <input type="text" class="input-field" id="user" placeholder="Username" autocomplete="username">
-        <input type="password" class="input-field" id="pass" placeholder="Password" autocomplete="current-password">
+        <input type="text" class="input-field" id="user" placeholder="Username">
+        <input type="password" class="input-field" id="pass" placeholder="Password">
 
-        <button class="login-btn" onclick="handleLogin()">Entra nel sistema</button>
+        <button class="login-btn" onclick="handleLogin()">Accedi</button>
     </div>
 
-    <footer>SMART SYSTEM V2.0 — 2026 EDITION</footer>
+    <footer>SMART SYSTEM V2.1</footer>
 
     <script>
-        // Caricamento dati e logica login (Identica alla precedente ma ottimizzata)
         const USERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVgqrDiEAD3X6HclOFJoVo2xHgwS4TRmgJ8_HRFZFRNSS0ZVm_Hx6lSIsvj31paCckaWY2zY-HMb8J/pub?gid=0&single=true&output=csv';
-        let authorizedUsers = [];
+        let authUsers = [];
 
         async function loadUsers() {
             try {
-                const response = await fetch(`${USERS_CSV_URL}&t=${Date.now()}`);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1);
-                authorizedUsers = rows.map(row => {
-                    const cols = row.split(',');
-                    return { u: cols[0]?.trim(), p: cols[1]?.trim() };
-                }).filter(user => user.u && user.p);
-            } catch (e) { console.error("Database sync failed"); }
+                const res = await fetch(`${USERS_CSV_URL}&t=${Date.now()}`);
+                const text = await res.text();
+                authUsers = text.split('\n').slice(1).map(r => {
+                    const c = r.split(',');
+                    return { u: c[0]?.trim(), p: c[1]?.trim() };
+                });
+            } catch (e) { console.error("Sync Error"); }
         }
 
         function handleLogin() {
             const u = document.getElementById('user').value.trim();
             const p = document.getElementById('pass').value.trim();
-            const found = authorizedUsers.find(user => user.u === u && user.p === p);
-
-            if (found) {
+            if (authUsers.find(x => x.u === u && x.p === p)) {
                 localStorage.setItem('scarpa_auth', 'true');
                 window.location.href = 'index.html';
-            } else {
-                alert("Credenziali errate. Riprova.");
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(() => {});
-            });
-        }
-        loadUsers();
-    </script>
-</body>
-</html><!DOCTYPE html>
-<html lang="it">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Login | Smart Portal Scarpa</title>
-    
-    <link rel="manifest" href="manifest.json">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="theme-color" content="#05080d">
-    
-    <link rel="apple-touch-icon" href="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png">
-
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --primary: #00d2ff; --accent: #ff007a; --bg-dark: #05080d;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif; background: var(--bg-dark);
-            min-height: 100dvh; display: flex; flex-direction: column;
-            align-items: center; justify-content: center; overflow: hidden;
-            position: relative; padding: 20px;
-        }
-
-        /* SFONDO ANIMATO */
-        .blobs { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; filter: blur(60px); }
-        .blob { position: absolute; border-radius: 50%; opacity: 0.5; animation: move 18s infinite alternate ease-in-out; }
-        .blob-1 { width: 55vw; height: 55vw; background: var(--primary); top: -15%; left: -10%; }
-        .blob-2 { width: 65vw; height: 65vw; background: var(--accent); bottom: -15%; right: -10%; animation-delay: -5s; }
-        .blob-3 { width: 35vw; height: 35vw; background: #0066ff; top: 20%; right: 15%; animation-duration: 22s; }
-
-        @keyframes move { from { transform: translate(0, 0) scale(1); } to { transform: translate(40px, 50px) scale(1.1); } }
-
-        /* CARD GLASSMORPHISM */
-        .login-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px);
-            border: 2px solid transparent;
-            background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)), 
-                              linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-            background-origin: border-box; background-clip: padding-box, border-box;
-            padding: 3rem 2rem; border-radius: 30px; width: 100%; max-width: 400px;
-            text-align: center; box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7); z-index: 10;
-            display: flex; flex-direction: column; align-items: center;
-        }
-
-        /* FIX 2: LOGO UNICO E PULITO */
-        .logo-container {
-            margin-bottom: 1.5rem;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .main-logo {
-            width: 180px; /* Ingrandito per leggibilità */
-            height: auto;
-            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.4));
-            margin-bottom: 10px;
-        }
-
-        .school-brand { 
-            color: white; 
-            font-weight: 800; 
-            font-size: 1.2rem; 
-            letter-spacing: 2px; 
-            text-transform: uppercase;
-        }
-
-        h2 { color: #fff; font-weight: 700; font-size: 1.8rem; margin-top: 0.5rem; letter-spacing: -0.5px; }
-        .subtitle { color: rgba(255,255,255,0.7); font-size: 0.95rem; margin-bottom: 2rem; font-weight: 300; }
-
-        /* INPUTS */
-        .input-field {
-            width: 100%; padding: 1.1rem; background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 14px;
-            color: #fff; font-size: 1rem; outline: none; transition: 0.3s; margin-bottom: 1rem;
-        }
-        .input-field:focus { border-color: var(--primary); background: rgba(0, 0, 0, 0.5); box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
-
-        /* BUTTON */
-        .login-btn {
-            width: 100%; padding: 1.1rem; 
-            background: linear-gradient(90deg, var(--primary), var(--accent));
-            color: #fff; border: none; border-radius: 14px; font-size: 1rem;
-            font-weight: 800; cursor: pointer; transition: 0.4s; text-transform: uppercase;
-            margin-top: 0.5rem; letter-spacing: 1px;
-        }
-        .login-btn:hover { transform: translateY(-2px); filter: brightness(1.1); box-shadow: 0 10px 20px rgba(0, 210, 255, 0.3); }
-
-        footer { position: fixed; bottom: 15px; color: rgba(255,255,255,0.2); font-size: 0.65rem; letter-spacing: 2px; }
-    </style>
-</head>
-<body>
-
-    <div class="blobs"><div class="blob blob-1"></div><div class="blob blob-2"></div><div class="blob blob-3"></div></div>
-
-    <div class="login-card">
-        <div class="logo-container">
-            <img src="https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png" alt="Logo Scarpa" class="main-logo">
-            <div class="school-brand">IIS A. SCARPA</div>
-        </div>
-
-        <h2>Area Riservata</h2>
-        <div class="subtitle">Smart Portal Accedi</div>
-
-        <input type="text" class="input-field" id="user" placeholder="Username" autocomplete="username">
-        <input type="password" class="input-field" id="pass" placeholder="Password" autocomplete="current-password">
-
-        <button class="login-btn" onclick="handleLogin()">Entra nel sistema</button>
-    </div>
-
-    <footer>SMART SYSTEM V2.0 — 2026 EDITION</footer>
-
-    <script>
-        // Caricamento dati e logica login (Identica alla precedente ma ottimizzata)
-        const USERS_CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSVgqrDiEAD3X6HclOFJoVo2xHgwS4TRmgJ8_HRFZFRNSS0ZVm_Hx6lSIsvj31paCckaWY2zY-HMb8J/pub?gid=0&single=true&output=csv';
-        let authorizedUsers = [];
-
-        async function loadUsers() {
-            try {
-                const response = await fetch(`${USERS_CSV_URL}&t=${Date.now()}`);
-                const data = await response.text();
-                const rows = data.split('\n').slice(1);
-                authorizedUsers = rows.map(row => {
-                    const cols = row.split(',');
-                    return { u: cols[0]?.trim(), p: cols[1]?.trim() };
-                }).filter(user => user.u && user.p);
-            } catch (e) { console.error("Database sync failed"); }
-        }
-
-        function handleLogin() {
-            const u = document.getElementById('user').value.trim();
-            const p = document.getElementById('pass').value.trim();
-            const found = authorizedUsers.find(user => user.u === u && user.p === p);
-
-            if (found) {
-                localStorage.setItem('scarpa_auth', 'true');
-                window.location.href = 'index.html';
-            } else {
-                alert("Credenziali errate. Riprova.");
-            }
-        }
-
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('sw.js').catch(() => {});
-            });
+            } else { alert("Dati errati"); }
         }
         loadUsers();
     </script>
