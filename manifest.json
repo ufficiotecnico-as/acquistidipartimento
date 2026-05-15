@@ -1,15 +1,17 @@
 {
-  "id": "/scarpa-portal-v1",
+  "id": "scarpa-portal-v2026",
   "name": "Smart Portal IIS Scarpa",
   "short_name": "Scarpa App",
-  "start_url": "./login.html",
+  "start_url": "login.html",
   "display": "standalone",
   "background_color": "#05080d",
   "theme_color": "#05080d",
   "orientation": "portrait",
-  "scope": "./",
+  "scope": "/",
   "lang": "it",
   "dir": "ltr",
+  "categories": ["education", "productivity"],
+  "description": "Portale ufficiale per la gestione acquisti IIS Antonio Scarpa.",
   "icons": [
     {
       "src": "https://cspace.spaggiari.eu//pub/TVII0004/TVII0004-intestazione-nuova-senzaloghi.png",
@@ -22,6 +24,12 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Login",
+      "url": "login.html"
     }
   ]
 }
